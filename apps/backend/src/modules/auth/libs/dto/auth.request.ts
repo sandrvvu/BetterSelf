@@ -1,6 +1,7 @@
-export interface AuthRequest {
-    user: {
-      sub: string;
-      name: string;
-    };
-  }
+import { Request } from "express";
+
+export interface AuthRequest extends Request {
+  user?: {
+    sub: string;
+  };
+}
