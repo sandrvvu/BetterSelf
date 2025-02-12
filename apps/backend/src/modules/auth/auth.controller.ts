@@ -26,13 +26,14 @@ export class AuthController {
 
   @Post("register")
   @Public()
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async register(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.authService.register(createUserDto);
   }
 
   @Post("login")
   @Public()
+  @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto): Promise<LoginResponse> {
     const accessToken = await this.authService.login(
       loginDto.email,
@@ -43,6 +44,7 @@ export class AuthController {
   }
 
   @Get("profile")
+  @HttpCode(HttpStatus.OK)
   async profile(@Request() request: AuthRequest): Promise<User> {
     return this.authService.profile(request);
   }
