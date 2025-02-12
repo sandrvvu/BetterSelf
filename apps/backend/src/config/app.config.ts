@@ -1,6 +1,14 @@
-import { registerAs } from '@nestjs/config';
+import { registerAs } from "@nestjs/config";
 
-export default registerAs('config', () => ({
-  port: parseInt(process.env.PORT, 10),
-  nodenv: process.env.NODE_ENV,
-}));
+export interface AppConfigType {
+  port: number;
+  nodenv: string;
+}
+
+export default registerAs(
+  "config",
+  (): AppConfigType => ({
+    port: parseInt(process.env.PORT ?? "8080"),
+    nodenv: process.env.NODE_ENV,
+  }),
+);
