@@ -10,7 +10,7 @@ import {
   TypedConfigService,
 } from "./config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { UsersModule } from "./modules/users/user.module";
+import { UsersModule } from "./modules/users/users.module";
 
 @Module({
   imports: [

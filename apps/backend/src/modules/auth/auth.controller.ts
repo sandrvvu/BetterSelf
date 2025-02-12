@@ -9,6 +9,7 @@ import {
   Post,
   SerializeOptions,
   UseInterceptors,
+  ValidationPipe,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../users/libs/dto/create-user.dto";
@@ -27,14 +28,18 @@ export class AuthController {
   @Post("register")
   @Public()
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async register(
+    @Body(ValidationPipe) createUserDto: CreateUserDto,
+  ): Promise<User> {
     return this.authService.register(createUserDto);
   }
 
   @Post("login")
   @Public()
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto): Promise<LoginResponse> {
+  async login(
+    @Body(ValidationPipe) loginDto: LoginDto,
+  ): Promise<LoginResponse> {
     const accessToken = await this.authService.login(
       loginDto.email,
       loginDto.password,

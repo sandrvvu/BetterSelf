@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Repository } from 'typeorm';
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto } from "./libs/dto/create-user.dto";
 import { PasswordService } from "../../common/modules/password/password.service";

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
@@ -10,6 +11,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
 import { AuthConfigType } from "src/config";
+import { isUUID } from "class-validator";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -41,11 +43,17 @@ export class AuthGuard implements CanActivate {
         secret: this.configService.get<AuthConfigType>("auth")?.secret,
       });
 
-      request["user"] = payload;
-    } catch {
-      throw new UnauthorizedException();
-    }
+      if (!payload.sub || !isUUID(payload.sub)) {
+        throw new BadRequestException("Invalid UUID format in token");
+      }
 
+      request["user"] = payload;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new UnauthorizedException(error.message);
+      }
+      throw new UnauthorizedException("Invalid token");
+    }
     return true;
   }
 
