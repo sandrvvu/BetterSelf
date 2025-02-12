@@ -28,14 +28,18 @@ export class AuthController {
   @Post("register")
   @Public()
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body(ValidationPipe) createUserDto: CreateUserDto): Promise<User> {
+  async register(
+    @Body(ValidationPipe) createUserDto: CreateUserDto,
+  ): Promise<User> {
     return this.authService.register(createUserDto);
   }
 
   @Post("login")
   @Public()
   @HttpCode(HttpStatus.OK)
-  async login(@Body(ValidationPipe) loginDto: LoginDto): Promise<LoginResponse> {
+  async login(
+    @Body(ValidationPipe) loginDto: LoginDto,
+  ): Promise<LoginResponse> {
     const accessToken = await this.authService.login(
       loginDto.email,
       loginDto.password,

@@ -12,7 +12,6 @@ import {
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsersModule } from "./modules/users/users.module";
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
