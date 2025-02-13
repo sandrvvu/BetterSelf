@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -15,6 +16,7 @@ import { isUUID } from "class-validator";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private readonly logger = new Logger("AuthGuard");
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -49,6 +51,7 @@ export class AuthGuard implements CanActivate {
 
       request["user"] = payload;
     } catch (error) {
+      this.logger.warn(`Unauthorized access attempt: Authentication failed.`);
       if (error instanceof Error) {
         throw new UnauthorizedException(error.message);
       }
