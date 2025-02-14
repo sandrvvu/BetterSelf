@@ -1,23 +1,23 @@
-import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateUserDto } from "./libs/dto/create-user.dto";
+import { Repository } from "typeorm";
+
 import { PasswordService } from "../../common/modules/password/password.service";
+
+import { CreateUserDto } from "./libs/dto/create-user.dto";
 import { User } from "./user.entity";
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger("UserService");
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly passwordService: PasswordService,
   ) {}
 
-  public async findOneByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ email });
-  }
-
   public async create(createUserDto: CreateUserDto): Promise<User> {
+    this.logger.log(`Creating user: ${createUserDto.email}`);
     const hashedPassword = await this.passwordService.hash(
       createUserDto.password,
     );
@@ -26,10 +26,18 @@ export class UserService {
       password: hashedPassword,
     });
 
-    return await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    this.logger.log(`User created successfully: ${savedUser.id}`);
+    return savedUser;
   }
 
   public async findOne(id: string): Promise<User | null> {
+    this.logger.log(`Finding user by ID: ${id}`);
     return await this.userRepository.findOneBy({ id });
+  }
+
+  public async findOneByEmail(email: string): Promise<User | null> {
+    this.logger.log(`Finding user by email: ${email}`);
+    return await this.userRepository.findOneBy({ email });
   }
 }
