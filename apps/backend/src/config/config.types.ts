@@ -1,7 +1,6 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import * as Joi from "joi";
-
 import { AppConfigType } from "./app.config";
+import * as Joi from "joi";
 import { AuthConfigType } from "./auth.config";
 
 export interface ConfigType {
