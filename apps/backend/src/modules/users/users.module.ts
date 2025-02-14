@@ -1,22 +1,18 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { APP_GUARD } from "@nestjs/core";
-import { JwtModule } from "@nestjs/jwt";
-import { TypeOrmModule } from "@nestjs/typeorm";
-
-import { AuthGuard } from "src/common/guards";
-import { TypedConfigService, AuthConfigType } from "src/config";
-
-import { PasswordService } from "../../common/modules/password/password.service";
-import { AuthController } from "../auth/auth.controller";
-import { AuthService } from "../auth/auth.service";
-
+import { UserService } from "./user.service";
 import { UserController } from "./user.controller";
 import { User } from "./user.entity";
-import { UserService } from "./user.service";
+import { JwtModule } from "@nestjs/jwt";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { PasswordService } from "../../common/modules/password/password.service";
+import { AuthService } from "../auth/auth.service";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthController } from "../auth/auth.controller";
+import { TypedConfigService, AuthConfigType } from "src/config";
+import { AuthGuard } from "src/common/guards";
 
 @Module({
-  controllers: [UserController, AuthController],
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({
@@ -30,6 +26,7 @@ import { UserService } from "./user.service";
       }),
     }),
   ],
+  controllers: [UserController, AuthController],
   providers: [
     UserService,
     PasswordService,
