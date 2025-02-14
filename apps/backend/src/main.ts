@@ -1,13 +1,14 @@
-import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
+import { Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { Logger } from '@nestjs/common';
+
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const logger = new Logger();      
+  const logger = new Logger();
   const configService = app.get(ConfigService);
   const port = configService.get("PORT");
 
@@ -17,9 +18,9 @@ async function bootstrap() {
     .setVersion("1.0")
     .addBearerAuth(
       {
-        type: "http",
-        scheme: "bearer",
         bearerFormat: "JWT",
+        scheme: "bearer",
+        type: "http",
       },
       "access-token",
     )

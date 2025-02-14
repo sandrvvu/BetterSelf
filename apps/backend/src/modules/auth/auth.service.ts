@@ -6,11 +6,13 @@ import {
   NotFoundException,
   Logger,
 } from "@nestjs/common";
-import { UserService } from "../users/user.service";
 import { JwtService } from "@nestjs/jwt";
-import { CreateUserDto } from "../users/libs/dto/create-user.dto";
+
 import { PasswordService } from "../../common/modules/password/password.service";
+import { CreateUserDto } from "../users/libs/dto/create-user.dto";
 import { User } from "../users/user.entity";
+import { UserService } from "../users/user.service";
+
 import { AuthRequest } from "./libs/dto/auth.request";
 
 @Injectable()
@@ -21,22 +23,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly passwordService: PasswordService,
   ) {}
-
-  public async register(createUserDto: CreateUserDto): Promise<User> {
-    this.logger.log(`Registering user: ${createUserDto.email}`);
-    const existingUser = await this.userService.findOneByEmail(
-      createUserDto.email,
-    );
-
-    if (existingUser) {
-      this.logger.warn(`Registration failed: Email already exists`);
-      throw new ConflictException("Email already exists");
-    }
-
-    const user = await this.userService.create(createUserDto);
-    this.logger.log(`User registered successfully: ${user.id}`);
-    return user;
-  }
 
   public async login(email: string, password: string): Promise<string> {
     this.logger.log(`Login attempt for email: ${email}`);
@@ -65,8 +51,24 @@ export class AuthService {
       return user;
     }
 
-    this.logger.warn(`Profile fetch failed: User not found`);
+    this.logger.warn("Profile fetch failed: User not found");
     throw new NotFoundException();
+  }
+
+  public async register(createUserDto: CreateUserDto): Promise<User> {
+    this.logger.log(`Registering user: ${createUserDto.email}`);
+    const existingUser = await this.userService.findOneByEmail(
+      createUserDto.email,
+    );
+
+    if (existingUser) {
+      this.logger.warn("Registration failed: Email already exists");
+      throw new ConflictException("Email already exists");
+    }
+
+    const user = await this.userService.create(createUserDto);
+    this.logger.log(`User registered successfully: ${user.id}`);
+    return user;
   }
 
   private generateToken(user: User): string {
