@@ -32,6 +32,22 @@ export class UserService {
     return savedUser;
   }
 
+  public async delete(id: string): Promise<boolean> {
+    const user = await this.findOne(id);
+
+    if (!user) {
+      this.logger.warn(
+        `Attempted to delete a non-existent user with ID: ${id}`,
+      );
+      throw new NotFoundException();
+    }
+
+    const deletedUser = await this.userRepository.remove(user);
+
+    this.logger.log(`User deleted successfully: ${id}`);
+    return Boolean(deletedUser);
+  }
+
   public async findOne(id: string): Promise<User | null> {
     this.logger.log(`Finding user by ID: ${id}`);
     return await this.userRepository.findOneBy({ id });
