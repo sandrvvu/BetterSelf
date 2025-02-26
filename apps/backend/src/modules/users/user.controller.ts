@@ -4,7 +4,6 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Param,
   Put,
   ValidationPipe,
 } from "@nestjs/common";
@@ -37,8 +36,8 @@ export class UserController {
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   @ApiResponse({ description: "User is not found.", status: 404 })
-  async delete(@CurrentUserId() id: string) {
-    return this.userService.delete(id);
+  async delete(@CurrentUserId() id: string): Promise<boolean> {
+    return await this.userService.delete(id);
   }
 
   @Put()
@@ -58,7 +57,7 @@ export class UserController {
   async update(
     @CurrentUserId() id: string,
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
-  ) {
-    return this.userService.update(id, updateUserDto);
+  ): Promise<User> {
+    return await this.userService.update(id, updateUserDto);
   }
 }

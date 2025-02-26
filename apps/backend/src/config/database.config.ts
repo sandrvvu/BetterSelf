@@ -11,7 +11,7 @@ export default registerAs(
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     dropSchema: false,
-    synchronize: process.env.NODE_ENV === "development",
+    synchronize: false,
     logging: process.env.NODE_ENV === "development",
     entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
     migrations: [`${__dirname}/db/migrations/*{.ts,.js}`],
