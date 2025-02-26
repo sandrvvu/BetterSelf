@@ -31,6 +31,7 @@ export default [
       unicorn: unicornPlugin,
     },
     rules: {
+      "your-offending-rule-name": "off",
       "prettier/prettier": [
         "error",
         {

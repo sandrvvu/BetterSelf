@@ -7,14 +7,17 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
+
+import { Category } from "../categories/category.entity";
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn("uuid")
   @Expose()
   @ApiProperty({
-    example: "1",
+    example: "d3f8e19a-6a5f-4c8e-9a7b-2f6b41a8c123",
   })
   id: string;
 
@@ -43,9 +46,18 @@ export class User {
 
   @CreateDateColumn()
   @Expose()
+  @ApiProperty({
+    example: "2025-02-20T12:27:02.176Z",
+  })
   createdAt: Date;
 
   @UpdateDateColumn()
   @Expose()
+  @ApiProperty({
+    example: "2025-02-20T12:27:02.176Z",
+  })
   updatedAt: Date;
+
+  @OneToMany(() => Category, (category) => category.user)
+  categories: Category[];
 }

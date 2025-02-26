@@ -11,6 +11,7 @@ import {
   DatabaseConfig,
   TypedConfigService,
 } from "./config";
+import { CategoriesModule } from "./modules/categories/categories.module";
 import { UsersModule } from "./modules/users/users.module";
 
 @Module({
@@ -32,6 +33,7 @@ import { UsersModule } from "./modules/users/users.module";
         ...configService.get("database"),
       }),
     }),
+    CategoriesModule,
     UsersModule,
   ],
   providers: [AppService],
