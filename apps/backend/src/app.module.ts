@@ -12,6 +12,7 @@ import {
   TypedConfigService,
 } from "./config";
 import { CategoriesModule } from "./modules/categories/categories.module";
+import { GoalsModule } from "./modules/goals/goals.module";
 import { UsersModule } from "./modules/users/users.module";
 
 @Module({
@@ -34,6 +35,7 @@ import { UsersModule } from "./modules/users/users.module";
       }),
     }),
     CategoriesModule,
+    GoalsModule,
     UsersModule,
   ],
   providers: [AppService],

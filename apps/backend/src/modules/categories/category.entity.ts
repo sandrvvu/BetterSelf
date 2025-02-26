@@ -8,8 +8,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
 
+import { Goal } from "../goals/goal.entity";
 import { User } from "../users/user.entity";
 
 @Entity()
@@ -64,4 +66,7 @@ export class Category {
   })
   @Expose()
   user: User;
+
+  @OneToMany(() => Goal, (goal) => goal.category)
+  goals: Goal[];
 }

@@ -22,6 +22,8 @@ import {
 
 import { CurrentUserId } from "src/common/decorators";
 
+import { Goal } from "../goals/goal.entity";
+
 import { Category } from "./category.entity";
 import { CategoryService } from "./category.service";
 import { CreateCategoryDto } from "./libs/dto/create-category.dto";
@@ -83,6 +85,20 @@ export class CategoryController {
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   async findAllByUserId(@CurrentUserId() userId: string): Promise<Category[]> {
     return await this.categoryService.findAllByUserId(userId);
+  }
+
+  @Get(":id/goals")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [Goal] })
+  @ApiResponse({
+    description: "Successfully retrieved goals for the category.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Category not found.", status: 404 })
+  async findGoalsByCategory(@Param("id") categoryId: string): Promise<Goal[]> {
+    return await this.categoryService.findGoalsByCategory(categoryId);
   }
 
   @Get(":id")

@@ -7,6 +7,8 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
+import { Goal } from "../goals/goal.entity";
+
 import { Category } from "./category.entity";
 import { CreateCategoryDto } from "./libs/dto/create-category.dto";
 import { UpdateCategoryDto } from "./libs/dto/update-category.dto";
@@ -54,6 +56,22 @@ export class CategoryService {
     }
 
     return categories;
+  }
+
+  public async findGoalsByCategory(categoryId: string): Promise<Goal[]> {
+    this.logger.log(`Finding goals for categoryId: ${categoryId}`);
+
+    const category = await this.categoryRepository.findOne({
+      relations: ["goals"],
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      this.logger.warn(`Category not found with ID: ${categoryId}`);
+      throw new NotFoundException("Category not found.");
+    }
+
+    return category.goals;
   }
 
   public async findOne(id: string): Promise<Category> {

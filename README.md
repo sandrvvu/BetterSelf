@@ -22,5 +22,19 @@ erDiagram
       dateTime updated_at
    }
    
+   goals {
+      varchar id PK
+      varchar titlw
+      varchar description
+      int priority
+      enum status
+      varchar categoryId
+      dateTime targetDate
+      int progress
+      dateTime created_at
+      dateTime updated_at
+   }
+
     users ||--|{ categories : userId
+    categories ||--|{ goals : categoryId
 ```
