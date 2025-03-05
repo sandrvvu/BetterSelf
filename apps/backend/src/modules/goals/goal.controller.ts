@@ -16,6 +16,7 @@ import {
   ApiOkResponse,
   ApiResponse,
 } from "@nestjs/swagger";
+
 import { CurrentUserId } from "src/common/decorators";
 
 import { Goal } from "./goal.entity";

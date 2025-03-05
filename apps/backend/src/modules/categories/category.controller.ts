@@ -97,8 +97,13 @@ export class CategoryController {
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   @ApiResponse({ description: "Category not found.", status: 404 })
-  async findGoalsByCategory(@Param("id") categoryId: string): Promise<Goal[]> {
-    return await this.categoryService.findGoalsByCategory(categoryId);
+  async findGoalsByCategory(
+    @Param("id") id: string,
+    @CurrentUserId() userId: string,
+  ): Promise<Goal[]> {
+    const category = await this.findOneOrFail(id);
+    this.checkCategoryOwnership(category, userId);
+    return await this.categoryService.findGoalsByCategory(id);
   }
 
   @Get(":id")
@@ -117,7 +122,7 @@ export class CategoryController {
   ): Promise<Category> {
     const category = await this.findOneOrFail(id);
     this.checkCategoryOwnership(category, userId);
-    return await this.categoryService.findOne(id);
+    return category;
   }
 
   @Patch(":id")
@@ -151,12 +156,12 @@ export class CategoryController {
   }
 
   private async findOneOrFail(id: string): Promise<Category> {
-    const task = await this.categoryService.findOne(id);
+    const category = await this.categoryService.findOne(id);
 
-    if (!task) {
-      throw new NotFoundException();
+    if (!category) {
+      throw new NotFoundException("Category not found.");
     }
 
-    return task;
+    return category;
   }
 }
