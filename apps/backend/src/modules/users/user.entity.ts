@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 
 import { Category } from "../categories/category.entity";
+import { Entry } from "../entries/entry.entity";
 
 @Entity()
 export class User {
@@ -60,4 +61,7 @@ export class User {
 
   @OneToMany(() => Category, (category) => category.user)
   categories: Category[];
+
+  @OneToMany(() => Entry, (entry) => entry.user)
+  entries: Entry[];
 }

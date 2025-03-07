@@ -24,7 +24,7 @@ erDiagram
    
    goals {
       varchar id PK
-      varchar titlw
+      varchar title
       varchar description
       int priority
       enum status
@@ -35,6 +35,16 @@ erDiagram
       dateTime updated_at
    }
 
-    users ||--|{ categories : userId
-    categories ||--|{ goals : categoryId
+   entries {
+      varchar id PK
+      varchar title
+      varchar content
+      varchar userId
+      dateTime created_at
+      dateTime updated_at
+   }
+
+   users ||--|{ categories : userId
+   users ||--|{ entries : userId
+   categories ||--|{ goals : categoryId
 ```

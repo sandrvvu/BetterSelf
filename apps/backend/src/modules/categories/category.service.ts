@@ -59,7 +59,7 @@ export class CategoryService {
   }
 
   public async findGoalsByCategory(categoryId: string): Promise<Goal[]> {
-    this.logger.log(`Finding goals for categoryId: ${categoryId}`);
+    this.logger.log(`Finding goals for category with ID: ${categoryId}`);
 
     const category = await this.categoryRepository.findOne({
       relations: ["goals"],
@@ -68,7 +68,6 @@ export class CategoryService {
 
     if (!category) {
       this.logger.warn(`Category not found with ID: ${categoryId}`);
-      throw new NotFoundException("Category not found.");
     }
 
     return category.goals;
@@ -80,7 +79,6 @@ export class CategoryService {
 
     if (!category) {
       this.logger.warn(`Category not found with ID: ${id}`);
-      throw new NotFoundException("Category not found.");
     }
 
     return category;
