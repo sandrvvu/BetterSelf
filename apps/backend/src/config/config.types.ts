@@ -3,11 +3,13 @@ import * as Joi from "joi";
 
 import { AppConfigType } from "./app.config";
 import { AuthConfigType } from "./auth.config";
+import { AwsConfigType } from "./aws.config";
 
 export interface ConfigType {
   app: AppConfigType;
   database: TypeOrmModuleOptions;
   auth: AuthConfigType;
+  aws: AwsConfigType;
 }
 
 export default Joi.object({
@@ -20,4 +22,8 @@ export default Joi.object({
   DATABASE_NAME: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRES_IN: Joi.string().default("24h"),
+  AWS_ACCESS_KEY_ID: Joi.string().required(),
+  AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+  AWS_REGION: Joi.string().required(),
+  AWS_BUCKET_NAME: Joi.string().required(),
 });
