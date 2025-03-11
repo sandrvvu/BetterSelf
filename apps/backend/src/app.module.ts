@@ -6,8 +6,9 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import {
   AppConfig,
-  appConfigSchema,
+  AppConfigSchema,
   AuthConfig,
+  AwsConfig,
   DatabaseConfig,
   TypedConfigService,
 } from "./config";
@@ -15,6 +16,7 @@ import { CategoriesModule } from "./modules/categories/categories.module";
 import { EntriesModule } from "./modules/entries/entries.module";
 import { GoalsModule } from "./modules/goals/goals.module";
 import { UsersModule } from "./modules/users/users.module";
+import { VisionBoardsModule } from "./modules/vision-boards/vision-boards.module";
 
 @Module({
   controllers: [AppController],
@@ -22,11 +24,11 @@ import { UsersModule } from "./modules/users/users.module";
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      load: [AppConfig, AuthConfig, DatabaseConfig],
+      load: [AppConfig, AuthConfig, AwsConfig, DatabaseConfig],
       validationOptions: {
         abortEarly: true,
       },
-      validationSchema: appConfigSchema,
+      validationSchema: AppConfigSchema,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,6 +41,7 @@ import { UsersModule } from "./modules/users/users.module";
     EntriesModule,
     GoalsModule,
     UsersModule,
+    VisionBoardsModule,
   ],
   providers: [AppService],
 })

@@ -15,9 +15,11 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 
 import { Category } from "../categories/category.entity";
+import { VisionBoard } from "../vision-boards/vision-board.entity";
 
 export enum GoalStatus {
   PENDING = "pending",
@@ -122,4 +124,7 @@ export class Goal {
     example: "2025-02-20T12:27:02.176Z",
   })
   updatedAt: Date;
+
+  @OneToMany(() => VisionBoard, (board) => board.user)
+  visionBoards: VisionBoard[];
 }
