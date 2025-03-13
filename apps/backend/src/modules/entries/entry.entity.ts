@@ -10,6 +10,7 @@ import {
   ManyToOne,
 } from "typeorm";
 
+import { Goal } from "../goals/goal.entity";
 import { User } from "../users/user.entity";
 
 @Entity()
@@ -45,6 +46,14 @@ export class Entry {
   })
   userId: string;
 
+  @Column({ default: null, nullable: true })
+  @Expose()
+  @ApiProperty({
+    example: "b5f68e29-2c7d-4a6f-8a1b-3c8f98a45678",
+    nullable: true,
+  })
+  goalId: string | null;
+
   @CreateDateColumn()
   @Expose()
   @ApiProperty({
@@ -65,4 +74,10 @@ export class Entry {
   })
   @Expose()
   user: User;
+
+  @ManyToOne(() => Goal, (goal) => goal.entries, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
+  goal: Goal | null;
 }
