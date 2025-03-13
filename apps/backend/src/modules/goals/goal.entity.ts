@@ -19,6 +19,7 @@ import {
 } from "typeorm";
 
 import { Category } from "../categories/category.entity";
+import { Entry } from "../entries/entry.entity";
 import { VisionBoard } from "../vision-boards/vision-board.entity";
 
 export enum GoalStatus {
@@ -125,6 +126,9 @@ export class Goal {
   })
   updatedAt: Date;
 
-  @OneToMany(() => VisionBoard, (board) => board.user)
+  @OneToMany(() => VisionBoard, (board) => board.goal)
   visionBoards: VisionBoard[];
+
+  @OneToMany(() => Entry, (entry) => entry.goal)
+  entries: Entry[];
 }

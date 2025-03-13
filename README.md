@@ -40,6 +40,7 @@ erDiagram
       varchar title
       varchar content
       varchar userId
+      varchar goalId
       dateTime created_at
       dateTime updated_at
    }
@@ -70,9 +71,10 @@ erDiagram
 
    users ||--|{ categories : userId
    users ||--|{ entries : userId
+   users ||--|{ vision_boards : userId
    categories ||--|{ goals : categoryId
    board_to_images ||--|| images : imageId
    board_to_images ||--|| vision_boards : visionBoardId
-   users ||--|{ vision_boards : userId
    goals ||--|{ vision_boards : goalId
+   goals ||--|{ entries : goalId
 ```
