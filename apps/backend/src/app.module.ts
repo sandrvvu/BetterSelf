@@ -15,6 +15,7 @@ import {
 import { CategoriesModule } from "./modules/categories/categories.module";
 import { EntriesModule } from "./modules/entries/entries.module";
 import { GoalsModule } from "./modules/goals/goals.module";
+import { TasksModule } from "./modules/tasks/tasks.module";
 import { UsersModule } from "./modules/users/users.module";
 import { VisionBoardsModule } from "./modules/vision-boards/vision-boards.module";
 
@@ -40,6 +41,7 @@ import { VisionBoardsModule } from "./modules/vision-boards/vision-boards.module
     CategoriesModule,
     EntriesModule,
     GoalsModule,
+    TasksModule,
     UsersModule,
     VisionBoardsModule,
   ],

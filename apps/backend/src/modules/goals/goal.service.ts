@@ -9,6 +9,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { Category } from "../categories/category.entity";
+import { Task } from "../tasks/task.entity";
 
 import { Goal } from "./goal.entity";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
@@ -23,6 +24,8 @@ export class GoalService {
     private readonly goalRepository: Repository<Goal>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(Task)
+    private readonly taskRepository: Repository<Task>,
   ) {}
 
   public async create(
@@ -60,7 +63,7 @@ export class GoalService {
   }
 
   public async findAllByCategoryId(categoryId: string): Promise<Goal[]> {
-    this.logger.log(`Finding goals for categoryId: ${categoryId}`);
+    this.logger.log(`Finding goals of category with ID: ${categoryId}`);
 
     return await this.goalRepository.find({
       where: { categoryId },
@@ -71,6 +74,26 @@ export class GoalService {
     const goal = await this.findOneOrFail(goalId);
     await this.getCategoryAndCheckOwnership(userId, goal.categoryId);
     return goal;
+  }
+
+  public async findTasksByGoal(
+    goalId: string,
+    userId: string,
+  ): Promise<Task[]> {
+    this.logger.log(`Finding tasks for goal with ID: ${goalId}`);
+
+    const goal = await this.findOneOrFail(goalId);
+    await this.getCategoryAndCheckOwnership(userId, goal.categoryId);
+
+    if (!goal) {
+      this.logger.warn(`Goal not found with ID: ${goalId}`);
+    }
+
+    const tasks = await this.taskRepository.find({
+      where: { goalId },
+    });
+
+    return tasks;
   }
 
   public async update(
