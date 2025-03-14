@@ -15,15 +15,19 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiResponse,
+  ApiTags,
 } from "@nestjs/swagger";
 
 import { CurrentUserId } from "src/common/decorators";
+
+import { Task } from "../tasks/task.entity";
 
 import { Goal } from "./goal.entity";
 import { GoalService } from "./goal.service";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 
+@ApiTags("Goals")
 @Controller("goals")
 export class GoalController {
   constructor(private readonly goalService: GoalService) {}
@@ -78,6 +82,23 @@ export class GoalController {
     @CurrentUserId() userId: string,
   ): Promise<Goal> {
     return await this.goalService.findOne(userId, id);
+  }
+
+  @Get(":id/tasks")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [Task] })
+  @ApiResponse({
+    description: "Successfully retrieved tasks for the goal.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Goal not found.", status: 404 })
+  async findTasksByGoal(
+    @Param("id") id: string,
+    @CurrentUserId() userId: string,
+  ): Promise<Task[]> {
+    return await this.goalService.findTasksByGoal(id, userId);
   }
 
   @Patch(":id")

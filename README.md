@@ -35,6 +35,20 @@ erDiagram
       dateTime updated_at
    }
 
+   tasks {
+      varchar id PK
+      varchar title
+      text description
+      int priority
+      enum status
+      varchar goalId
+      dateTime targetDate
+      int estimatedTime
+      enum estimatedTimeUnit
+      dateTime created_at
+      dateTime updated_at
+   }
+
    entries {
       varchar id PK
       varchar title
@@ -75,6 +89,7 @@ erDiagram
    categories ||--|{ goals : categoryId
    board_to_images ||--|| images : imageId
    board_to_images ||--|| vision_boards : visionBoardId
+   goals ||--|{ tasks : goalId
    goals ||--|{ vision_boards : goalId
    goals ||--|{ entries : goalId
 ```

@@ -20,6 +20,7 @@ import {
 
 import { Category } from "../categories/category.entity";
 import { Entry } from "../entries/entry.entity";
+import { Task } from "../tasks/task.entity";
 import { VisionBoard } from "../vision-boards/vision-board.entity";
 
 export enum GoalStatus {
@@ -131,4 +132,7 @@ export class Goal {
 
   @OneToMany(() => Entry, (entry) => entry.goal)
   entries: Entry[];
+
+  @OneToMany(() => Task, (task) => task.goal)
+  tasks: Task[];
 }
