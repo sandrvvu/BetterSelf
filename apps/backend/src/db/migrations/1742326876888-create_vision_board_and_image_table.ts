@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateVisionBoardsAndImagesTable1742326876888
+export class CreateVisionBoardAndImageTable1742326876888
   implements MigrationInterface
 {
-  name = "CreateVisionBoardsAndImagesTable1742326876888";
+  name = "CreateVisionBoardAndImageTable1742326876888";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
