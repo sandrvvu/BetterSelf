@@ -4,13 +4,10 @@ import {
   IsString,
   IsNotEmpty,
   IsEnum,
-  IsInt,
-  Min,
-  Max,
   IsDateString,
 } from "class-validator";
 
-import { GoalStatus } from "../../goal.entity";
+import { GoalPriority, GoalStatus } from "../../goal.entity";
 
 export class UpdateGoalDto {
   @IsOptional()
@@ -31,14 +28,13 @@ export class UpdateGoalDto {
   description?: string;
 
   @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Max(5)
+  @IsEnum(GoalPriority)
   @ApiProperty({
-    description: "Priority level of the goal (1 to 5).",
-    example: 2,
+    description: "Priority level of the goal.",
+    enum: GoalPriority,
+    example: GoalPriority.LOW,
   })
-  priority?: number;
+  priority?: GoalPriority;
 
   @IsOptional()
   @IsDateString()

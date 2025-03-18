@@ -31,6 +31,12 @@ export enum GoalStatus {
   COMPLETED = "completed",
 }
 
+export enum GoalPriority {
+  LOW = "low",
+  MEDIUM = "medium",
+  HIGH = "high",
+}
+
 @Entity()
 export class Goal {
   @PrimaryGeneratedColumn("uuid")
@@ -71,16 +77,17 @@ export class Goal {
   })
   description?: string;
 
-  @Column("integer", { default: 1 })
-  @IsInt()
-  @Min(1)
-  @Max(5)
+  @Column({
+    enum: GoalPriority,
+    type: "enum",
+  })
+  @IsEnum(GoalPriority)
   @Expose()
   @ApiProperty({
-    description: "Priority level of the goal (1 to 5).",
-    example: 3,
+    description: "Priority level of the goal.",
+    example: GoalPriority.MEDIUM,
   })
-  priority: number;
+  priority: GoalPriority;
 
   @Column("date", { nullable: true })
   @IsOptional()

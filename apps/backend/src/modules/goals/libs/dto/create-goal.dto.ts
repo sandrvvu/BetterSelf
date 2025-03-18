@@ -3,15 +3,12 @@ import {
   IsNotEmpty,
   IsOptional,
   IsEnum,
-  IsInt,
-  Min,
-  Max,
   IsUUID,
   IsDateString,
   IsString,
 } from "class-validator";
 
-import { GoalStatus } from "../../goal.entity";
+import { GoalPriority, GoalStatus } from "../../goal.entity";
 
 export class CreateGoalDto {
   @IsUUID()
@@ -39,14 +36,13 @@ export class CreateGoalDto {
   })
   description?: string;
 
-  @IsInt()
-  @Min(1)
-  @Max(5)
+  @IsEnum(GoalPriority)
   @ApiProperty({
-    description: "Priority level of the goal (1 to 5).",
-    example: 3,
+    description: "Priority level of the goal.",
+    enum: GoalPriority,
+    example: GoalPriority.LOW,
   })
-  priority: number;
+  priority: GoalPriority;
 
   @IsOptional()
   @IsDateString()
@@ -59,7 +55,6 @@ export class CreateGoalDto {
   @IsOptional()
   @IsEnum(GoalStatus)
   @ApiProperty({
-    default: GoalStatus.PENDING,
     description: "Current status of the goal.",
     enum: GoalStatus,
     example: GoalStatus.PENDING,
