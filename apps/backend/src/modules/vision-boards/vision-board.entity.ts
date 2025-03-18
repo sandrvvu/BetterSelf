@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -16,41 +16,52 @@ import { User } from "../users/user.entity";
 
 import { BoardToImage } from "./board-to-image.entity";
 
-@Entity("vision_boards")
+@Entity()
 export class VisionBoard {
   @PrimaryGeneratedColumn("uuid")
   @Expose()
   @ApiProperty({
+    description: "Unique identifier of the vision board.",
     example: "987f6543-d21c-4b3a-9876-543210fedcba",
   })
   id: string;
 
-  @Column()
+  @Column("varchar")
+  @IsString()
   @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "Title of the vision board.",
     example: "My Dream Board",
   })
   title: string;
 
-  @Column()
+  @Column("text")
+  @IsString()
   @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "Description of the vision board.",
     example: "Visualizing my goals for the next quarter.",
   })
   description: string;
 
-  @Column()
+  @Column("uuid")
+  @IsUUID()
+  @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "ID of the user who created the vision board.",
     example: "d3f8e19a-6a5f-4c8e-9a7b-2f6b41a8c123",
   })
   userId: string;
 
-  @Column({ default: null, nullable: true })
+  @Column("uuid", { default: null, nullable: true })
+  @IsUUID()
+  @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "ID of the goal associated with the vision board.",
     example: "b5f68e29-2c7d-4a6f-8a1b-3c8f98a45678",
     nullable: true,
   })
@@ -59,6 +70,7 @@ export class VisionBoard {
   @CreateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the vision board was created.",
     example: "2025-02-20T12:27:02.176Z",
   })
   createdAt: Date;
@@ -66,6 +78,7 @@ export class VisionBoard {
   @UpdateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the vision board was last updated.",
     example: "2025-02-20T12:27:02.176Z",
   })
   updatedAt: Date;

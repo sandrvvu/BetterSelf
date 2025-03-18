@@ -7,6 +7,10 @@ export class LoginResponse {
   }
 
   @Expose()
-  @ApiProperty()
+  @ApiProperty({
+    description: "JSON Web Token (JWT) for authenticated user access.",
+    example:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZjIwMjFjOS01OWU3LTQ4NWMtOTM0Yy0wNTg3MTZmY2EzNTgiLCJpYXQiOjE3NDE5NTQzMzUsImV4cCI6MTc0MjA0MDczNX0.QihsGKDTvAeYYHuk3H74kCEqGFzsV0nbvH95IeEWw-I",
+  })
   accessToken: string;
 }

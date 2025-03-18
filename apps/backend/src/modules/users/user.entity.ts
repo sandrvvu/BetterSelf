@@ -19,29 +19,33 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   @Expose()
   @ApiProperty({
+    description: "Unique identifier of the user.",
     example: "d3f8e19a-6a5f-4c8e-9a7b-2f6b41a8c123",
   })
   id: string;
 
-  @Column({ unique: true })
+  @Column("varchar", { unique: true })
   @IsEmail()
   @Expose()
   @ApiProperty({
+    description: "Email address of the user (must be unique).",
     example: "marie@gmail.com",
   })
   email: string;
 
-  @Column()
+  @Column("varchar")
   @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "Name of the user.",
     example: "Marie",
   })
   name: string;
 
-  @Column()
+  @Column("varchar")
   @IsNotEmpty()
   @ApiProperty({
+    description: "Password of the user.",
     example: "Marie123!",
   })
   password: string;
@@ -49,6 +53,7 @@ export class User {
   @CreateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the user account was created.",
     example: "2025-02-20T12:27:02.176Z",
   })
   createdAt: Date;
@@ -56,6 +61,7 @@ export class User {
   @UpdateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the user account was last updated.",
     example: "2025-02-20T12:27:02.176Z",
   })
   updatedAt: Date;
