@@ -1,11 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
@@ -13,19 +12,22 @@ import {
 
 import { BoardToImage } from "./board-to-image.entity";
 
-@Entity("images")
+@Entity()
 export class Image {
   @PrimaryGeneratedColumn("uuid")
   @Expose()
   @ApiProperty({
+    description: "Unique identifier of the image.",
     example: "abcdef98-7654-3210-fedc-ba0987654321",
   })
   id: string;
 
-  @Column()
+  @Column("varchar")
+  @IsString()
   @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "URL or source of the image.",
     example: "https://example.com/image.jpg",
   })
   source: string;
@@ -33,6 +35,7 @@ export class Image {
   @CreateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the image was created.",
     example: "2025-02-20T12:27:02.176Z",
   })
   createdAt: Date;
@@ -40,6 +43,7 @@ export class Image {
   @UpdateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the image was last updated.",
     example: "2025-02-20T12:27:02.176Z",
   })
   updatedAt: Date;

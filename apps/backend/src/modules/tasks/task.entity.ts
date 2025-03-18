@@ -7,6 +7,9 @@ import {
   IsInt,
   Min,
   Max,
+  IsString,
+  IsUUID,
+  IsArray,
 } from "class-validator";
 import {
   Entity,
@@ -43,6 +46,7 @@ export class Task {
   id: string;
 
   @Column("uuid")
+  @IsUUID()
   @IsNotEmpty()
   @Expose()
   @ApiProperty({
@@ -62,6 +66,7 @@ export class Task {
 
   @Column("text", { nullable: true })
   @IsOptional()
+  @IsString()
   @Expose()
   @ApiProperty({
     description: "Detailed description of the task.",
@@ -69,16 +74,60 @@ export class Task {
   })
   description?: string;
 
-  @Column("integer", { default: 1 })
+  @Column("integer")
   @IsInt()
   @Min(1)
   @Max(5)
   @Expose()
   @ApiProperty({
-    description: "Priority level of the task (1 to 5).",
+    description: "Importance level of the task (1 to 5).",
+    example: 4,
+  })
+  importance: number;
+
+  @Column("integer")
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  @Expose()
+  @ApiProperty({
+    description: "Urgency level of the task (1 to 5).",
     example: 2,
   })
-  priority: number;
+  urgency: number;
+
+  @Column("integer")
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  @Expose()
+  @ApiProperty({
+    description: "Difficulty level of the task (1 to 5).",
+    example: 2,
+  })
+  difficulty: number;
+
+  @Column("integer")
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  @Expose()
+  @ApiProperty({
+    description: "Probability of success in percentage (0 to 100).",
+    example: 50,
+  })
+  successProbability: number;
+
+  @Column("simple-array", { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsUUID("4", { each: true })
+  @Expose()
+  @ApiProperty({
+    description: "List of task dependencies (IDs of prerequisite tasks).",
+    example: ["550e8400-e29b-41d4-a716-446655440000"],
+  })
+  dependencies?: string[];
 
   @Column("date", { nullable: true })
   @IsOptional()
@@ -101,9 +150,8 @@ export class Task {
   })
   status: TaskStatus;
 
-  @Column("integer", { nullable: true })
+  @Column("float", { nullable: true })
   @IsOptional()
-  @Min(1)
   @Expose()
   @ApiProperty({
     description: "Estimated time to complete the task (in estimatedTimeUnit).",

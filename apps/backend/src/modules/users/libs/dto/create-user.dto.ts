@@ -8,20 +8,23 @@ import {
 } from "class-validator";
 
 export class CreateUserDto {
-  @IsNotEmpty()
   @IsEmail()
+  @IsNotEmpty()
   @ApiProperty({
+    description: "Email address of the user.",
     example: "angel@gmail.com",
   })
   email: string;
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
+    description: "Name of the user.",
     example: "Angel",
   })
   name: string;
 
+  @IsString()
   @IsNotEmpty()
   @MinLength(6)
   @Matches(/[A-Z]/, {
@@ -34,6 +37,7 @@ export class CreateUserDto {
     message: "Password must contain at least 1 special character",
   })
   @ApiProperty({
+    description: "Password of the user.",
     example: "777777A#",
   })
   password: string;

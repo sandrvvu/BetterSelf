@@ -2,27 +2,30 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class UpdateVisionBoardDto {
-  @IsNotEmpty()
-  @IsString()
   @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
+    description: "Title of the vision board.",
     example: "My career",
     required: false,
   })
-  title: string;
+  title?: string;
 
-  @IsNotEmpty()
-  @IsString()
   @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
+    description: "Description of the vision board.",
     example: "Focusing on professional development and advancement.",
     required: false,
   })
-  description: string;
+  description?: string;
 
-  @IsUUID()
   @IsOptional()
+  @IsUUID()
   @ApiProperty({
+    description: "ID of the goal associated with the vision board.",
     example: "d3f8e19a-6a5f-4c8e-9a7b-2f6b41a8c123",
     nullable: true,
     required: false,

@@ -7,6 +7,8 @@ import {
   IsInt,
   Min,
   Max,
+  IsUUID,
+  IsString,
 } from "class-validator";
 import {
   Entity,
@@ -34,60 +36,60 @@ export class Goal {
   @PrimaryGeneratedColumn("uuid")
   @Expose()
   @ApiProperty({
+    description: "Unique identifier of the goal.",
     example: "b5f68e29-2c7d-4a6f-8a1b-3c8f98a45678",
   })
   id: string;
 
-  @ManyToOne(() => Category, (category) => category.goals, {
-    nullable: false,
-    onDelete: "CASCADE",
-  })
-  @Expose()
-  category: Category;
-
-  @Column()
+  @Column("uuid")
+  @IsUUID()
   @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "ID of the category associated with the goal.",
     example: "d3f8e19a-6a5f-4c8e-9a7b-2f6b41a8c123",
   })
   categoryId: string;
 
-  @Column()
+  @Column("varchar")
+  @IsString()
   @IsNotEmpty()
   @Expose()
   @ApiProperty({
+    description: "Title of the goal.",
     example: "Complete the programming course",
   })
   title: string;
 
   @Column("text", { nullable: true })
   @IsOptional()
+  @IsString()
   @Expose()
   @ApiProperty({
+    description: "Detailed description of the goal.",
     example: "Finish all course modules and pass the final exam.",
   })
   description?: string;
 
-  @Column({ default: 1 })
+  @Column("integer", { default: 1 })
   @IsInt()
   @Min(1)
   @Max(5)
   @Expose()
   @ApiProperty({
-    description: "Priority level (1 to 5).",
+    description: "Priority level of the goal (1 to 5).",
     example: 3,
   })
   priority: number;
 
-  @Column({ type: "date" })
-  @IsNotEmpty()
+  @Column("date", { nullable: true })
+  @IsOptional()
   @Expose()
   @ApiProperty({
-    description: "Target date for goal completion.",
+    description: "Target completion date for the goal.",
     example: "2025-12-31",
   })
-  targetDate: Date;
+  targetDate?: Date;
 
   @Column({
     default: GoalStatus.PENDING,
@@ -102,7 +104,7 @@ export class Goal {
   })
   status: GoalStatus;
 
-  @Column({ default: 0, type: "float" })
+  @Column("integer", { default: 0 })
   @IsInt()
   @Min(0)
   @Max(100)
@@ -116,6 +118,7 @@ export class Goal {
   @CreateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the goal was created.",
     example: "2025-02-20T12:27:02.176Z",
   })
   createdAt: Date;
@@ -123,9 +126,16 @@ export class Goal {
   @UpdateDateColumn()
   @Expose()
   @ApiProperty({
+    description: "Date and time the goal was last updated.",
     example: "2025-02-20T12:27:02.176Z",
   })
   updatedAt: Date;
+
+  @ManyToOne(() => Category, (category) => category.goals, {
+    nullable: false,
+    onDelete: "CASCADE",
+  })
+  category: Category;
 
   @OneToMany(() => VisionBoard, (board) => board.goal)
   visionBoards: VisionBoard[];

@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  IsArray,
   IsDateString,
   IsEnum,
   IsInt,
@@ -43,10 +44,47 @@ export class CreateTaskDto {
   @Min(1)
   @Max(5)
   @ApiProperty({
-    description: "Priority level of the task (1 to 5).",
+    description: "Importance level of the task (1 to 5).",
     example: 3,
   })
-  priority: number;
+  importance: number;
+
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  @ApiProperty({
+    description: "Urgency level of the task (1 to 5).",
+    example: 2,
+  })
+  urgency: number;
+
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  @ApiProperty({
+    description: "Difficulty level of the task (1 to 5).",
+    example: 1,
+  })
+  difficulty: number;
+
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  @ApiProperty({
+    description: "Probability of success in percentage (0 to 100).",
+    example: 50,
+  })
+  successProbability: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID("4", { each: true })
+  @ApiProperty({
+    description: "List of task dependencies (IDs of prerequisite tasks).",
+    example: ["550e8400-e29b-41d4-a716-446655440000"],
+    required: false,
+  })
+  dependencies?: string[];
 
   @IsOptional()
   @IsDateString()

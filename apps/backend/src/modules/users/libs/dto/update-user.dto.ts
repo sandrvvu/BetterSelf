@@ -12,12 +12,14 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
+    description: "Name of the user.",
     example: "Andriana",
     required: false,
   })
-  readonly name?: string;
+  name?: string;
 
   @IsOptional()
+  @IsString()
   @MinLength(6)
   @Matches(/[A-Z]/, {
     message: "Password must contain at least 1 uppercase letter",
@@ -29,8 +31,9 @@ export class UpdateUserDto {
     message: "Password must contain at least 1 special character",
   })
   @ApiProperty({
+    description: "Password of the user.",
     example: "skyBlue8#",
     required: false,
   })
-  readonly password?: string;
+  password?: string;
 }

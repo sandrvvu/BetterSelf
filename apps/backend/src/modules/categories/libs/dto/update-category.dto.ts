@@ -3,18 +3,19 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class UpdateCategoryDto {
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
+    description: "Name of the category.",
     example: "Health",
     required: false,
   })
   name?: string;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
   @ApiProperty({
+    description: "Description of the category.",
     example: "Live a healthier life.",
     required: false,
   })
