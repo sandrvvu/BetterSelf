@@ -5,82 +5,86 @@
 ```mermaid
 erDiagram
    users {
-      varchar id PK
+      uuid id PK
       citext email
       varchar name
       varchar password
-      dateTime created_at
-      dateTime updated_at
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    categories {
-      varchar id PK
+      uuid id PK
       varchar name
-      varchar description
-      varchar userId
-      dateTime created_at
-      dateTime updated_at
+      text description
+      uuid userId
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    goals {
-      varchar id PK
+      uuid id PK
       varchar title
-      varchar description
-      int priority
+      text description
+      enum priority
       enum status
-      varchar categoryId
-      dateTime targetDate
+      uuid categoryId
+      date targetDate
       int progress
-      dateTime created_at
-      dateTime updated_at
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    tasks {
-      varchar id PK
+      uuid id PK
       varchar title
       text description
-      int priority
+      int importance
+      int urgency
+      int difficulty
+      int successProbability
+      text(array) dependencies
       enum status
-      varchar goalId
-      dateTime targetDate
-      int estimatedTime
+      uuid goalId
+      date targetDate
+      double estimatedTime
       enum estimatedTimeUnit
-      dateTime created_at
-      dateTime updated_at
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    entries {
-      varchar id PK
+      uuid id PK
       varchar title
-      varchar content
-      varchar userId
-      varchar goalId
-      dateTime created_at
-      dateTime updated_at
+      text content
+      uuid userId
+      uuid goalId
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    images {
-        varchar id PK
+        uuid id PK
         varchar source
-        dateTime createdAt
-        dateTime updatedAt
+        timestamp createdAt
+        timestamp updatedAt
    }
 
    vision_boards {
-        varchar id PK
+        uuid id PK
         varchar title
-        varchar description
-        varchar userId FK
-        varchar goalId FK
-        dateTime createdAt
-        dateTime updatedAt
+        text description
+        uuid userId FK
+        uuid goalId FK
+        timestamp createdAt
+        timestamp updatedAt
    }
 
    board_to_images {
-        varchar id PK
-        varchar imageId FK
-        varchar visionBoardId FK
-        dateTime createdAt
+        uuid id PK
+        uuid imageId FK
+        uuid visionBoardId FK
+        timestamp createdAt
    }
 
    users ||--|{ categories : userId

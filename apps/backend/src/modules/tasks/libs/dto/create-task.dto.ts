@@ -78,7 +78,7 @@ export class CreateTaskDto {
 
   @IsOptional()
   @IsArray()
-  @IsUUID("4", { each: true })
+  @IsUUID("all", { each: true })
   @ApiProperty({
     description: "List of task dependencies (IDs of prerequisite tasks).",
     example: ["550e8400-e29b-41d4-a716-446655440000"],

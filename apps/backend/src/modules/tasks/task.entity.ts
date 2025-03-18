@@ -121,7 +121,7 @@ export class Task {
   @Column("simple-array", { nullable: true })
   @IsOptional()
   @IsArray()
-  @IsUUID("4", { each: true })
+  @IsUUID("all", { each: true })
   @Expose()
   @ApiProperty({
     description: "List of task dependencies (IDs of prerequisite tasks).",
