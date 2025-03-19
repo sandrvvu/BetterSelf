@@ -72,6 +72,7 @@ export class VisionBoardController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Vision board is not found.", status: 404 })
   async delete(
     @Param("id") id: string,
@@ -108,6 +109,7 @@ export class VisionBoardController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Vision board is not found.", status: 404 })
   async findOne(
     @Param("id") id: string,
@@ -127,6 +129,7 @@ export class VisionBoardController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Vision board or Image not found", status: 404 })
   @ApiResponse({
     description: "Error with storage during deleting files",
@@ -156,6 +159,7 @@ export class VisionBoardController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Vision board not found.", status: 404 })
   @ApiResponse({
     description: "Vision board with this name already exists.",
@@ -181,6 +185,7 @@ export class VisionBoardController {
   @ApiCreatedResponse({ type: Image })
   @ApiConsumes("multipart/form-data")
   @ApiResponse({ description: "Image uploaded successfully", status: 201 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({
     description: "Error with storage during uploading files",
     status: 500,
@@ -202,7 +207,7 @@ export class VisionBoardController {
   ): void {
     if (visionBoard.userId !== userId) {
       throw new ForbiddenException(
-        "You can only access your own vision boards",
+        "You can only access your own vision boards.",
       );
     }
   }
