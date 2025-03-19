@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   ValidationPipe,
 } from "@nestjs/common";
 import {
@@ -62,6 +63,27 @@ export class TaskController {
     @CurrentUserId() userId: string,
   ): Promise<boolean> {
     return await this.taskService.delete(userId, id);
+  }
+
+  @Get("available-dependencies")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [Task] })
+  @ApiResponse({
+    description: "Successfully retrieved available tasks.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  async findAllAvailableDependencies(
+    @CurrentUserId() userId: string,
+    @Query("goalId") goalId: string,
+    @Query("taskId") taskId?: string,
+  ): Promise<Task[]> {
+    return await this.taskService.getAvailableDependencies(
+      userId,
+      goalId,
+      taskId,
+    );
   }
 
   @Get(":id")
