@@ -42,6 +42,8 @@ export class GoalController {
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   @ApiResponse({ description: "Invalid data type provided.", status: 400 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  @ApiResponse({ description: "Category not found.", status: 404 })
   @ApiResponse({
     description: "Goal with this name already exists.",
     status: 409,
@@ -62,6 +64,7 @@ export class GoalController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Goal not found.", status: 404 })
   async delete(
     @Param("id") id: string,
@@ -75,8 +78,9 @@ export class GoalController {
   @ApiBearerAuth("access-token")
   @ApiOkResponse({ type: Goal })
   @ApiResponse({ description: "Successfully retrieved the goal.", status: 200 })
-  @ApiResponse({ description: "Goal not found.", status: 404 })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  @ApiResponse({ description: "Goal not found.", status: 404 })
   async findOne(
     @Param("id") id: string,
     @CurrentUserId() userId: string,
@@ -93,6 +97,7 @@ export class GoalController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Goal not found.", status: 404 })
   async findTasksByGoal(
     @Param("id") id: string,
@@ -110,6 +115,7 @@ export class GoalController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Goal not found.", status: 404 })
   @ApiResponse({
     description: "Goal with this name already exists.",

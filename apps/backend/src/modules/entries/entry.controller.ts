@@ -58,6 +58,7 @@ export class EntryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Entry is not found.", status: 404 })
   async delete(
     @Param("id") id: string,
@@ -90,6 +91,7 @@ export class EntryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Entry is not found.", status: 404 })
   async findOne(
     @Param("id") id: string,
@@ -109,6 +111,7 @@ export class EntryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Entry not found.", status: 404 })
   async update(
     @Param("id") id: string,

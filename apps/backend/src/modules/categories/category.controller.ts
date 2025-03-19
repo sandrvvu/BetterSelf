@@ -64,6 +64,7 @@ export class CategoryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Category is not found.", status: 404 })
   async delete(
     @Param("id") id: string,
@@ -83,6 +84,7 @@ export class CategoryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   async findAllByUserId(@CurrentUserId() userId: string): Promise<Category[]> {
     return await this.categoryService.findAllByUserId(userId);
   }
@@ -96,6 +98,7 @@ export class CategoryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Category not found.", status: 404 })
   async findGoalsByCategory(
     @Param("id") id: string,
@@ -115,6 +118,7 @@ export class CategoryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Category is not found.", status: 404 })
   async findOne(
     @Param("id") id: string,
@@ -134,6 +138,7 @@ export class CategoryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Category not found.", status: 404 })
   @ApiResponse({
     description: "Category with this name already exists.",

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   Logger,
@@ -35,6 +36,24 @@ export class TaskService {
       createTaskDto.goalId,
     );
 
+    const availableTasks = await this.getAvailableDependencies(
+      userId,
+      createTaskDto.goalId,
+    );
+
+    if (createTaskDto.dependencies && createTaskDto.dependencies.length > 0) {
+      const invalidDependencies = createTaskDto.dependencies.filter(
+        (depId) => !availableTasks.some((task) => task.id === depId),
+      );
+
+      if (invalidDependencies.length > 0) {
+        this.logger.warn(
+          `Invalid dependencies: ${invalidDependencies.join(", ")}`,
+        );
+        throw new BadRequestException("Some dependencies are not valid.");
+      }
+    }
+
     const task = this.taskRepository.create({
       ...createTaskDto,
       goalId: goal.id,
@@ -68,6 +87,30 @@ export class TaskService {
     return task;
   }
 
+  public async getAvailableDependencies(
+    userId: string,
+    goalId: string,
+    taskId?: string,
+  ): Promise<Task[]> {
+    this.logger.log(`Fetching available dependency tasks for goal ${goalId}`);
+
+    const goal = await this.getGoalAndCheckOwnership(userId, goalId);
+
+    const tasks = await this.taskRepository.find({
+      where: { goalId: goal.id },
+    });
+
+    if (taskId) {
+      const currentTask = await this.findOne(userId, taskId);
+      return tasks.filter(
+        (task) =>
+          task.id !== taskId && !task.dependencies?.includes(currentTask.id),
+      );
+    }
+
+    return tasks;
+  }
+
   public async update(
     userId: string,
     taskId: string,
@@ -75,6 +118,25 @@ export class TaskService {
   ): Promise<Task> {
     const task = await this.findOneOrFail(taskId);
     await this.getTaskAndCheckOwnership(userId, taskId);
+
+    const availableTasks = await this.getAvailableDependencies(
+      userId,
+      task.goalId,
+      taskId,
+    );
+
+    if (updateTaskDto.dependencies && updateTaskDto.dependencies.length > 0) {
+      const invalidDependencies = updateTaskDto.dependencies.filter(
+        (depId) => !availableTasks.some((task) => task.id === depId),
+      );
+
+      if (invalidDependencies.length > 0) {
+        this.logger.warn(
+          `Invalid dependencies: ${invalidDependencies.join(", ")}`,
+        );
+        throw new BadRequestException("Some dependencies are not valid.");
+      }
+    }
 
     Object.assign(task, updateTaskDto);
     this.logger.log(`Task updated successfully: ${task.id}`);
@@ -114,7 +176,7 @@ export class TaskService {
       this.logger.warn(
         `User ${userId} tried to modify goal ${goalId} they don't own.`,
       );
-      throw new ForbiddenException("You can only modify your own goals.");
+      throw new ForbiddenException("You can only access your own goals.");
     }
 
     return goal;

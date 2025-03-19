@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   ValidationPipe,
 } from "@nestjs/common";
 import {
@@ -39,6 +40,7 @@ export class TaskController {
     status: 201,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Invalid data type provided.", status: 400 })
   async create(
     @CurrentUserId() userId: string,
@@ -56,6 +58,7 @@ export class TaskController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Task not found.", status: 404 })
   async delete(
     @Param("id") id: string,
@@ -64,12 +67,35 @@ export class TaskController {
     return await this.taskService.delete(userId, id);
   }
 
+  @Get("available-dependencies")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [Task] })
+  @ApiResponse({
+    description: "Successfully retrieved available tasks.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  async findAllAvailableDependencies(
+    @CurrentUserId() userId: string,
+    @Query("goalId") goalId: string,
+    @Query("taskId") taskId?: string,
+  ): Promise<Task[]> {
+    return await this.taskService.getAvailableDependencies(
+      userId,
+      goalId,
+      taskId,
+    );
+  }
+
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth("access-token")
   @ApiOkResponse({ type: Task })
   @ApiResponse({ description: "Successfully retrieved the task.", status: 200 })
   @ApiResponse({ description: "Task not found.", status: 404 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   async findOne(
     @Param("id") id: string,
@@ -87,6 +113,7 @@ export class TaskController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
   @ApiResponse({ description: "Task not found.", status: 404 })
   async update(
     @Param("id") id: string,
