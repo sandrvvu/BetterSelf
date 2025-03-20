@@ -25,6 +25,7 @@ import { Task } from "../tasks/task.entity";
 import { Goal } from "./goal.entity";
 import { GoalService } from "./goal.service";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
+import { ProgressDto } from "./libs/dto/progress.dto";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 
 @ApiTags("Goals")
@@ -104,6 +105,24 @@ export class GoalController {
     @CurrentUserId() userId: string,
   ): Promise<Task[]> {
     return await this.goalService.findTasksByGoal(id, userId);
+  }
+
+  @Get(":id/progress")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: ProgressDto })
+  @ApiResponse({
+    description: "Successfully calculated the goal progress.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  @ApiResponse({ description: "Goal not found.", status: 404 })
+  async getGoalProgress(
+    @Param("id") id: string,
+    @CurrentUserId() userId: string,
+  ): Promise<ProgressDto> {
+    return await this.goalService.calculateProgress(id, userId);
   }
 
   @Patch(":id")
