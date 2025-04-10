@@ -12,6 +12,7 @@ import {
 
 import { Category } from "../categories/category.entity";
 import { Entry } from "../entries/entry.entity";
+import { Reflection } from "../reflections/reflection.entity";
 import { VisionBoard } from "../vision-boards/vision-board.entity";
 
 @Entity()
@@ -71,6 +72,9 @@ export class User {
 
   @OneToMany(() => Entry, (entry) => entry.user)
   entries: Entry[];
+
+  @OneToMany(() => Reflection, (reflection) => reflection.user)
+  reflections: Reflection[];
 
   @OneToMany(() => VisionBoard, (board) => board.user)
   visionBoards: VisionBoard[];

@@ -1,15 +1,19 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import * as Joi from "joi";
 
-import { AppConfigType } from "./app.config";
-import { AuthConfigType } from "./auth.config";
-import { AwsConfigType } from "./aws.config";
+import {
+  AppConfigType,
+  AuthConfigType,
+  AwsConfigType,
+  OpenAIConfigType,
+} from ".";
 
 export interface ConfigType {
   app: AppConfigType;
   database: TypeOrmModuleOptions;
   auth: AuthConfigType;
   aws: AwsConfigType;
+  openai: OpenAIConfigType;
 }
 
 export default Joi.object({
@@ -26,4 +30,5 @@ export default Joi.object({
   AWS_SECRET_ACCESS_KEY: Joi.string().required(),
   AWS_REGION: Joi.string().required(),
   AWS_BUCKET_NAME: Joi.string().required(),
+  OPENAI_API_KEY: Joi.string().required(),
 });
