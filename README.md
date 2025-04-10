@@ -64,36 +64,53 @@ erDiagram
    }
 
    image {
-        uuid id PK
-        varchar source
-        timestamp createdAt
-        timestamp updatedAt
+      uuid id PK
+      varchar source
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    vision_board {
-        uuid id PK
-        varchar title
-        text description
-        uuid userId FK
-        uuid goalId FK
-        timestamp createdAt
-        timestamp updatedAt
+      uuid id PK
+      varchar title
+      text description
+      uuid userId FK
+      uuid goalId FK
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    board_to_image {
-        uuid id PK
-        uuid imageId FK
-        uuid visionBoardId FK
-        timestamp createdAt
+      uuid id PK
+      uuid imageId FK
+      uuid visionBoardId FK
+      timestamp createdAt
+   }
+
+   chat_message {
+      uuid id PK
+      uuid sessionId FK
+      enum role
+      text content
+      timestamp createdAt
+   }
+
+   reflection {
+      uuid id PK
+      uuid userId FK
+      timestamp createdAt
+      timestamp updatedAt
    }
 
    user ||--|{ category : userId
    user ||--|{ entry : userId
    user ||--|{ vision_board : userId
+   user ||--|{ reflection : userId
    category ||--|{ goal : categoryId
    board_to_image ||--|| image : imageId
    board_to_image ||--|| vision_board : visionBoardId
    goal ||--|{ task : goalId
    goal ||--|{ vision_board : goalId
    goal ||--|{ entry : goalId
+   reflection ||--|{ chat_message : sessionId
 ```

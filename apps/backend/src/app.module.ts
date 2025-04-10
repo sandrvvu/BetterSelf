@@ -10,11 +10,13 @@ import {
   AuthConfig,
   AwsConfig,
   DatabaseConfig,
+  OpenAIConfig,
   TypedConfigService,
 } from "./config";
 import { CategoriesModule } from "./modules/categories/categories.module";
 import { EntriesModule } from "./modules/entries/entries.module";
 import { GoalsModule } from "./modules/goals/goals.module";
+import { ReflectionsModule } from "./modules/reflections/reflections.module";
 import { TasksModule } from "./modules/tasks/tasks.module";
 import { UsersModule } from "./modules/users/users.module";
 import { VisionBoardsModule } from "./modules/vision-boards/vision-boards.module";
@@ -25,7 +27,7 @@ import { VisionBoardsModule } from "./modules/vision-boards/vision-boards.module
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      load: [AppConfig, AuthConfig, AwsConfig, DatabaseConfig],
+      load: [AppConfig, AuthConfig, AwsConfig, DatabaseConfig, OpenAIConfig],
       validationOptions: {
         abortEarly: true,
       },
@@ -42,6 +44,7 @@ import { VisionBoardsModule } from "./modules/vision-boards/vision-boards.module
     EntriesModule,
     GoalsModule,
     TasksModule,
+    ReflectionsModule,
     UsersModule,
     VisionBoardsModule,
   ],

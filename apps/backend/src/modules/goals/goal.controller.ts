@@ -20,6 +20,8 @@ import {
 
 import { CurrentUserId } from "src/common/decorators";
 
+import { AiAssistantService } from "../../common/modules/ai-assistant/ai-assistant.service";
+import { CreateTaskDto } from "../tasks/libs/dto/create-task.dto";
 import { Task } from "../tasks/task.entity";
 
 import { Goal } from "./goal.entity";
@@ -31,7 +33,10 @@ import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 @ApiTags("Goals")
 @Controller("goals")
 export class GoalController {
-  constructor(private readonly goalService: GoalService) {}
+  constructor(
+    private readonly aiAssistantService: AiAssistantService,
+    private readonly goalService: GoalService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -105,6 +110,22 @@ export class GoalController {
     @CurrentUserId() userId: string,
   ): Promise<Task[]> {
     return await this.goalService.findTasksByGoal(id, userId);
+  }
+
+  @Post(":id/generate-tasks")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [CreateTaskDto] })
+  @ApiResponse({ description: "Tasks generated successfully.", status: 200 })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Failed to request ChatGPT.", status: 503 })
+  async generateTasksForGoal(
+    @Param("id") goalId: string,
+    @CurrentUserId() userId: string,
+    @Body("goalDetails") goalDetails: string,
+  ): Promise<CreateTaskDto[]> {
+    const goal = await this.goalService.findOne(userId, goalId);
+    return this.aiAssistantService.generateGoalTasks(goal.id, goalDetails);
   }
 
   @Get(":id/progress")
