@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Expose } from "class-transformer";
 import {
   IsEmail,
   IsNotEmpty,
@@ -10,6 +11,7 @@ import {
 export class LoginDto {
   @IsEmail()
   @IsNotEmpty()
+  @Expose()
   @ApiProperty({
     description: "Email address of the user.",
     example: "blair@gmail.com",
@@ -28,6 +30,7 @@ export class LoginDto {
   @Matches(/[^A-Za-z0-9]/, {
     message: "Password must contain at least 1 special character",
   })
+  @Expose()
   @ApiProperty({
     description: "Password of the user.",
     example: "Blair1#",

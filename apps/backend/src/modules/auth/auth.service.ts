@@ -14,6 +14,7 @@ import { User } from "../users/user.entity";
 import { UserService } from "../users/user.service";
 
 import { AuthRequest } from "./libs/dto/auth.request";
+import { LoginResponse } from "./libs/dto/login.response";
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
     private readonly passwordService: PasswordService,
   ) {}
 
-  public async login(email: string, password: string): Promise<string> {
+  public async login(email: string, password: string): Promise<LoginResponse> {
     this.logger.log(`Login attempt for email: ${email}`);
     const user = await this.userService.findOneByEmail(email);
 
@@ -38,9 +39,9 @@ export class AuthService {
       throw new UnauthorizedException("Invalid credentials");
     }
 
-    const token = this.generateToken(user);
+    const accessToken = this.generateToken(user);
     this.logger.log(`User logged in successfully: ${user.id}`);
-    return token;
+    return new LoginResponse({ accessToken, user });
   }
 
   async profile(@Request() request: AuthRequest): Promise<User> {
@@ -55,7 +56,7 @@ export class AuthService {
     throw new NotFoundException();
   }
 
-  public async register(createUserDto: CreateUserDto): Promise<User> {
+  public async register(createUserDto: CreateUserDto): Promise<LoginResponse> {
     this.logger.log(`Registering user: ${createUserDto.email}`);
     const existingUser = await this.userService.findOneByEmail(
       createUserDto.email,
@@ -67,8 +68,9 @@ export class AuthService {
     }
 
     const user = await this.userService.create(createUserDto);
-    this.logger.log(`User registered successfully: ${user.id}`);
-    return user;
+    const accessToken = this.generateToken(user);
+    this.logger.log(`User logged in successfully: ${user.id}`);
+    return new LoginResponse({ accessToken, user });
   }
 
   private generateToken(user: User): string {

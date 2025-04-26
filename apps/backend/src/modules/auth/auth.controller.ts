@@ -45,7 +45,7 @@ export class AuthController {
   })
   @ApiOkResponse({ type: LoginResponse })
   @ApiResponse({
-    description: "User  logged in successfully.",
+    description: "User logged in successfully.",
     status: 200,
   })
   @ApiResponse({ description: "Invalid data type provided.", status: 400 })
@@ -53,12 +53,7 @@ export class AuthController {
   async login(
     @Body(ValidationPipe) loginDto: LoginDto,
   ): Promise<LoginResponse> {
-    const accessToken = await this.authService.login(
-      loginDto.email,
-      loginDto.password,
-    );
-
-    return new LoginResponse({ accessToken });
+    return await this.authService.login(loginDto.email, loginDto.password);
   }
 
   @Get("profile")
@@ -72,7 +67,7 @@ export class AuthController {
   @ApiResponse({ description: "User is not found.", status: 404 })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   async profile(@Request() request: AuthRequest): Promise<User> {
-    return this.authService.profile(request);
+    return await this.authService.profile(request);
   }
 
   @Post("register")
@@ -81,7 +76,7 @@ export class AuthController {
   @ApiBody({
     type: CreateUserDto,
   })
-  @ApiCreatedResponse({ type: User })
+  @ApiCreatedResponse({ type: LoginResponse })
   @ApiResponse({
     description: "The user has been successfully registred.",
     status: 201,
@@ -93,7 +88,7 @@ export class AuthController {
   @ApiResponse({ description: "Invalid data type provided.", status: 400 })
   async register(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
-  ): Promise<User> {
-    return this.authService.register(createUserDto);
+  ): Promise<LoginResponse> {
+    return await this.authService.register(createUserDto);
   }
 }

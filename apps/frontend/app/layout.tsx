@@ -1,6 +1,12 @@
-import type { Metadata } from "next";
+"use client";
+
+// import type { Metadata } from "next";
 import { Montserrat, Gravitas_One } from "next/font/google";
 import "./globals.css";
+import { Provider } from "react-redux";
+import { store } from "@/state/store";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -14,10 +20,10 @@ const gravitasOne = Gravitas_One({
   weight: ["400"],
 });
 
-export const metadata: Metadata = {
-  title: "BetterSelf",
-  description: "Goal achievement app",
-};
+// export const metadata: Metadata = {
+//   title: "BetterSelf",
+//   description: "Goal achievement app",
+// };
 
 export default function RootLayout({
   children,
@@ -32,9 +38,11 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${gravitasOne.variable} font-montserrat`}
       >
-        {children}
+        <Provider store={store}>
+          {children}
+          <ToastContainer position="top-right" autoClose={3000} />
+        </Provider>
       </body>
     </html>
   );
 }
-
