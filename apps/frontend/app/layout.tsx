@@ -40,8 +40,8 @@ export default function RootLayout({
       >
         <Provider store={store}>
           {children}
-          <ToastContainer position="top-right" autoClose={3000} />
         </Provider>
+        <ToastContainer position="top-right" autoClose={3000} />
       </body>
     </html>
   );

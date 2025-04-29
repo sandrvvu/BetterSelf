@@ -36,7 +36,7 @@ import AppAvatar from "@/components/app-avatar";
 
 const items = [
   { title: "Home", url: "/home", icon: Home },
-  { title: "Areas", url: "/areas", icon: Component },
+  { title: "Categories", url: "/categories", icon: Component },
   { title: "Goals", url: "/goals", icon: Goal },
   { title: "Journal", url: "/journal", icon: BookHeart },
   { title: "Vision boards", url: "/vision-boards", icon: Telescope },
@@ -59,12 +59,9 @@ export default function AppSidebar({ name, email, onSignOut }: SidebarProps) {
           <SidebarMenu>
             <SidebarMenuButton
               asChild
-              className="hover:text-purple-800 hover:bg-background active:text-purple-800 active:bg-background"
+              className="hover:bg-background active:bg-background"
             >
-              <Link
-                href="/home"
-                className="uppercase font-bold font-gravitas text-purple-800"
-              >
+              <Link href="/home" className="uppercase font-bold font-gravitas">
                 <Star />
                 betterself
               </Link>
@@ -79,8 +76,8 @@ export default function AppSidebar({ name, email, onSignOut }: SidebarProps) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={`hover:text-purple-800 hover:bg-purple-200 active:text-purple-800 active:bg-purple-200  ${
-                      pathname === item.url
+                    className={`hover:text-purple-800 hover:bg-purple-200 active:text-purple-800 active:bg-purple-200 ${
+                      pathname?.startsWith(item.url)
                         ? "text-purple-800 bg-purple-200 font-semibold"
                         : ""
                     }`}
@@ -135,3 +132,4 @@ export default function AppSidebar({ name, email, onSignOut }: SidebarProps) {
     </Sidebar>
   );
 }
+

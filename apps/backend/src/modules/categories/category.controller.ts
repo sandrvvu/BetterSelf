@@ -26,6 +26,7 @@ import { Goal } from "../goals/goal.entity";
 
 import { Category } from "./category.entity";
 import { CategoryService } from "./category.service";
+import { CategoryWithGoalCountsDto } from "./libs/dto/category-with-goal-count";
 import { CreateCategoryDto } from "./libs/dto/create-category.dto";
 import { UpdateCategoryDto } from "./libs/dto/update-category.dto";
 
@@ -78,14 +79,16 @@ export class CategoryController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth("access-token")
-  @ApiOkResponse({ type: [Category] })
+  @ApiOkResponse({ type: [CategoryWithGoalCountsDto] })
   @ApiResponse({
     description: "Successfully retrieved the user's categories.",
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   @ApiResponse({ description: "Access denied.", status: 403 })
-  async findAllByUserId(@CurrentUserId() userId: string): Promise<Category[]> {
+  async findAllByUserId(
+    @CurrentUserId() userId: string,
+  ): Promise<CategoryWithGoalCountsDto[]> {
     return await this.categoryService.findAllByUserId(userId);
   }
 

@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { SignInSchema } from "@/utils/validation/sign-in.shema";
+import { SignInSchema, SignInSchemaType } from "@/lib/validation/sign-in.shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -26,7 +25,7 @@ export default function SignIn() {
   const [register] = useRegisterMutation();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof SignInSchema>>({
+  const form = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: "",
@@ -35,7 +34,7 @@ export default function SignIn() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof SignInSchema>) {
+  async function onSubmit(values: SignInSchemaType) {
     const res = await register(values).unwrap();
     dispatch(setCredentials(res));
     dispatch(setUser(res.user));

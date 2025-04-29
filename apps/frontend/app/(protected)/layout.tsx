@@ -40,7 +40,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         />
         <main className="flex-1 p-3">
           <SidebarTrigger />
-          <div className="pl-7">{children}</div>
+          <div className="px-7">{children}</div>
         </main>
       </div>
     </SidebarProvider>
