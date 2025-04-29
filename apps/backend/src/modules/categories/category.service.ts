@@ -1,15 +1,11 @@
-import {
-  ConflictException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from "@nestjs/common";
+import { ConflictException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Goal } from "../goals/goal.entity";
+import { Goal, GoalStatus } from "../goals/goal.entity";
 
 import { Category } from "./category.entity";
+import { CategoryWithGoalCountsDto } from "./libs/dto/category-with-goal-count";
 import { CreateCategoryDto } from "./libs/dto/create-category.dto";
 import { UpdateCategoryDto } from "./libs/dto/update-category.dto";
 
@@ -48,14 +44,30 @@ export class CategoryService {
     return Boolean(deletedCategory);
   }
 
-  public async findAllByUserId(userId: string): Promise<Category[]> {
-    const categories = await this.categoryRepository.findBy({ userId });
+  public async findAllByUserId(
+    userId: string,
+  ): Promise<CategoryWithGoalCountsDto[]> {
+    const categories = await this.categoryRepository
+      .createQueryBuilder("category")
+      .leftJoin("category.goals", "goal")
+      .where("category.userId = :userId", { userId })
+      .loadRelationCountAndMap("category.allGoals", "category.goals")
+      .loadRelationCountAndMap(
+        "category.completedGoals",
+        "category.goals",
+        "completedGoal",
+        (qb) =>
+          qb.where("completedGoal.status = :completedStatus", {
+            completedStatus: GoalStatus.COMPLETED,
+          }),
+      )
+      .getMany();
 
     if (!categories.length) {
       this.logger.warn(`No categories found for userId: ${userId}`);
     }
 
-    return categories;
+    return categories as CategoryWithGoalCountsDto[];
   }
 
   public async findGoalsByCategory(categoryId: string): Promise<Goal[]> {

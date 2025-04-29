@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LoginSchema } from "@/utils/validation/login.schema";
+import { LoginSchema, LoginSchemaType } from "@/lib/validation/login.schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,7 +27,7 @@ export default function Login() {
   const [login] = useLoginMutation();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
+  const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
@@ -35,7 +35,7 @@ export default function Login() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof LoginSchema>) {
+  async function onSubmit(values: LoginSchemaType) {
     try {
       const res = await login(values).unwrap();
       dispatch(setCredentials(res));
