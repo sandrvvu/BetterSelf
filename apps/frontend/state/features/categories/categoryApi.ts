@@ -1,17 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
 import { API_BASE_URL } from "@/lib/constants/api";
+import { Category, CategoryWithGoalCount, CreateCategoryDto, UpdateCategoryDto } from "@/lib/types/category";
+import { Goal } from "@/lib/types/goal";
 import { RootState } from "@/state/store";
-import { Category, CategoryWithGoalCount } from "./category.type";
-
-type CreateCategoryDto = {
-  name?: string;
-  description?: string;
-};
-
-type UpdateCategoryDto = {
-  name?: string;
-  description?: string;
-};
 
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
@@ -25,7 +17,7 @@ export const categoryApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Category", "CategoryWithGoalCount"],
+  tagTypes: ["Category", "CategoryWithGoalCount", "Goals"],
   endpoints: (builder) => ({
     createCategory: builder.mutation<Category, CreateCategoryDto>({
       query: (body) => ({
@@ -33,7 +25,7 @@ export const categoryApi = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: ["Category", "CategoryWithGoalCount"],
     }),
 
     deleteCategory: builder.mutation<boolean, string>({
@@ -41,7 +33,7 @@ export const categoryApi = createApi({
         url: `categories/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: ["Category", "CategoryWithGoalCount"],
     }),
 
     getCategories: builder.query<CategoryWithGoalCount[], void>({
@@ -49,7 +41,7 @@ export const categoryApi = createApi({
         url: `/categories`,
         method: "GET",
       }),
-      providesTags: ["CategoryWithGoalCount"],
+      providesTags: ["Category"],
     }),
 
     getCategory: builder.query<Category, string>({
@@ -69,15 +61,15 @@ export const categoryApi = createApi({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: ["Category", "CategoryWithGoalCount"],
     }),
-    //     getGoalsByCategory: builder.query<Goal[], string>({
-    //     query: (id) => ({
-    //       url: `/${id}/goals`,
-    //       method: "GET",
-    //     }),
-    //     providesTags: ["Goals"],
-    //   }),
+    getGoalsByCategory: builder.query<Goal[], string>({
+      query: (id) => ({
+        url: `categories/${id}/goals`,
+        method: "GET",
+      }),
+      providesTags: ["Goals"],
+    }),
   }),
 });
 
@@ -87,4 +79,5 @@ export const {
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
   useGetCategoryQuery,
+  useGetGoalsByCategoryQuery,
 } = categoryApi;

@@ -1,13 +1,11 @@
 "use client";
 
-import { useGetCategoriesQuery } from "@/state/features/categories/categoryApi";
-import { columns } from "./components/columns";
-import { DataTable } from "./components/data-table";
 import { useState } from "react";
-import { ResponsiveDialog } from "@/components/responsive-dialog";
-import CreateCategoryForm from "./components/create-category.form";
+
+import { columns, CreateCategoryDialog } from "@/components/categories";
+import { DataTable, Spinner } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import Spinner from "@/components/spinner";
+import { useGetCategoriesQuery } from "@/state/features/categories/categoryApi";
 
 export default function Categories() {
   const { data, isLoading } = useGetCategoriesQuery();
@@ -28,15 +26,8 @@ export default function Categories() {
         >
           Add category
         </Button>
-        <ResponsiveDialog
-          isOpen={isAddOpen}
-          setIsOpen={setIsAddOpen}
-          title="Add category"
-          description=' Add a new category for your goals. Click "Add " to
-            confirm.'
-        >
-          <CreateCategoryForm setIsOpen={setIsAddOpen} />
-        </ResponsiveDialog>
+
+        <CreateCategoryDialog isOpen={isAddOpen} setIsOpen={setIsAddOpen} />
       </div>
       <div className="rounded-2xl">
         <DataTable columns={columns} data={data ?? []} />

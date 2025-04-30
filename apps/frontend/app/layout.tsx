@@ -1,12 +1,14 @@
 "use client";
 
 // import type { Metadata } from "next";
-import { Montserrat, Gravitas_One } from "next/font/google";
 import "./globals.css";
-import { Provider } from "react-redux";
-import { store } from "@/state/store";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import { Gravitas_One,Montserrat } from "next/font/google";
+import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
+
+import { store } from "@/state/store";
 
 const montserrat = Montserrat({
   subsets: ["latin"],

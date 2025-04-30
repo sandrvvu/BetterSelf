@@ -1,13 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
-import { RootState } from "@/state/store";
-import AppSidebar from "@/components/app-sidebar";
+
+import { AppSidebar, Spinner } from "@/components/shared";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { logout } from "@/state/features/auth/authSlice";
-import { clearUser } from "@/state/features/user/userSlice";
+import { User } from "@/lib/types/user";
+import { logout, setCredentials } from "@/state/features/auth/authSlice";
+import { RootState } from "@/state/store";
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const dispatch = useDispatch();
@@ -16,19 +17,34 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const user = useSelector((state: RootState) => state.auth.authenticatedUser);
   const isAuthenticated = !!token && !!user;
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const user = localStorage.getItem("user");
+
+    if (accessToken && user) {
+      dispatch(
+        setCredentials({
+          accessToken,
+          user: JSON.parse(user) as User,
+        }),
+      );
+    }
+  }, [dispatch]);
+
   const handleSignOut = () => {
     dispatch(logout());
-    dispatch(clearUser());
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
     router.replace("/login");
   };
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace("/login");
-    }
-  }, [isAuthenticated, router]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     router.replace("/login");
+  //   }
+  // }, [isAuthenticated, router]);
 
-  if (!isAuthenticated) return <p>Loading..</p>;
+  if (!isAuthenticated) return <Spinner />;
 
   return (
     <SidebarProvider>
