@@ -1,10 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { LoginSchema, LoginSchemaType } from "@/lib/validation/login.schema";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,16 +18,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useDispatch } from "react-redux";
+import { LoginSchema, LoginSchemaType } from "@/lib/validation/login.schema";
 import { useLoginMutation } from "@/state/features/auth/authApi";
 import { setCredentials } from "@/state/features/auth/authSlice";
-import { useRouter } from "next/navigation";
-import { setUser } from "@/state/features/user/userSlice";
-import { toast } from "react-toastify";
 
 export default function Login() {
   const dispatch = useDispatch();
-  const [login] = useLoginMutation();
+  const [login, { data, isLoading, isSuccess }] = useLoginMutation();
   const router = useRouter();
 
   const form = useForm<LoginSchemaType>({
@@ -36,22 +36,23 @@ export default function Login() {
   });
 
   async function onSubmit(values: LoginSchemaType) {
-    try {
-      const res = await login(values).unwrap();
-      dispatch(setCredentials(res));
-      dispatch(setUser(res.user));
-      router.push("/home");
-    } catch (err: any) {
-      toast.error(
-        err?.data?.message || "Invalid credentials. Please try again.",
-      );
-    }
+    await login(values);
   }
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setCredentials(data));
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      router.push("/home");
+      toast.success("Logined.");
+    }
+  }, [isSuccess, data, dispatch, router]);
 
   return (
     <main>
       <div className="mb-6">
-        <h1 className="font-bold text-violet-900 mb-2 text-xl lg:text-2xl font-gravitas textdrop-shadow-lg">
+        <h1 className="font-bold mb-2 text-xl lg:text-2xl font-gravitas textdrop-shadow-lg">
           Welcome back
         </h1>
         <div className="flex gap-1 items-center text-sm">
@@ -63,7 +64,10 @@ export default function Login() {
       </div>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={(event) => {
+            event.preventDefault();
+            void form.handleSubmit(onSubmit)(event);
+          }}
           className="space-y-4 text-violet-900"
         >
           <FormField
@@ -107,7 +111,7 @@ export default function Login() {
             type="submit"
             className="w-full text-md bg-violet-600 text-white py-4 rounded-lg hover:bg-violet-700"
           >
-            Log in
+            {isLoading ? "Loginning..." : "Log in"}
           </Button>
         </form>
       </Form>

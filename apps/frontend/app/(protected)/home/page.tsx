@@ -1,7 +1,8 @@
 "use client";
 
-import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
+
+import { RootState } from "@/state/store";
 
 export default function Home() {
   const user = useSelector((state: RootState) => state.auth.authenticatedUser);
