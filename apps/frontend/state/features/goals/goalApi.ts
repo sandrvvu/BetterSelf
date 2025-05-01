@@ -1,7 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { API_BASE_URL } from "@/lib/constants/api";
-import { CreateGoalDto, Goal, UpdateGoalDto } from "@/lib/types/goal";
+import {
+  CreateGoalDto,
+  Goal,
+  GoalWithCategoryName,
+  UpdateGoalDto,
+} from "@/lib/types/goal";
 import { RootState } from "@/state/store";
 
 export const goalApi = createApi({
@@ -35,13 +40,13 @@ export const goalApi = createApi({
       invalidatesTags: ["Goal"],
     }),
 
-    // getCategories: builder.query<CategoryWithGoalCount[], void>({
-    //   query: () => ({
-    //     url: `/categories`,
-    //     method: "GET",
-    //   }),
-    //   providesTags: ["Category"],
-    // }),
+    getGoals: builder.query<GoalWithCategoryName[], void>({
+      query: () => ({
+        url: `/goals`,
+        method: "GET",
+      }),
+      providesTags: ["Goal"],
+    }),
 
     getGoal: builder.query<Goal, string>({
       query: (id) => ({
@@ -51,10 +56,7 @@ export const goalApi = createApi({
       providesTags: (result, error, id) => [{ type: "Goal", id }],
     }),
 
-    updateGoal: builder.mutation<
-      Goal,
-      { id: string; data: UpdateGoalDto }
-    >({
+    updateGoal: builder.mutation<Goal, { id: string; data: UpdateGoalDto }>({
       query: ({ id, data }) => ({
         url: `goals/${id}`,
         method: "PATCH",
@@ -70,4 +72,5 @@ export const {
   useDeleteGoalMutation,
   useUpdateGoalMutation,
   useGetGoalQuery,
+  useGetGoalsQuery,
 } = goalApi;

@@ -27,6 +27,7 @@ import { Task } from "../tasks/task.entity";
 import { Goal } from "./goal.entity";
 import { GoalService } from "./goal.service";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
+import { GoalWithCategoryName } from "./libs/dto/goal-with-category-name";
 import { ProgressDto } from "./libs/dto/progress.dto";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 
@@ -77,6 +78,22 @@ export class GoalController {
     @CurrentUserId() userId: string,
   ): Promise<boolean> {
     return await this.goalService.delete(userId, id);
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [GoalWithCategoryName] })
+  @ApiResponse({
+    description: "Successfully retrieved the user's goals.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  async findAllByUserId(
+    @CurrentUserId() userId: string,
+  ): Promise<GoalWithCategoryName[]> {
+    return await this.goalService.findAllByUserId(userId);
   }
 
   @Get(":id")

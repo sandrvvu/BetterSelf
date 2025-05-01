@@ -1,2 +1,2 @@
-export { GoalCard } from "./cards";
+export { GoalCard, GoalItem,GoalTabs } from "./cards";
 export { AddGoalDialog } from "./dialogs";
