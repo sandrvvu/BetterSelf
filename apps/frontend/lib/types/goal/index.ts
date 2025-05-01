@@ -39,3 +39,7 @@ export type UpdateGoalDto = {
   priority: GoalPriority;
   targetDate?: Date;
 };
+
+export type GoalWithCategoryName = Goal & {
+  categoryName: string;
+};

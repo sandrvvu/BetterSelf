@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Goal, GoalPriority, GoalStatus } from "@/lib/types/goal";
 
-interface GoalCardProps {
+type GoalCardProps = {
   goal: Goal;
-}
+};
 
 const priorityVariants: Record<
   GoalPriority,

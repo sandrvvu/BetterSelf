@@ -13,6 +13,7 @@ import { Task, TaskStatus } from "../tasks/task.entity";
 
 import { Goal, GoalStatus } from "./goal.entity";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
+import { GoalWithCategoryName } from "./libs/dto/goal-with-category-name";
 import { ProgressDto } from "./libs/dto/progress.dto";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 
@@ -132,6 +133,34 @@ export class GoalService {
     return await this.goalRepository.find({
       where: { categoryId },
     });
+  }
+
+  public async findAllByUserId(
+    userId: string,
+  ): Promise<GoalWithCategoryName[]> {
+    this.logger.log(`Finding all goals for user ID: ${userId}`);
+
+    const goals = await this.goalRepository
+      .createQueryBuilder("goal")
+      .innerJoin("goal.category", "category")
+      .addSelect(["category.name"])
+      .where("category.userId = :userId", { userId })
+      .orderBy("goal.createdAt", "DESC")
+      .getMany();
+
+    const transformedGoals = goals.map((goal) => {
+      return {
+        ...goal,
+        category: undefined,
+        categoryName: (goal as any).category?.name,
+      };
+    });
+
+    if (!goals.length) {
+      this.logger.warn(`No goals found for userId: ${userId}`);
+    }
+
+    return transformedGoals;
   }
 
   public async findOne(userId: string, goalId: string): Promise<Goal> {
