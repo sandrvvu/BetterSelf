@@ -8,17 +8,17 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { LoginSchema, LoginSchemaType } from "@/lib/validation/login.schema";
+  Input,
+} from "@/components/ui";
+import { LoginSchema, LoginSchemaType } from "@/lib";
 import { useLoginMutation } from "@/state/features/auth/authApi";
 import { setCredentials } from "@/state/features/auth/authSlice";
 

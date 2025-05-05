@@ -2,9 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { CategoryWithGoalCount } from "@/lib/types/category";
-
-import DataTableRowActions from "./data-table-row-actions";
+import { DataTableRowActions } from "@/components/categories";
+import { CategoryWithGoalCount } from "@/lib";
 
 export const columns: ColumnDef<CategoryWithGoalCount>[] = [
   {

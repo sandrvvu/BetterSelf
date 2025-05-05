@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { API_BASE_URL } from "@/lib/constants/api";
-import { Category, CategoryWithGoalCount, CreateCategoryDto, UpdateCategoryDto } from "@/lib/types/category";
-import { Goal } from "@/lib/types/goal";
+import {
+  API_BASE_URL,
+  Category,
+  CategoryWithGoalCount,
+  CreateCategoryDto,
+  Goal,
+  UpdateCategoryDto,
+} from "@/lib";
 import { RootState } from "@/state/store";
 
 export const categoryApi = createApi({

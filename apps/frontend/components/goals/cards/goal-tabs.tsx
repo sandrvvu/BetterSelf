@@ -1,7 +1,6 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GoalStatus, GoalWithCategoryName } from "@/lib/types/goal";
-
-import GoalItem from "./goal-item";
+import { GoalItem } from "@/components/goals";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import { GoalStatus, GoalWithCategoryName } from "@/lib";
 
 type GoalTabsProps = {
   goals: GoalWithCategoryName[];

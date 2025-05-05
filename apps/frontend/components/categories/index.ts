@@ -1,3 +1,8 @@
+export {
+  CreateCategoryForm,
+  DeleteCategoryContent,
+  EditCategoryForm,
+} from "./actions";
 export { CategoryActions } from "./buttons";
 export {
   CreateCategoryDialog,

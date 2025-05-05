@@ -1,14 +1,11 @@
-"use client";
-
-// import type { Metadata } from "next";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Gravitas_One,Montserrat } from "next/font/google";
-import { Provider } from "react-redux";
+import type { Metadata } from "next";
+import { Gravitas_One, Montserrat } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 
-import { store } from "@/state/store";
+import ClientLayout from "./client-layout";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -22,10 +19,10 @@ const gravitasOne = Gravitas_One({
   weight: ["400"],
 });
 
-// export const metadata: Metadata = {
-//   title: "BetterSelf",
-//   description: "Goal achievement app",
-// };
+export const metadata: Metadata = {
+  title: "BetterSelf",
+  description: "Goal achievement app",
+};
 
 export default function RootLayout({
   children,
@@ -40,9 +37,7 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${gravitasOne.variable} font-montserrat`}
       >
-        <Provider store={store}>
-          {children}
-        </Provider>
+        <ClientLayout>{children}</ClientLayout>
         <ToastContainer position="top-right" autoClose={3000} />
       </body>
     </html>

@@ -14,7 +14,6 @@ export class UpdateEntryDto {
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: "Content of the entry.",
     example: "Felt rested. Ready for the day.",

@@ -1,10 +1,15 @@
 import { format } from "date-fns";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Goal, GoalPriority, GoalStatus } from "@/lib/types/goal";
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Progress,
+} from "@/components/ui";
+import { Goal, GoalPriority, GoalStatus } from "@/lib";
 
 type GoalCardProps = {
   goal: Goal;

@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { API_BASE_URL } from "@/lib/constants/api";
 import {
+  API_BASE_URL,
   CreateGoalDto,
   Goal,
   GoalWithCategoryName,
   UpdateGoalDto,
-} from "@/lib/types/goal";
+} from "@/lib";
 import { RootState } from "@/state/store";
 
 export const goalApi = createApi({
