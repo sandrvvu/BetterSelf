@@ -2,10 +2,8 @@ import { format } from "date-fns";
 import { Calendar, ListChecks } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { GoalWithCategoryName } from "@/lib/types/goal";
+import { Badge, Card, Progress } from "@/components/ui";
+import { GoalWithCategoryName } from "@/lib";
 
 type GoalItemProps = {
   goal: GoalWithCategoryName;

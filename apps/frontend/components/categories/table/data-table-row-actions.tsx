@@ -5,38 +5,41 @@ import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import {
+  DeleteCategoryContent,
+  EditCategoryForm,
+} from "@/components/categories";
+import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ResponsiveDialog } from "@/components/ui/responsive-dialog";
+  ResponsiveDialog,
+} from "@/components/ui";
 
-import DeleteCategoryContent from "../dialogs/content/delete-category-content";
-import EditCategoryForm from "../dialogs/content/edit-category.form";
-
-interface WithId<T> {
-  id: T;
+interface CategoryRow {
+  id: string;
+  name: string;
+  description?: string;
 }
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export default function DataTableRowActions<TData extends WithId<string>>({
+export default function DataTableRowActions<TData extends CategoryRow>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditedOpen, setIsEditedOpen] = useState(false);
 
-  const categoryId = row.original.id ;
+  const categoryId = row.original.id;
 
   const onDelete = () => {
     setIsDeleteOpen(false);
-  }
+  };
 
   return (
     <>
@@ -55,7 +58,12 @@ export default function DataTableRowActions<TData extends WithId<string>>({
         title="Edit category"
         description='Modify the details of this category. Click "Save Changes" to update.'
       >
-        <EditCategoryForm id={categoryId} setIsOpen={setIsEditedOpen} />
+        <EditCategoryForm
+          id={categoryId}
+          name={row.original.name}
+          description={row.original.description}
+          setIsOpen={setIsEditedOpen}
+        />
       </ResponsiveDialog>
 
       <DropdownMenu>
@@ -69,7 +77,7 @@ export default function DataTableRowActions<TData extends WithId<string>>({
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer">
-            <Link href={`/categories/${categoryId}`}>View category</Link>
+            <Link href={`/home/categories/${categoryId}`}>View category</Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"

@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook,useDispatch, useSelector } from "react-redux";
 
 import { rtkQueryErrorLogger } from "./errorMiddleware";
 import { authApi } from "./features/auth/authApi";
 import authReducer from "./features/auth/authSlice";
 import { categoryApi } from "./features/categories/categoryApi";
 import { goalApi } from "./features/goals/goalApi";
+import { journalApi } from "./features/journal/journalApi";
 import { userApi } from "./features/user/userApi";
 
 export const store = configureStore({
@@ -14,6 +16,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [goalApi.reducerPath]: goalApi.reducer,
+    [journalApi.reducerPath]: journalApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -21,12 +24,13 @@ export const store = configureStore({
       userApi.middleware,
       authApi.middleware,
       categoryApi.middleware,
-      goalApi.middleware
+      goalApi.middleware,
+      journalApi.middleware,
     ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// export const useAppDispatch = () => useDispatch<AppDispatch>();
-// export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

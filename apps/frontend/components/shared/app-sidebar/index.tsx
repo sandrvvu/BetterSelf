@@ -21,8 +21,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -33,15 +31,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/ui";
 
 const items = [
   { title: "Home", url: "/home", icon: Home },
-  { title: "Categories", url: "/categories", icon: Component },
-  { title: "Goals", url: "/goals", icon: Goal },
-  { title: "Journal", url: "/journal", icon: BookHeart },
-  { title: "Vision boards", url: "/vision-boards", icon: Telescope },
-  { title: "Insights", url: "/insights", icon: Brain },
+  { title: "Categories", url: "/home/categories", icon: Component },
+  { title: "Goals", url: "/home/goals", icon: Goal },
+  { title: "Journal", url: "/home/journal", icon: BookHeart },
+  { title: "Vision boards", url: "/home/vision-boards", icon: Telescope },
+  { title: "Insights", url: "/home/insights", icon: Brain },
 ];
 
 type SidebarProps = {
@@ -78,9 +76,14 @@ export default function AppSidebar({ name, email, onSignOut }: SidebarProps) {
                   <SidebarMenuButton
                     asChild
                     className={`hover:text-purple-800 hover:bg-purple-200 active:text-purple-800 active:bg-purple-200 ${
-                      pathname?.startsWith(item.url)
-                        ? "text-purple-800 bg-purple-200 font-semibold"
-                        : ""
+                      item.url === "/home"
+                        ? pathname === "/home"
+                          ? "text-purple-800 bg-purple-200 font-semibold"
+                          : ""
+                        : pathname?.startsWith(`${item.url}/`) ||
+                            pathname === item.url
+                          ? "text-purple-800 bg-purple-200 font-semibold"
+                          : ""
                     }`}
                   >
                     <Link href={item.url}>

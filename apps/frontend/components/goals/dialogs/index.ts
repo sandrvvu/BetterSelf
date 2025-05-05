@@ -1,1 +1,1 @@
-export { AddGoalDialog } from "./add-goal.dialog";
+export { AddGoalDialog } from "./add-goal";

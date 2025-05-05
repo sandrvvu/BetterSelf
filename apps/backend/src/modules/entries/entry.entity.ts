@@ -35,7 +35,6 @@ export class Entry {
 
   @Column("text")
   @IsString()
-  @IsNotEmpty()
   @Expose()
   @ApiProperty({
     description: "Content of the entry.",

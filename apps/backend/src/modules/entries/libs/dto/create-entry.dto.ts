@@ -11,7 +11,6 @@ export class CreateEntryDto {
   title: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: "Content of the entry.",
     example: "Felt rested. Ready for the day.",
