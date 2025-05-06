@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook,useDispatch, useSelector } from "react-redux";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { rtkQueryErrorLogger } from "./errorMiddleware";
 import { authApi } from "./features/auth/authApi";
 import authReducer from "./features/auth/authSlice";
 import { categoryApi } from "./features/categories/categoryApi";
 import { goalApi } from "./features/goals/goalApi";
+import { insightApi } from "./features/insights/insightApi";
 import { journalApi } from "./features/journal/journalApi";
 import { userApi } from "./features/user/userApi";
 
@@ -17,6 +18,7 @@ export const store = configureStore({
     [categoryApi.reducerPath]: categoryApi.reducer,
     [goalApi.reducerPath]: goalApi.reducer,
     [journalApi.reducerPath]: journalApi.reducer,
+    [insightApi.reducerPath]: insightApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -26,6 +28,7 @@ export const store = configureStore({
       categoryApi.middleware,
       goalApi.middleware,
       journalApi.middleware,
+      insightApi.middleware,
     ),
 });
 

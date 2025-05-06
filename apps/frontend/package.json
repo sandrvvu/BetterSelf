@@ -47,6 +47,7 @@
     "react": "^19.1.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "react-spinners": "^0.17.0",
     "react-toastify": "^11.0.5",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",

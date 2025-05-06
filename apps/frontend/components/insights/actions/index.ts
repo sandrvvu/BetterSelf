@@ -1,0 +1,1 @@
+export { default as DeleteInsightContent} from "./delete-insight"
