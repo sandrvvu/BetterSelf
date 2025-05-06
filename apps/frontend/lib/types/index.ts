@@ -18,6 +18,14 @@ export {
   type UpdateGoalDto,
 } from "./goal";
 export {
+  type ChatMessage,
+  ChatMessageRole,
+  type Reflection,
+  type ReflectionPreview,
+  type ReflectionPrompt,
+  type ReflectionWithMessages,
+} from "./insight";
+export {
   type CreateEntryDto,
   type Entry,
   type UpdateEntryDto,
