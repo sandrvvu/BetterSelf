@@ -5,7 +5,7 @@ import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
 import {
-  CategoryActions,
+  CategoryControls,
   DeleteCategoryDialog,
   EditCategoryDialog,
 } from "@/components/categories";
@@ -60,7 +60,7 @@ export default function Category(props: { params: Params }) {
             </p>
           )}
         </div>
-        <CategoryActions
+        <CategoryControls
           onEdit={() => setIsEditOpen(true)}
           onDelete={() => setIsDeleteOpen(true)}
         />

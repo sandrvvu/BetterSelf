@@ -1,14 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber } from "class-validator";
 
 import { Category } from "../../category.entity";
 
-export class CategoryWithGoalCountsDto extends Category {
-  @IsNumber()
-  @ApiProperty({ description: "Total number of goals for the category." })
+export class CategoryWithGoalCounts extends Category {
+  @ApiProperty({
+    description: "Total number of goals for the category.",
+    type: "number",
+  })
   allGoals: number;
 
-  @IsNumber()
-  @ApiProperty({ description: "Number of completed goals for the category." })
+  @ApiProperty({
+    description: "Number of completed goals for the category.",
+    type: "number",
+  })
   completedGoals: number;
 }

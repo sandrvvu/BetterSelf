@@ -55,7 +55,7 @@ export class StorageService {
     };
     try {
       await this.s3.send(new PutObjectCommand(params));
-      return `https://${this.bucketName}.s3.${this.configService.get<string>("aws.region")}.amazonaws.com/${fileName}`;
+      return `https://${this.bucketName}.s3.${this.configService.get<string>("aws.region")}.amazonaws.com/files/${fileName}`;
     } catch (e) {
       this.logger.warn(`Error with storage during uploading files: ${e}`);
       throw new InternalServerErrorException(

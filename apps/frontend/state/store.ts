@@ -9,6 +9,7 @@ import { goalApi } from "./features/goals/goalApi";
 import { insightApi } from "./features/insights/insightApi";
 import { journalApi } from "./features/journal/journalApi";
 import { userApi } from "./features/user/userApi";
+import { visionBoardApi } from "./features/vision-boards/visionBoardApi";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     [goalApi.reducerPath]: goalApi.reducer,
     [journalApi.reducerPath]: journalApi.reducer,
     [insightApi.reducerPath]: insightApi.reducer,
+    [visionBoardApi.reducerPath]: visionBoardApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -29,6 +31,7 @@ export const store = configureStore({
       goalApi.middleware,
       journalApi.middleware,
       insightApi.middleware,
+      visionBoardApi.middleware,
     ),
 });
 

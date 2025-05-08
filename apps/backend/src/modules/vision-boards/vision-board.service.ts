@@ -11,6 +11,8 @@ import { BoardToImage } from "./board-to-image.entity";
 import { Image } from "./image.entity";
 import { CreateVisionBoardDto } from "./libs/dto/create-vision-board.dto";
 import { UpdateVisionBoardDto } from "./libs/dto/update-vision-board.dto";
+import { VisionBoardWithImages } from "./libs/dto/vision-board-with-images";
+import { VisionBoardWithPreviewImage } from "./libs/dto/vision-board-with-preview-image";
 import { VisionBoard } from "./vision-board.entity";
 
 @Injectable()
@@ -78,9 +80,11 @@ export class VisionBoardService {
     userId: string,
     goalId?: string,
     title?: string,
-  ): Promise<VisionBoard[]> {
+  ): Promise<VisionBoardWithPreviewImage[]> {
     const queryBuilder = this.visionBoardRepository
       .createQueryBuilder("visionBoard")
+      .leftJoinAndSelect("visionBoard.boardToImages", "boardToImages")
+      .leftJoinAndSelect("boardToImages.image", "image")
       .where("visionBoard.userId = :userId", { userId });
 
     if (goalId) {
@@ -95,11 +99,28 @@ export class VisionBoardService {
 
     const visionBoards = await queryBuilder.getMany();
 
-    if (!visionBoards.length) {
-      this.logger.warn(`No vision boards found for userId: ${userId}`);
-    }
+    return visionBoards.map((vb) => {
+      const images = vb.boardToImages
+        .map((bti) => bti.image)
+        .filter(Boolean)
+        .map((img) => ({
+          id: img.id,
+          source: img.source,
+        }));
 
-    return visionBoards;
+      const previewImage = images.length ? images[images.length - 1] : null;
+
+      return {
+        createdAt: vb.createdAt,
+        description: vb.description,
+        goalId: vb.goalId,
+        id: vb.id,
+        previewImage,
+        title: vb.title,
+        updatedAt: vb.updatedAt,
+        userId: vb.userId,
+      };
+    });
   }
 
   public async findImageByIdInBoard(
@@ -124,7 +145,6 @@ export class VisionBoardService {
   public async findOne(id: string): Promise<VisionBoard> {
     this.logger.log(`Finding vision board by ID: ${id}`);
     const visionBoard = await this.visionBoardRepository.findOne({
-      relations: ["boardToImages", "boardToImages.image"],
       where: { id },
     });
 
@@ -133,6 +153,31 @@ export class VisionBoardService {
     }
 
     return visionBoard;
+  }
+
+  public async findOneWithImages(id: string): Promise<VisionBoardWithImages> {
+    this.logger.log(`Finding vision board by ID: ${id}`);
+    const visionBoard = await this.visionBoardRepository.findOne({
+      relations: ["boardToImages", "boardToImages.image"],
+      where: { id },
+    });
+
+    if (!visionBoard) {
+      this.logger.warn(`Vision board not found with ID: ${id}`);
+    }
+
+    const images =
+      visionBoard.boardToImages?.map((bti) => ({
+        id: bti.image.id,
+        source: bti.image.source,
+      })) ?? [];
+
+    const { boardToImages, ...rest } = visionBoard;
+
+    return {
+      ...rest,
+      images,
+    };
   }
 
   async removeImage(visionBoardId: string, imageId: string): Promise<Boolean> {

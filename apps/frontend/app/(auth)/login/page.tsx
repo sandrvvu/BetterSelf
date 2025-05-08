@@ -111,7 +111,7 @@ export default function Login() {
             type="submit"
             className="w-full text-md bg-violet-600 text-white py-4 rounded-lg hover:bg-violet-700"
           >
-            {isLoading ? "Loginning..." : "Log in"}
+            {isLoading ? "Entering..." : "Log in"}
           </Button>
         </form>
       </Form>

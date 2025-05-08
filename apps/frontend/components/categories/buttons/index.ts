@@ -1,1 +1,1 @@
-export { CategoryActions } from "./category-action";
+export { CategoryControls } from "./category-controls";

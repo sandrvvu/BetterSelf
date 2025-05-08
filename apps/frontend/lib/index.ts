@@ -8,11 +8,13 @@ export {
   type CreateCategoryDto,
   type CreateEntryDto,
   type CreateGoalDto,
+  type CreateVisionBoardDto,
   type Entry,
   type Goal,
   GoalPriority,
   GoalStatus,
   type GoalWithCategoryName,
+  type Image,
   type LoginRequest,
   type Reflection,
   type ReflectionPreview,
@@ -22,7 +24,11 @@ export {
   type UpdateCategoryDto,
   type UpdateEntryDto,
   type UpdateGoalDto,
+  type UpdateVisionBoardDto,
   type User,
+  type VisionBoard,
+  type VisionBoardWithImages,
+  type VisionBoardWithPreviewImage,
 } from "./types";
 export {
   CategorySchema,
@@ -35,4 +41,6 @@ export {
   type LoginSchemaType,
   SignInSchema,
   type SignInSchemaType,
+  VisionBoardSchema,
+  type VisionBoardSchemaType,
 } from "./validation";
