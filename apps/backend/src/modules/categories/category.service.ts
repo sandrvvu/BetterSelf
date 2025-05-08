@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { Goal, GoalStatus } from "../goals/goal.entity";
 
 import { Category } from "./category.entity";
-import { CategoryWithGoalCountsDto } from "./libs/dto/category-with-goal-count";
+import { CategoryWithGoalCounts } from "./libs/dto/category-with-goal-count";
 import { CreateCategoryDto } from "./libs/dto/create-category.dto";
 import { UpdateCategoryDto } from "./libs/dto/update-category.dto";
 
@@ -46,7 +46,7 @@ export class CategoryService {
 
   public async findAllByUserId(
     userId: string,
-  ): Promise<CategoryWithGoalCountsDto[]> {
+  ): Promise<CategoryWithGoalCounts[]> {
     const categories = await this.categoryRepository
       .createQueryBuilder("category")
       .leftJoin("category.goals", "goal")
@@ -67,7 +67,7 @@ export class CategoryService {
       this.logger.warn(`No categories found for userId: ${userId}`);
     }
 
-    return categories as CategoryWithGoalCountsDto[];
+    return categories as CategoryWithGoalCounts[];
   }
 
   public async findGoalsByCategory(categoryId: string): Promise<Goal[]> {

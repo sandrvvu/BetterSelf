@@ -14,7 +14,6 @@ export class UpdateVisionBoardDto {
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: "Description of the vision board.",
     example: "Focusing on professional development and advancement.",

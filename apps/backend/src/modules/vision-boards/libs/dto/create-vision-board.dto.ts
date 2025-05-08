@@ -11,7 +11,6 @@ export class CreateVisionBoardDto {
   title: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: "Description of the vision board.",
     example: "Focusing on professional development and advancement.",

@@ -31,3 +31,11 @@ export {
   type UpdateEntryDto,
 } from "./journal";
 export { type User } from "./user";
+export {
+  type CreateVisionBoardDto,
+  type Image,
+  type UpdateVisionBoardDto,
+  type VisionBoard,
+  type VisionBoardWithImages,
+  type VisionBoardWithPreviewImage,
+} from "./vision-board";

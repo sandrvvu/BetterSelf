@@ -31,6 +31,8 @@ import { StorageService } from "src/common/modules/storage/storage.service";
 import { Image } from "./image.entity";
 import { CreateVisionBoardDto } from "./libs/dto/create-vision-board.dto";
 import { UpdateVisionBoardDto } from "./libs/dto/update-vision-board.dto";
+import { VisionBoardWithImages } from "./libs/dto/vision-board-with-images";
+import { VisionBoardWithPreviewImage } from "./libs/dto/vision-board-with-preview-image";
 import { VisionBoard } from "./vision-board.entity";
 import { VisionBoardService } from "./vision-board.service";
 
@@ -86,7 +88,7 @@ export class VisionBoardController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth("access-token")
-  @ApiOkResponse({ type: [VisionBoard] })
+  @ApiOkResponse({ type: [VisionBoardWithPreviewImage] })
   @ApiResponse({
     description: "Successfully retrieved the user's vision boards.",
     status: 200,
@@ -96,14 +98,14 @@ export class VisionBoardController {
     @CurrentUserId() userId: string,
     @Query("goalId") goalId?: string,
     @Query("title") title?: string,
-  ): Promise<VisionBoard[]> {
+  ): Promise<VisionBoardWithPreviewImage[]> {
     return await this.visionBoardService.findAllByUserId(userId, goalId, title);
   }
 
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth("access-token")
-  @ApiOkResponse({ type: VisionBoard })
+  @ApiOkResponse({ type: VisionBoardWithImages })
   @ApiResponse({
     description: "Successfully retrieved the vision board.",
     status: 200,
@@ -114,10 +116,10 @@ export class VisionBoardController {
   async findOne(
     @Param("id") id: string,
     @CurrentUserId() userId: string,
-  ): Promise<VisionBoard> {
+  ): Promise<VisionBoardWithImages> {
     const visionBoard = await this.findOneOrFail(id);
     this.checkVisionBoardOwnership(visionBoard, userId);
-    return visionBoard;
+    return await this.visionBoardService.findOneWithImages(id);
   }
 
   @Delete(":id/image/:imageId")
@@ -169,7 +171,7 @@ export class VisionBoardController {
     @Param("id") id: string,
     @CurrentUserId() userId: string,
     @Body(ValidationPipe) updateVisionBoardDto: UpdateVisionBoardDto,
-  ) {
+  ): Promise<VisionBoard> {
     const visionBoard = await this.findOneOrFail(id);
     this.checkVisionBoardOwnership(visionBoard, userId);
     return await this.visionBoardService.update(

@@ -38,7 +38,6 @@ export class VisionBoard {
 
   @Column("text")
   @IsString()
-  @IsNotEmpty()
   @Expose()
   @ApiProperty({
     description: "Description of the vision board.",
