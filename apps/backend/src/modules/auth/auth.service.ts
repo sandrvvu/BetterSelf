@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
-import { PasswordService } from "../../common/modules/password/password.service";
+import { PasswordService } from "../../common/services/password/password.service";
 import { CreateUserDto } from "../users/libs/dto/create-user.dto";
 import { User } from "../users/user.entity";
 import { UserService } from "../users/user.service";

@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { AiAssistantService } from "../../common/modules/ai-assistant/ai-assistant.service";
+import { AiAssistantService } from "../../common/services/ai-assistant/ai-assistant.service";
 
 import { ChatMessage } from "./chat-message.entity";
 import { ReflectionController } from "./reflection.controller";

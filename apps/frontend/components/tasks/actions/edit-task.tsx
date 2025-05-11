@@ -28,7 +28,7 @@ import {
   Slider,
   Textarea,
 } from "@/components/ui";
-import { Task,TaskSchema, TaskSchemaType, TimeUnit } from "@/lib";
+import { Task, TaskSchema, TaskSchemaType, TimeUnit } from "@/lib";
 import { cn } from "@/lib/utils";
 import { useUpdateTaskMutation } from "@/state/features/tasks/taskApi";
 
@@ -51,7 +51,7 @@ export default function EditTaskForm({
       difficulty: task.difficulty,
       successProbability: task.successProbability,
       dependencies: task.dependencies,
-      targetDate: task.targetDate,
+      targetDate: task.targetDate ? new Date(task.targetDate) : undefined,
       estimatedTime: task.estimatedTime,
       estimatedTimeUnit: task.estimatedTimeUnit,
     },
@@ -267,7 +267,7 @@ export default function EditTaskForm({
             className="w-full bg-violet-600 text-white py-4 rounded-lg hover:bg-violet-700"
             disabled={isLoading}
           >
-            {isLoading ? "Adding..." : "Add"}
+            {isLoading ? "Saving..." : "Save changes"}
           </Button>
         </FormItem>
       </form>

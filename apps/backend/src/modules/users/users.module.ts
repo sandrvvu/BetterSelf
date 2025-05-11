@@ -7,7 +7,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthGuard } from "src/common/guards";
 import { TypedConfigService, AuthConfigType } from "src/config";
 
-import { PasswordService } from "../../common/modules/password/password.service";
+import { PasswordService } from "../../common/services/password/password.service";
 import { AuthController } from "../auth/auth.controller";
 import { AuthService } from "../auth/auth.service";
 

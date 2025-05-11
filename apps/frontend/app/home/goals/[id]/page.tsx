@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { ArrowDownUp, Calendar, Flag, Tag, TrendingUp } from "lucide-react";
+import { Calendar, Flag, Tag, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
@@ -9,8 +9,10 @@ import { use, useState } from "react";
 import { GoalControls, TasksControls } from "@/components/goals";
 import { AppCollapsible, Spinner } from "@/components/shared";
 import { TaskCard } from "@/components/tasks";
-import { Button, DropdownMenuSeparator, Progress } from "@/components/ui";
+import { DropdownMenuSeparator, Progress } from "@/components/ui";
+import { TaskStatus } from "@/lib";
 import { useGetGoalQuery } from "@/state/features/goals/goalApi";
+import { useUpdateTaskMutation } from "@/state/features/tasks/taskApi";
 
 type Params = Promise<{ id: string }>;
 
@@ -21,6 +23,7 @@ export default function Goal(props: { params: Params }) {
   const router = useRouter();
 
   const { data: goal, isLoading, refetch } = useGetGoalQuery(id);
+  const [updateTask] = useUpdateTaskMutation();
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -36,8 +39,23 @@ export default function Goal(props: { params: Params }) {
     void refetch();
   };
 
-  const onToggleStatus = (id: string) => {
-    console.log(id);
+  const onToggleStatus = (taskId: string) => {
+    const task = goal?.tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    const newStatus =
+      task.status === TaskStatus.COMPLETED
+        ? TaskStatus.PENDING
+        : TaskStatus.COMPLETED;
+
+    updateTask({ id: task.id, data: { status: newStatus } })
+      .unwrap()
+      .then(() => {
+        void refetch();
+      })
+      .catch((error) => {
+        console.error("Failed to update task status", error);
+      });
   };
 
   if (!goal && !isLoading) {
@@ -128,17 +146,12 @@ export default function Goal(props: { params: Params }) {
         <div className="flex items-center justify-between px-4">
           <p className="font-semibold">Action plan</p>
 
-          <div>
-            <Button className="px-2 py-0 border-none shadow-none bg-white text-neutral-800 rounded-lg hover:bg-neutral-200">
-              <ArrowDownUp />
-            </Button>
-            <TasksControls
-              goalId={goal.id}
-              onAdded={() => void refetch()}
-              isAddOpen={isAddTaskOpen}
-              setIsAddOpen={setIsAddTaskOpen}
-            />
-          </div>
+          <TasksControls
+            goalId={goal.id}
+            onAdded={() => void refetch()}
+            isAddOpen={isAddTaskOpen}
+            setIsAddOpen={setIsAddTaskOpen}
+          />
         </div>
 
         {goal.tasks.length > 0 ? (

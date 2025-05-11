@@ -20,7 +20,7 @@ import {
 
 import { CurrentUserId } from "src/common/decorators";
 
-import { AiAssistantService } from "../../common/modules/ai-assistant/ai-assistant.service";
+import { AiAssistantService } from "../../common/services/ai-assistant/ai-assistant.service";
 import { CreateTaskDto } from "../tasks/libs/dto/create-task.dto";
 import { Task } from "../tasks/task.entity";
 

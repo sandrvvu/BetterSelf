@@ -99,7 +99,7 @@ export default [
       "jsdoc/require-returns-description": "off",
       curly: ["error", "all"],
       eqeqeq: ["error", "always"],
-      "max-params": ["error", 3],
+      "max-params": ["error", 4],
       "no-console": ["error"],
       "no-multiple-empty-lines": ["error", { max: 1 }],
       "object-shorthand": ["error"],

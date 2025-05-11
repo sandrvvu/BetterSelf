@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { PasswordService } from "../../common/modules/password/password.service";
+import { PasswordService } from "../../common/services/password/password.service";
 
 import { CreateUserDto } from "./libs/dto/create-user.dto";
 import { UpdateUserDto } from "./libs/dto/update-user.dto";

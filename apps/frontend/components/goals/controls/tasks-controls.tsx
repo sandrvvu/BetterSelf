@@ -1,5 +1,7 @@
-import { Bot, Plus, SquarePen } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
+"use client";
+
+import { ArrowDownUp, Bot, Plus, SquarePen } from "lucide-react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { AddTaskDialog } from "@/components/tasks";
 import {
@@ -7,6 +9,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui";
 
@@ -21,8 +27,28 @@ export const TasksControls = ({
   isAddOpen: boolean;
   setIsAddOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const [sorting, setSorting] = useState("topsis");
+
   return (
-    <>
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <ArrowDownUp className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup value={sorting} onValueChange={setSorting}>
+            <DropdownMenuRadioItem value="topsis">
+              TOPSIS Priority
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -51,6 +77,6 @@ export const TasksControls = ({
         setIsOpen={setIsAddOpen}
         onAdded={onAdded}
       />
-    </>
+    </div>
   );
 };

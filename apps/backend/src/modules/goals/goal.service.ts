@@ -8,6 +8,8 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
+import { TopsisService } from "src/common/services/topsis/topsis.service";
+
 import { Category } from "../categories/category.entity";
 import { Task, TaskStatus } from "../tasks/task.entity";
 
@@ -29,6 +31,7 @@ export class GoalService {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    private readonly topsisService: TopsisService,
   ) {}
 
   public async create(
@@ -136,7 +139,7 @@ export class GoalService {
       userId,
       goal.categoryId,
     );
-    const tasks = await this.taskRepository.find({ where: { goalId } });
+    const tasks = await this.getPrioritizedTasks(goalId);
 
     const progress = await this.calculateProgress(goalId, userId);
 
@@ -288,5 +291,23 @@ export class GoalService {
     }
 
     return category;
+  }
+
+  private async getPrioritizedTasks(goalId: string): Promise<Task[]> {
+    const tasks = await this.taskRepository.find({ where: { goalId } });
+
+    const sortedTasks = this.topsisService.rank<Task>(tasks, {
+      criteria: [
+        "importance",
+        "urgency",
+        "difficulty",
+        "successProbability",
+        "estimatedTime",
+      ],
+      isBenefit: [true, true, false, true, false],
+      weights: [0.3, 0.25, 0.15, 0.2, 0.1],
+    });
+
+    return sortedTasks;
   }
 }
