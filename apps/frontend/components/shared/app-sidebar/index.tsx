@@ -75,14 +75,14 @@ export default function AppSidebar({ name, email, onSignOut }: SidebarProps) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={`hover:text-purple-800 hover:bg-purple-200 active:text-purple-800 active:bg-purple-200 ${
+                    className={`hover:text-purple-700 hover:bg-purple-200 active:text-purple-700 active:bg-purple-200 ${
                       item.url === "/home"
                         ? pathname === "/home"
-                          ? "text-purple-800 bg-purple-200 font-semibold"
+                          ? "text-purple-700 bg-purple-200 font-semibold"
                           : ""
                         : pathname?.startsWith(`${item.url}/`) ||
                             pathname === item.url
-                          ? "text-purple-800 bg-purple-200 font-semibold"
+                          ? "text-purple-700 bg-purple-200 font-semibold"
                           : ""
                     }`}
                   >

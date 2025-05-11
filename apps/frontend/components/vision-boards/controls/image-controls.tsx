@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-interface Props {
+type ImageControlsProps = {
   isDeleteMode: boolean;
   onToggleDeleteMode: () => void;
   boardId: string;
@@ -17,7 +17,7 @@ export const ImageControls = ({
   onToggleDeleteMode,
   boardId,
   uploadImage,
-}: Props) => {
+}: ImageControlsProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 

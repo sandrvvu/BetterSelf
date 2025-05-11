@@ -13,7 +13,7 @@ export default function Goals() {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-4 text-purple-800 w-5/6">
+      <h1 className="text-3xl font-semibold mb-4">
         My goals
       </h1>
       {goals && goals.length > 0 ? (

@@ -1,3 +1,5 @@
+import { Task } from "@/lib";
+
 export enum GoalStatus {
   PENDING = "pending",
   IN_PROGRESS = "in_progress",
@@ -32,14 +34,23 @@ export type CreateGoalDto = {
 };
 
 export type UpdateGoalDto = {
-  id: string;
-  categoryId: string;
-  title: string;
+  title?: string;
   description?: string;
-  priority: GoalPriority;
+  priority?: GoalPriority;
   targetDate?: Date;
+  status?: GoalStatus;
 };
 
 export type GoalWithCategoryName = Goal & {
   categoryName: string;
+};
+
+export type GoalWithFullInfo = Goal & {
+  categoryName: string;
+  progress: {
+    allTasksCount: number;
+    completedTasksCount: number;
+    progressPercentage: number;
+  };
+  tasks: Task[];
 };

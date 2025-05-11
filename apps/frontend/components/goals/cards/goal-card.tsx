@@ -9,79 +9,47 @@ import {
   CardTitle,
   Progress,
 } from "@/components/ui";
-import { Goal, GoalPriority, GoalStatus } from "@/lib";
+import { Goal } from "@/lib";
 
 type GoalCardProps = {
   goal: Goal;
 };
 
-const priorityVariants: Record<
-  GoalPriority,
-  { text: string; className: string }
-> = {
-  [GoalPriority.HIGH]: { text: "High", className: "bg-red-100 text-red-700" },
-  [GoalPriority.MEDIUM]: {
-    text: "Medium",
-    className: "bg-yellow-100 text-yellow-700",
-  },
-  [GoalPriority.LOW]: { text: "Low", className: "bg-green-100 text-green-700" },
-};
-
-const statusVariants: Record<GoalStatus, { text: string; className: string }> =
-  {
-    [GoalStatus.PENDING]: {
-      text: "Pending",
-      className: "bg-gray-100 text-gray-800",
-    },
-    [GoalStatus.IN_PROGRESS]: {
-      text: "In Progress",
-      className: "bg-blue-100 text-blue-800",
-    },
-    [GoalStatus.COMPLETED]: {
-      text: "Completed",
-      className: "bg-green-100 text-green-800",
-    },
-  };
-
 export default function GoalCard({ goal }: GoalCardProps) {
-  const statusInfo = statusVariants[goal.status];
-  const priorityInfo = priorityVariants[goal.priority];
-
   return (
-    <Link href={`/goals/${goal.id}`}>
-      <Card className="shadow-lg border border-t-4 border-purple-400">
-        <CardHeader className="pb-2 space-y-2">
-          <div className="flex gap-2">
-            <Badge
-              className={`px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800`}
-            >
-              {statusInfo.text}
-            </Badge>
-            <Badge
-              className={`px-2 py-0.5 rounded-full text-xs font-medium ${priorityInfo.className} bg-pink-400 hover:bg-pink-400 text-white`}
-            >
-              {priorityInfo.text} Priority
-            </Badge>
-          </div>
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-base font-semibold text-gray-800">
+    <Link href={`/home/goals/${goal.id}`}>
+      <Card className="border border-gray-200 shadow-sm rounded-xl transition hover:shadow-md">
+        <CardHeader className="pb-3 px-4 pt-4">
+          <div className="flex justify-between items-start">
+            <CardTitle className="mb-1 text-lg font-semibold text-purple-700 leading-snug">
               {goal.title}
             </CardTitle>
             {goal.targetDate && (
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-gray-500 whitespace-nowrap">
                 {format(new Date(goal.targetDate), "yyyy-MM-dd")}
               </span>
             )}
           </div>
+          <div className="flex flex-wrap gap-2">
+            <Badge className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800">
+              {goal.status}
+            </Badge>
+            <Badge className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800">
+              {goal.priority} priority
+            </Badge>
+          </div>
         </CardHeader>
 
-        <CardContent className="space-y-2 text-sm">
+        <CardContent className="px-4 pb-4 space-y-2 text-sm text-gray-700">
           <div className="space-y-1">
-            <div className="flex justify-between text-xs text-gray-500">
+            <div className="flex justify-between text-xs text-gray-500 font-medium">
               <span>Progress</span>
               <span>{goal.progress}%</span>
             </div>
-            <Progress value={goal.progress} className="h-2 bg-gray-100" />
+            <Progress
+              value={goal.progress}
+              className="h-2 rounded-full bg-gray-100"
+            />
           </div>
         </CardContent>
       </Card>

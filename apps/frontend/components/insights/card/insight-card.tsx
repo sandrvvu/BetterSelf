@@ -10,9 +10,9 @@ type InsightCardProps = {
 
 export const InsightCard = ({ preview }: InsightCardProps) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-200 flex flex-col justify-between">
+    <div className="bg-white p-4 rounded-2xl shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-200 flex flex-col justify-between">
       <div>
-        <p className="text-gray-800 text-md mb-3 line-clamp-3">
+        <p className="text-gray-800 text-sm mb-3 line-clamp-3">
           {preview.previewText}
         </p>
       </div>
@@ -24,7 +24,7 @@ export const InsightCard = ({ preview }: InsightCardProps) => {
         <Link href={`/home/insights/${preview.id}`}>
         <Button
           variant="outline"
-          className="text-purple-700 border-purple-600 hover:bg-purple-50"
+          className="text-purple-700 border-purple-700 hover:bg-purple-700 hover:text-white"
         >
           View
         </Button>

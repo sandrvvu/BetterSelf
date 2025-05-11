@@ -13,11 +13,11 @@ type EntryCardProps = {
 
 export default function EntryCard({ entry }: EntryCardProps) {
   return (
-    <Card className="border-pink-500 border-2 rounded-2xl shadow-sm w-full xl:max-w-sm">
-      <Link href={`journal/${entry.id}`}>
-        <CardContent className="p-4 flex flex-col h-full">
+    <Card className="border-2 shadow-sm w-full p-2 rounded-xl border-gray-200 transition hover:shadow-md">
+      <Link href={`/home/journal/${entry.id}`}>
+        <CardContent className="p-2 flex flex-col h-full">
           <div className="flex-1 space-y-2">
-            <h3 className="text-lg font-semibold">{entry.title}</h3>
+            <h3 className="text-lg text-purple-700 font-semibold">{entry.title}</h3>
             {entry.content ? (
               <p className="text-muted-foreground text-sm line-clamp-2">
                 {striptags(entry.content)}
@@ -27,7 +27,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
             )}
           </div>
 
-          <div className="mt-4">
+          <div className="mt-2">
             <Separator />
             <p className="text-xs text-muted-foreground text-right mt-2">
               {format(new Date(entry.createdAt), "PPP")}

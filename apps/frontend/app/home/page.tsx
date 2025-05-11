@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <>
-      <h1 className="text-4xl font-semibold text-purple-800">
+      <h1 className="text-4xl font-bold text-purple-800">
         Welcome back, {user?.name}!
       </h1>
       <p>home page</p>

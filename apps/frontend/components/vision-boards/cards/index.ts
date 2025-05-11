@@ -1,0 +1,1 @@
+export { default as VisionBoardCard } from "./vision-board-card"

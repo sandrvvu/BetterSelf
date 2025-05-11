@@ -38,7 +38,7 @@ export function ResponsiveDialog({
   if (!isMobile) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[625px]">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             {description && (

@@ -6,7 +6,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+const DropdownMenu = ({ ...rest }) => ( <DropdownMenuPrimitive.Root modal={false} {...rest} /> );
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 

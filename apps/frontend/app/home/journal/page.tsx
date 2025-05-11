@@ -17,18 +17,18 @@ export default function Journal() {
   return (
     <>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-4xl font-semibold text-purple-800">My journal</h1>
+        <h1 className="text-3xl font-semibold">My journal</h1>
         <Link href="/home/journal/create">
           <Button
             variant="default"
-            className="border-2 text-md border-purple-600 bg-purple-600 text-white py-4 rounded-lg hover:bg-white hover:text-purple-800 shadow-lg"
+            className="border-2 text-md border-purple-600 bg-purple-600 text-white py-4 rounded-lg hover:bg-white hover:text-purple-600 shadow-lg"
           >
             Add entry
           </Button>
         </Link>
       </div>
       {entries && entries.length > 0 ? (
-        <div className="flex flex-wrap justify-between gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {entries.map((entry) => (
             <EntryCard key={entry.id} entry={entry} />
           ))}

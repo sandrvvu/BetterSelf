@@ -17,8 +17,8 @@ export default function DeleteCategoryContent({
     useDeleteCategoryMutation();
 
   async function handleDelete(id: string) {
-    await deleteCategory(id);
     onDelete();
+    await deleteCategory(id);
   }
 
   useEffect(() => {

@@ -37,12 +37,8 @@ export default function Insight(props: { params: Params }) {
 
   const handleSend = async () => {
     if (!message.trim()) return;
-    try {
-      await sendPrompt({ id, data: { content: message } }).unwrap();
-      setMessage("");
-    } catch (e) {
-      console.error("Error sending message:", e);
-    }
+    await sendPrompt({ id, data: { content: message } }).unwrap();
+    setMessage("");
   };
 
   const onDelete = () => {
@@ -57,30 +53,16 @@ export default function Insight(props: { params: Params }) {
   if (isLoading) {
     return <Spinner />;
   }
-
   if (!chat) {
     return null;
   }
 
   return (
-    <div className="h-full">
-      <div className="sticky top-0 p-2 bg-white flex items-center justify-between mb-6">
-        <h1 className="text-2xl text-purple-600 font-bold">
+    <>
+      <div className="bg-white flex items-center justify-between mb-4">
+        <h1 className="text-3xl font-semibold">
           {format(new Date(chat.createdAt), "PPP")}
         </h1>
-        <Button
-          onClick={() => setIsDeleteOpen(true)}
-          className="border-2 text-md border-neutral-500 bg-white text-neutral-800 py-4 rounded-lg hover:bg-purple-600 hover:text-white shadow-lg"
-        >
-          <Trash2 />
-        </Button>
-
-        <DeleteInsightDialog
-          id={id}
-          onDelete={onDelete}
-          isOpen={isDeleteOpen}
-          setIsOpen={setIsDeleteOpen}
-        />
       </div>
 
       <div className="flex flex-col">
@@ -90,7 +72,7 @@ export default function Insight(props: { params: Params }) {
               key={msg.id}
               className={`p-3 rounded-lg max-w-[75%] ${
                 msg.role === ChatMessageRole.USER
-                  ? "bg-pink-200 self-end ml-auto"
+                  ? "bg-purple-200 self-end ml-auto"
                   : "bg-gray-100"
               }`}
             >
@@ -118,17 +100,30 @@ export default function Insight(props: { params: Params }) {
             className="flex-1 border rounded-lg p-2"
             placeholder="Enter message..."
           />
-          <button
+          <Button
             onClick={() => {
               void handleSend();
             }}
             disabled={isSending}
-            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50"
+            className="bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50"
           >
             Go deeper
-          </button>
+          </Button>
+          <Button
+            onClick={() => setIsDeleteOpen(true)}
+            className="border-2 text-md border-neutral-500 bg-white text-neutral-800 py-4 rounded-lg hover:bg-purple-700 hover:text-white shadow-lg"
+          >
+            <Trash2 />
+          </Button>
         </div>
       </div>
-    </div>
+
+      <DeleteInsightDialog
+        id={id}
+        onDelete={onDelete}
+        isOpen={isDeleteOpen}
+        setIsOpen={setIsDeleteOpen}
+      />
+    </>
   );
 }

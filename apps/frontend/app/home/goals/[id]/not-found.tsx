@@ -14,9 +14,9 @@ export default function NotFound() {
       </p>
       <Link
         href="/home/goals"
-        className="text-purple-600 border border-purple-600 px-4 py-2 rounded hover:bg-purple-50 transition"
+        className="text-purple-700 border border-purple-700 px-4 py-2 rounded hover:bg-purple-50 transition"
       >
-        Back to Goals
+        Back to goals
       </Link>
     </div>
   );

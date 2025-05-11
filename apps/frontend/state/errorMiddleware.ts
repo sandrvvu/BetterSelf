@@ -1,12 +1,12 @@
 import { isRejectedWithValue, Middleware } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-interface ErrorData {
+type ErrorData =  {
   message?: string;
   [key: string]: unknown;
 }
 
-interface RejectedAction {
+type RejectedAction = {
   payload?: {
     data?: string | ErrorData;
     status?: number;

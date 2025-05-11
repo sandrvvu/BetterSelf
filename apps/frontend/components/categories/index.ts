@@ -3,7 +3,7 @@ export {
   DeleteCategoryContent,
   EditCategoryForm,
 } from "./actions";
-export { CategoryControls } from "./buttons";
+export { CategoryControls } from "./controls";
 export {
   CreateCategoryDialog,
   DeleteCategoryDialog,

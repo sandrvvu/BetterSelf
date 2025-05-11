@@ -8,6 +8,7 @@ import { categoryApi } from "./features/categories/categoryApi";
 import { goalApi } from "./features/goals/goalApi";
 import { insightApi } from "./features/insights/insightApi";
 import { journalApi } from "./features/journal/journalApi";
+import { taskApi } from "./features/tasks/taskApi";
 import { userApi } from "./features/user/userApi";
 import { visionBoardApi } from "./features/vision-boards/visionBoardApi";
 
@@ -21,9 +22,13 @@ export const store = configureStore({
     [journalApi.reducerPath]: journalApi.reducer,
     [insightApi.reducerPath]: insightApi.reducer,
     [visionBoardApi.reducerPath]: visionBoardApi.reducer,
+    [taskApi.reducerPath]: taskApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }).concat(
       rtkQueryErrorLogger,
       userApi.middleware,
       authApi.middleware,
@@ -32,6 +37,7 @@ export const store = configureStore({
       journalApi.middleware,
       insightApi.middleware,
       visionBoardApi.middleware,
+      taskApi.middleware,
     ),
 });
 

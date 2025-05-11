@@ -14,7 +14,8 @@ import { Task, TaskStatus } from "../tasks/task.entity";
 import { Goal, GoalStatus } from "./goal.entity";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
 import { GoalWithCategoryName } from "./libs/dto/goal-with-category-name";
-import { ProgressDto } from "./libs/dto/progress.dto";
+import { GoalWithFullInfo } from "./libs/dto/goal-with-full-info";
+import { Progress } from "./libs/dto/progress";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 
 @Injectable()
@@ -29,69 +30,6 @@ export class GoalService {
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
   ) {}
-
-  public async calculateProgress(
-    goalId: string,
-    userId: string,
-  ): Promise<ProgressDto> {
-    this.logger.log(
-      `Calculating progress for goal with ID: ${goalId} for user with ID: ${userId}`,
-    );
-
-    const goal = await this.findOneOrFail(goalId);
-    await this.getCategoryAndCheckOwnership(userId, goal.categoryId);
-    this.logger.log(`Goal found with ID: ${goalId} and ownership verified.`);
-
-    const tasks = await this.taskRepository.find({ where: { goalId } });
-    this.logger.log(`Fetched ${tasks.length} tasks for goal ID: ${goalId}`);
-
-    const completedTasks = tasks.filter(
-      (task) => task.status === TaskStatus.COMPLETED,
-    );
-    const totalTasks = tasks.length;
-
-    let totalWeight = 0;
-    let completedWeight = 0;
-
-    tasks.forEach((task) => {
-      totalWeight += task.importance;
-      if (task.status === TaskStatus.COMPLETED) {
-        completedWeight += task.importance;
-      }
-    });
-    this.logger.log(
-      `Calculated total weight: ${totalWeight} and completed weight: ${completedWeight}`,
-    );
-
-    const progressPercentage = Math.round(
-      totalWeight > 0 ? (completedWeight / totalWeight) * 100 : 0,
-    );
-
-    this.logger.log(
-      `Progress for goal ID: ${goalId} is ${progressPercentage}% with ${completedTasks.length} completed tasks out of ${totalTasks}.`,
-    );
-
-    goal.progress = progressPercentage;
-
-    if (goal.progress === 100) {
-      goal.status = GoalStatus.COMPLETED;
-      this.logger.log(`Goal ID: ${goalId} marked as completed.`);
-    } else if (completedTasks.length > 0) {
-      goal.status = GoalStatus.IN_PROGRESS;
-      this.logger.log(`Goal ID: ${goalId} marked as in progress.`);
-    }
-
-    await this.goalRepository.save(goal);
-    this.logger.log(
-      `Goal progress updated to ${goal.progress}% in the database.`,
-    );
-
-    return {
-      allTasksCount: totalTasks,
-      completedTasksCount: completedTasks.length,
-      progressPercentage,
-    };
-  }
 
   public async create(
     userId: string,
@@ -189,6 +127,35 @@ export class GoalService {
     return tasks;
   }
 
+  public async getGoalFullInfo(
+    userId: string,
+    goalId: string,
+  ): Promise<GoalWithFullInfo> {
+    const goal = await this.findOneOrFail(goalId);
+    const category = await this.getCategoryAndCheckOwnership(
+      userId,
+      goal.categoryId,
+    );
+    const tasks = await this.taskRepository.find({ where: { goalId } });
+
+    const progress = await this.calculateProgress(goalId, userId);
+
+    return {
+      categoryId: category.id,
+      categoryName: category.name,
+      createdAt: goal.createdAt,
+      description: goal.description,
+      id: goal.id,
+      priority: goal.priority,
+      progress,
+      status: goal.status,
+      targetDate: goal.targetDate,
+      tasks,
+      title: goal.title,
+      updatedAt: goal.updatedAt,
+    };
+  }
+
   public async update(
     userId: string,
     goalId: string,
@@ -204,6 +171,69 @@ export class GoalService {
     Object.assign(goal, updateGoalDto);
     this.logger.log(`Goal updated successfully: ${goal.id}`);
     return await this.goalRepository.save(goal);
+  }
+
+  private async calculateProgress(
+    goalId: string,
+    userId: string,
+  ): Promise<Progress> {
+    this.logger.log(
+      `Calculating progress for goal with ID: ${goalId} for user with ID: ${userId}`,
+    );
+
+    const goal = await this.findOneOrFail(goalId);
+    await this.getCategoryAndCheckOwnership(userId, goal.categoryId);
+    this.logger.log(`Goal found with ID: ${goalId} and ownership verified.`);
+
+    const tasks = await this.taskRepository.find({ where: { goalId } });
+    this.logger.log(`Fetched ${tasks.length} tasks for goal ID: ${goalId}`);
+
+    const completedTasks = tasks.filter(
+      (task) => task.status === TaskStatus.COMPLETED,
+    );
+    const totalTasks = tasks.length;
+
+    let totalWeight = 0;
+    let completedWeight = 0;
+
+    tasks.forEach((task) => {
+      totalWeight += task.importance;
+      if (task.status === TaskStatus.COMPLETED) {
+        completedWeight += task.importance;
+      }
+    });
+    this.logger.log(
+      `Calculated total weight: ${totalWeight} and completed weight: ${completedWeight}`,
+    );
+
+    const progressPercentage = Math.round(
+      totalWeight > 0 ? (completedWeight / totalWeight) * 100 : 0,
+    );
+
+    this.logger.log(
+      `Progress for goal ID: ${goalId} is ${progressPercentage}% with ${completedTasks.length} completed tasks out of ${totalTasks}.`,
+    );
+
+    goal.progress = progressPercentage;
+
+    if (goal.progress === 100) {
+      goal.status = GoalStatus.COMPLETED;
+      this.logger.log(`Goal ID: ${goalId} marked as completed.`);
+    } else if (completedTasks.length > 0) {
+      goal.status = GoalStatus.IN_PROGRESS;
+      this.logger.log(`Goal ID: ${goalId} marked as in progress.`);
+    }
+
+    await this.goalRepository.save(goal);
+    this.logger.log(
+      `Goal progress updated to ${goal.progress}% in the database.`,
+    );
+
+    return {
+      allTasksCount: totalTasks,
+      completedTasksCount: completedTasks.length,
+      progressPercentage,
+    };
   }
 
   private async ensureGoalIsUnique(

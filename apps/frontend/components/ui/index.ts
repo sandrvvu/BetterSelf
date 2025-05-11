@@ -10,6 +10,7 @@ export {
   CardHeader,
   CardTitle,
 } from "./card";
+export { Checkbox } from "./checkbox";
 export {
   Collapsible,
   CollapsibleContent,
@@ -77,6 +78,18 @@ export {
 export { Progress } from "./progress";
 export { RadioGroup, RadioGroupItem } from "./radio-group";
 export { ResponsiveDialog } from "./responsive-dialog";
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
 export { Separator } from "./separator";
 export {
   Sheet,
@@ -117,6 +130,7 @@ export {
   useSidebar,
 } from "./sidebar";
 export { Skeleton } from "./skeleton";
+export { Slider } from "./slider";
 export {
   Table,
   TableBody,

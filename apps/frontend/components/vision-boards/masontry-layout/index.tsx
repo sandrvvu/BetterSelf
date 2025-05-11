@@ -17,7 +17,7 @@ type PinterestLayoutProps = {
 
 export const MasontryLayout = ({ images }: PinterestLayoutProps) => {
   const breakpointColumnsObj = {
-    default: 4,
+    default: 3,
     1100: 3,
     700: 2,
     500: 1,

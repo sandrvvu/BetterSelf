@@ -1,7 +1,7 @@
 "use state";
 
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, PencilOff, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -20,14 +20,14 @@ import {
   ResponsiveDialog,
 } from "@/components/ui";
 
-interface CategoryRow {
+type CategoryRow = {
   id: string;
   name: string;
   description?: string;
-}
-interface DataTableRowActionsProps<TData> {
+};
+type DataTableRowActionsProps<TData> = {
   row: Row<TData>;
-}
+};
 
 export default function DataTableRowActions<TData extends CategoryRow>({
   row,
@@ -77,7 +77,13 @@ export default function DataTableRowActions<TData extends CategoryRow>({
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer">
-            <Link href={`/home/categories/${categoryId}`}>View category</Link>
+            <Link
+              href={`/home/categories/${categoryId}`}
+              className="w-full flex gap-1"
+            >
+              <Eye size={18} />
+              <span> View category </span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
@@ -85,6 +91,7 @@ export default function DataTableRowActions<TData extends CategoryRow>({
               setIsEditedOpen(true);
             }}
           >
+            <PencilOff />
             Edit category
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -93,6 +100,7 @@ export default function DataTableRowActions<TData extends CategoryRow>({
               setIsDeleteOpen(true);
             }}
           >
+            <Trash2 />
             Delete category
           </DropdownMenuItem>
         </DropdownMenuContent>

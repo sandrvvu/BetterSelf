@@ -18,13 +18,13 @@ export default function Categories() {
   return (
     <>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-4xl font-semibold text-purple-800">
+        <h1 className="text-3xl font-semibold">
           My categories
         </h1>
         <Button
           onClick={() => setIsAddOpen(true)}
           variant="default"
-          className="border-2 text-md border-purple-600 bg-purple-600 text-white py-4 rounded-lg hover:bg-white hover:text-purple-800 shadow-lg"
+          className="border-2 text-md border-purple-700 bg-purple-700 text-white py-4 rounded-lg hover:bg-white hover:text-purple-700 shadow-lg"
         >
           Add category
         </Button>

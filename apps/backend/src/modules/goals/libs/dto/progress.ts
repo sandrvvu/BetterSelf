@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt } from "class-validator";
 
-export class ProgressDto {
+export class Progress {
   @IsInt()
   @ApiProperty({
     description: "Total number of tasks for the goal.",

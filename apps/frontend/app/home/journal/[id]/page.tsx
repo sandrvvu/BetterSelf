@@ -1,14 +1,13 @@
 "use client";
 
 import { format } from "date-fns";
-import { PencilOff, Trash2 } from "lucide-react";
 import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
-import { DeleteEntryDialog, EditEntryDialog } from "@/components/journal";
+import { EntryControls } from "@/components/journal";
 import { Spinner } from "@/components/shared";
-import { Button } from "@/components/ui";
+import { DropdownMenuSeparator } from "@/components/ui";
 import { useGetEntryQuery } from "@/state/features/journal/journalApi";
 
 type Params = Promise<{ id: string }>;
@@ -25,7 +24,7 @@ export default function Entry({ params }: { params: Params }) {
     notFound();
   }
 
-  const handleDelete = () => {
+  const onDelete = () => {
     setIsDeleteOpen(false);
     router.replace("/home/journal");
   };
@@ -35,26 +34,21 @@ export default function Entry({ params }: { params: Params }) {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-4xl font-bold mb-4">{entry.title}</h1>
-        <div className="flex gap-2">
-          {[
-            { icon: <PencilOff />, onClick: () => setIsEditOpen(true) },
-            { icon: <Trash2 />, onClick: () => setIsDeleteOpen(true) },
-          ].map(({ icon, onClick }, i) => (
-            <Button
-              key={i}
-              onClick={onClick}
-              className="border-2 text-md border-neutral-500 bg-white text-neutral-800 py-4 rounded-lg hover:bg-purple-600 hover:text-white shadow-lg"
-            >
-              {icon}
-            </Button>
-          ))}
-        </div>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-3xl font-semibold">{entry.title}</h1>
+        <EntryControls
+          entry={entry}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          onDelete={onDelete}
+        />
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="italic">{format(new Date(entry.createdAt), "PPP")}</p>
+        <p className="italic text-muted-foreground">{format(new Date(entry.createdAt), "PPP")}</p>
+        <DropdownMenuSeparator />
         {entry.content && (
           <div
             className="prose prose-sm max-w-none"
@@ -62,21 +56,6 @@ export default function Entry({ params }: { params: Params }) {
           />
         )}
       </div>
-
-      <DeleteEntryDialog
-        isOpen={isDeleteOpen}
-        setIsOpen={setIsDeleteOpen}
-        id={id}
-        onDelete={handleDelete}
-      />
-
-      <EditEntryDialog
-        isOpen={isEditOpen}
-        title={entry.title}
-        content={entry.content}
-        setIsOpen={setIsEditOpen}
-        id={id}
-      />
     </>
   );
 }

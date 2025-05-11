@@ -28,7 +28,7 @@ import { Goal } from "./goal.entity";
 import { GoalService } from "./goal.service";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
 import { GoalWithCategoryName } from "./libs/dto/goal-with-category-name";
-import { ProgressDto } from "./libs/dto/progress.dto";
+import { GoalWithFullInfo } from "./libs/dto/goal-with-full-info";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 
 @ApiTags("Goals")
@@ -99,7 +99,7 @@ export class GoalController {
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth("access-token")
-  @ApiOkResponse({ type: Goal })
+  @ApiOkResponse({ type: GoalWithFullInfo })
   @ApiResponse({ description: "Successfully retrieved the goal.", status: 200 })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
   @ApiResponse({ description: "Access denied.", status: 403 })
@@ -107,8 +107,8 @@ export class GoalController {
   async findOne(
     @Param("id") id: string,
     @CurrentUserId() userId: string,
-  ): Promise<Goal> {
-    return await this.goalService.findOne(userId, id);
+  ): Promise<GoalWithFullInfo> {
+    return await this.goalService.getGoalFullInfo(userId, id);
   }
 
   @Get(":id/tasks")
@@ -143,24 +143,6 @@ export class GoalController {
   ): Promise<CreateTaskDto[]> {
     const goal = await this.goalService.findOne(userId, goalId);
     return this.aiAssistantService.generateGoalTasks(goal.id, goalDetails);
-  }
-
-  @Get(":id/progress")
-  @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth("access-token")
-  @ApiOkResponse({ type: ProgressDto })
-  @ApiResponse({
-    description: "Successfully calculated the goal progress.",
-    status: 200,
-  })
-  @ApiResponse({ description: "Unauthorized.", status: 401 })
-  @ApiResponse({ description: "Access denied.", status: 403 })
-  @ApiResponse({ description: "Goal not found.", status: 404 })
-  async getGoalProgress(
-    @Param("id") id: string,
-    @CurrentUserId() userId: string,
-  ): Promise<ProgressDto> {
-    return await this.goalService.calculateProgress(id, userId);
   }
 
   @Patch(":id")
