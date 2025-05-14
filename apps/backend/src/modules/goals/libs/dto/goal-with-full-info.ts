@@ -6,6 +6,15 @@ import { GoalPriority, GoalStatus } from "../../goal.entity";
 
 import { Progress } from "./progress";
 
+interface DependencyInfo {
+  id: string;
+  title: string;
+}
+
+export interface TaskWithDependencies extends Omit<Task, "dependencies"> {
+  dependencies: DependencyInfo[];
+}
+
 export class GoalWithFullInfo {
   @ApiProperty({
     description: "ID of the category the goal belongs to.",
@@ -65,9 +74,8 @@ export class GoalWithFullInfo {
 
   @ApiProperty({
     description: "List of tasks associated with the goal.",
-    type: () => [Task],
   })
-  tasks: Task[];
+  tasks: TaskWithDependencies[];
 
   @ApiProperty({
     description: "Title of the goal.",

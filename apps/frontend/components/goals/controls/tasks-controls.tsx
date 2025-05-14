@@ -16,6 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui";
 
+import { GenerateTasksModal } from "../dialogs/generate-tasks";
+
 export const TasksControls = ({
   goalId,
   onAdded,
@@ -28,6 +30,7 @@ export const TasksControls = ({
   setIsAddOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [sorting, setSorting] = useState("topsis");
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div>
@@ -64,12 +67,21 @@ export const TasksControls = ({
             <SquarePen />
             Create task
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setIsOpen(true)}
+          >
             <Bot />
-            Generate task
+            Generate Tasks
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <GenerateTasksModal
+        goalId={goalId}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
 
       <AddTaskDialog
         goalId={goalId}

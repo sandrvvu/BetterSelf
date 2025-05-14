@@ -12,10 +12,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Task } from "@/lib";
+import { TaskWithDependencies } from "@/lib";
 
 type TaskSheetProps = {
-  task: Task;
+  task: TaskWithDependencies;
   children: React.ReactNode;
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
@@ -79,16 +79,16 @@ export default function TaskSheet({
             <Badge>{task.status}</Badge>
           </div>
 
-          {/* {task.dependencies?.length > 0 && (
+          {task.dependencies?.length > 0 && (
             <div>
               <span className="text-gray-600">Dependencies:</span>
               <ul className="list-disc ml-6 mt-1 text-muted-foreground text-xs">
                 {task.dependencies.map((dep) => (
-                  <li key={dep}>{dep}</li>
+                  <li key={dep.id}>{dep.title}</li>
                 ))}
               </ul>
             </div>
-          )} */}
+          )}
         </div>
       </SheetContent>
     </Sheet>

@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
+import { Spinner } from "@/components/shared";
 import {
   Button,
   Calendar,
@@ -17,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  MultiSelect,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -30,16 +32,23 @@ import {
 } from "@/components/ui";
 import { Task, TaskSchema, TaskSchemaType, TimeUnit } from "@/lib";
 import { cn } from "@/lib/utils";
-import { useUpdateTaskMutation } from "@/state/features/tasks/taskApi";
+import {
+  useGetAvailableDependenciesQuery,
+  useUpdateTaskMutation,
+} from "@/state/features/tasks/taskApi";
 
 export default function EditTaskForm({
   task,
   setIsOpen,
+  onEdit,
 }: {
   task: Task;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  onEdit: () => void;
 }) {
   const [updateTask, { data, isLoading, isSuccess }] = useUpdateTaskMutation();
+  const { data: availableDependencies, isLoading: isLoadingDependencies } =
+    useGetAvailableDependenciesQuery({ goalId: task.goalId, taskId: task.id });
 
   const form = useForm<TaskSchemaType>({
     resolver: zodResolver(TaskSchema),
@@ -52,7 +61,7 @@ export default function EditTaskForm({
       successProbability: task.successProbability,
       dependencies: task.dependencies,
       targetDate: task.targetDate ? new Date(task.targetDate) : undefined,
-      estimatedTime: task.estimatedTime,
+      estimatedTime: task.estimatedTime ? task.estimatedTime : undefined,
       estimatedTimeUnit: task.estimatedTimeUnit,
     },
   });
@@ -67,9 +76,14 @@ export default function EditTaskForm({
   useEffect(() => {
     if (isSuccess && data) {
       setIsOpen(false);
+      onEdit();
       toast.success("Task edited successfully.");
     }
-  }, [isSuccess, data, setIsOpen]);
+  }, [isSuccess, data, setIsOpen, onEdit]);
+
+  if (isLoadingDependencies) {
+    return <Spinner />;
+  }
 
   return (
     <Form {...form}>
@@ -260,6 +274,30 @@ export default function EditTaskForm({
             )}
           />
         </div>
+
+        {availableDependencies && (
+          <FormField
+            control={form.control}
+            name="dependencies"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Dependencies</FormLabel>
+                <FormControl>
+                  <MultiSelect
+                    options={availableDependencies.map((dep) => ({
+                      value: dep.id,
+                      label: dep.title,
+                    }))}
+                    selected={field.value || []}
+                    onChange={field.onChange}
+                    placeholder="Select tasks..."
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormItem>
           <Button

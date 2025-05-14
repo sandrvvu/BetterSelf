@@ -8,10 +8,12 @@ export const EditTaskDialog = ({
   isOpen,
   setIsOpen,
   task,
+  onEdit,
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   task: Task;
+  onEdit: () => void;
 }) => (
   <ResponsiveDialog
     isOpen={isOpen}
@@ -19,6 +21,6 @@ export const EditTaskDialog = ({
     title="Edit task"
     description='Modify the details of this task. Click "Save Changes" to update.'
   >
-    <EditTaskForm task={task} setIsOpen={setIsOpen} />
+    <EditTaskForm task={task} setIsOpen={setIsOpen} onEdit={onEdit}/>
   </ResponsiveDialog>
 );

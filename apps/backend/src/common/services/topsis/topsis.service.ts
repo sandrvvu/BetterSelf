@@ -4,7 +4,10 @@ import { TopsisConfig } from "./topsis.types";
 
 @Injectable()
 export class TopsisService {
-  rank<T extends Record<string, any>>(items: T[], config: TopsisConfig): T[] {
+  public rank<T extends Record<string, any>>(
+    items: T[],
+    config: TopsisConfig,
+  ): T[] {
     const { criteria, weights, isBenefit } = config;
 
     if (
@@ -16,7 +19,6 @@ export class TopsisService {
     }
 
     const matrix = items.map((item) => criteria.map((key) => item[key] ?? 0));
-
     const normMatrix = this.normalizeMatrix(matrix);
     const weighted = normMatrix.map((row) =>
       row.map((value, i) => value * weights[i]),
@@ -35,6 +37,58 @@ export class TopsisService {
       .map((item, i) => ({ item, score: scores[i] }))
       .sort((a, b) => b.score - a.score)
       .map(({ item }) => item);
+  }
+
+  public rankRespectingDependencies<
+    T extends { id: string; dependencies?: { id: string }[] },
+  >(items: T[], config: TopsisConfig): T[] {
+    const topsisSorted = this.rank(items, config);
+
+    // Step 1: Map task ID to TOPSIS rank index
+    const priorityMap = new Map<string, number>(
+      topsisSorted.map((task, index) => [task.id, index]),
+    );
+
+    // Step 2: Build graph and in-degree map
+    const graph = new Map<string, string[]>();
+    const inDegree = new Map<string, number>();
+
+    topsisSorted.forEach((task) => {
+      graph.set(task.id, []);
+      inDegree.set(task.id, 0);
+    });
+
+    topsisSorted.forEach((task) => {
+      for (const dep of task.dependencies ?? []) {
+        graph.get(dep.id)?.push(task.id);
+        inDegree.set(task.id, (inDegree.get(task.id) ?? 0) + 1);
+      }
+    });
+
+    // Step 3: Topological sort with TOPSIS-aware queue
+    const result: T[] = [];
+    const queue: T[] = topsisSorted.filter(
+      (task) => (inDegree.get(task.id) ?? 0) === 0,
+    );
+
+    queue.sort((a, b) => priorityMap.get(a.id)! - priorityMap.get(b.id)!);
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      result.push(current);
+
+      for (const neighborId of graph.get(current.id) ?? []) {
+        inDegree.set(neighborId, inDegree.get(neighborId)! - 1);
+        if (inDegree.get(neighborId) === 0) {
+          const neighbor = topsisSorted.find((t) => t.id === neighborId)!;
+          queue.push(neighbor);
+        }
+      }
+
+      queue.sort((a, b) => priorityMap.get(a.id)! - priorityMap.get(b.id)!);
+    }
+
+    return result;
   }
 
   private euclideanDistance(a: number[], b: number[]): number {

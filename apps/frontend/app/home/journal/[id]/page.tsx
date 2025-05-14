@@ -5,7 +5,7 @@ import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
-import { EntryControls } from "@/components/journal";
+import { EntryBreadcrumb,EntryControls } from "@/components/journal";
 import { Spinner } from "@/components/shared";
 import { DropdownMenuSeparator } from "@/components/ui";
 import { useGetEntryQuery } from "@/state/features/journal/journalApi";
@@ -34,7 +34,8 @@ export default function Entry({ params }: { params: Params }) {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4">
+      <EntryBreadcrumb />
+      <div className="flex items-center justify-between my-4">
         <h1 className="text-3xl font-semibold">{entry.title}</h1>
         <EntryControls
           entry={entry}
@@ -47,7 +48,9 @@ export default function Entry({ params }: { params: Params }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="italic text-muted-foreground">{format(new Date(entry.createdAt), "PPP")}</p>
+        <p className="italic text-muted-foreground">
+          {format(new Date(entry.createdAt), "PPP")}
+        </p>
         <DropdownMenuSeparator />
         {entry.content && (
           <div

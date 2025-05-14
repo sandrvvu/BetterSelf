@@ -68,6 +68,19 @@ export class TaskService {
     const task = await this.findOneOrFail(taskId);
     await this.getTaskAndCheckOwnership(userId, taskId);
 
+    const tasksWithDependency = await this.taskRepository.find({
+      where: { goalId: task.goalId },
+    });
+
+    const updatedTasks = tasksWithDependency
+      .filter((t) => t.dependencies?.includes(taskId))
+      .map((t) => ({
+        ...t,
+        dependencies: t.dependencies.filter((depId) => depId !== taskId),
+      }));
+
+    await this.taskRepository.save(updatedTasks);
+
     const deletedTask = await this.taskRepository.remove(task);
     this.logger.log(`Task deleted successfully: ${deletedTask.id}`);
     return Boolean(deletedTask);

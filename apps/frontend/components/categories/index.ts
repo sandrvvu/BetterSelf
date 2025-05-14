@@ -10,3 +10,4 @@ export {
   EditCategoryDialog,
 } from "./dialogs";
 export { columns, DataTableRowActions } from "./table";
+export { CategoriesBreadcrumb, CategoryBreadcrumb } from "./ui-elements";

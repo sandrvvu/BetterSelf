@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 
-import { columns, CreateCategoryDialog } from "@/components/categories";
-import { DataTable,Spinner } from "@/components/shared";
+import {
+  CategoriesBreadcrumb,
+  columns,
+  CreateCategoryDialog,
+} from "@/components/categories";
+import { DataTable, Spinner } from "@/components/shared";
 import { Button } from "@/components/ui";
 import { useGetCategoriesQuery } from "@/state/features/categories/categoryApi";
 
@@ -17,10 +21,9 @@ export default function Categories() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-semibold">
-          My categories
-        </h1>
+      <CategoriesBreadcrumb />
+      <div className="mt-4 flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-semibold">My categories</h1>
         <Button
           onClick={() => setIsAddOpen(true)}
           variant="default"

@@ -1,3 +1,3 @@
 export { DeleteInsightContent } from "./actions";
-export { InsightCard } from "./card";
 export { DeleteInsightDialog } from "./dialogs";
+export { ChatBreadcrumb, InsightCard, InsightsBreadcrumb } from "./ui-elements";

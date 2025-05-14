@@ -115,7 +115,7 @@ export default function AppSidebar({ name, email, onSignOut }: SidebarProps) {
                   className="w-[--radix-popper-anchor-width]"
                 >
                   <DropdownMenuItem>
-                    <Link href="/account" className="w-full flex gap-2">
+                    <Link href="/home/account" className="w-full flex gap-2">
                       <User2 size={18} />
                       <span>Account</span>
                     </Link>

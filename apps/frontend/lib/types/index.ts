@@ -16,6 +16,7 @@ export {
   GoalStatus,
   type GoalWithCategoryName,
   type GoalWithFullInfo,
+  type TaskWithDependencies,
   type UpdateGoalDto,
 } from "./goal";
 export {
@@ -38,7 +39,7 @@ export {
   TimeUnit,
   type UpdateTaskDto,
 } from "./task";
-export { type User } from "./user";
+export { type UpdateUserDto, type User } from "./user";
 export {
   type CreateVisionBoardDto,
   type Image,

@@ -30,14 +30,9 @@ export default function GoalCard({ goal }: GoalCardProps) {
               </span>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800">
-              {goal.status}
-            </Badge>
-            <Badge className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800">
-              {goal.priority} priority
-            </Badge>
-          </div>
+          <Badge className="max-w-32 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800">
+            {goal.priority} priority
+          </Badge>
         </CardHeader>
 
         <CardContent className="px-4 pb-4 space-y-2 text-sm text-gray-700">

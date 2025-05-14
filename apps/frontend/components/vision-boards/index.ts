@@ -3,7 +3,6 @@ export {
   DeleteVisionBoardContent,
   EditVisionBoardForm,
 } from "./actions";
-export { VisionBoardCard } from "./cards";
 export { BoardControls, ImageControls } from "./controls";
 export {
   CreateVisionBoardDialog,
@@ -11,3 +10,8 @@ export {
   EditVisionBoardDialog,
 } from "./dialogs";
 export { MasontryLayout } from "./masontry-layout";
+export {
+  BoardBreadcrumb,
+  BoardsBreadcrumb,
+  VisionBoardCard,
+} from "./ui-elements";

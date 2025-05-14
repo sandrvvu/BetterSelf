@@ -9,7 +9,7 @@ import { goalApi } from "./features/goals/goalApi";
 import { insightApi } from "./features/insights/insightApi";
 import { journalApi } from "./features/journal/journalApi";
 import { taskApi } from "./features/tasks/taskApi";
-import { userApi } from "./features/user/userApi";
+import { userApi } from "./features/users/userApi";
 import { visionBoardApi } from "./features/vision-boards/visionBoardApi";
 
 export const store = configureStore({

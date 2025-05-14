@@ -1,21 +1,23 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 
 import { TaskControls, TaskSheet } from "@/components/tasks";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Task, TaskStatus } from "@/lib";
+import { TaskStatus,TaskWithDependencies } from "@/lib";
 import { cn } from "@/lib/utils";
 
 type TaskCardProps = {
-  task: Task;
+  task: TaskWithDependencies;
   onDelete: () => void;
+  onEdit: () => void;
   onToggleStatus: (id: string) => void;
-}
+};
 
 export default function TaskCard({
   task,
   onDelete,
+  onEdit,
   onToggleStatus,
 }: TaskCardProps) {
   const isDone = task.status === TaskStatus.COMPLETED;
@@ -46,21 +48,30 @@ export default function TaskCard({
 
           <div className="flex flex-col gap-1 w-full overflow-hidden">
             <div className="flex items-center justify-between">
-              <h3
-                className={cn(
-                  "font-medium text-sm truncate",
-                  isDone
-                    ? "line-through text-muted-foreground"
-                    : "text-gray-700",
-                )}
-              >
-                {task.title}
-              </h3>
+              <div>
+                <h3
+                  className={cn(
+                    "font-medium text-sm truncate mb-1",
+                    isDone
+                      ? "line-through text-muted-foreground"
+                      : "text-gray-700",
+                  )}
+                >
+                  {task.title}
+                </h3>
+                <p className="text-xs text-neutral-400 line-clamp-1">
+                  {task.description}
+                </p>
+              </div>
 
               <div onClick={(e) => e.stopPropagation()}>
                 <TaskControls
-                  task={task}
+                  task={{
+                    ...task,
+                    dependencies: task.dependencies.map((dep) => dep.id),
+                  }}
                   onDelete={handleDelete}
+                  onEdit={onEdit}
                   isEditOpen={isEditOpen}
                   setIsEditOpen={setIsEditOpen}
                   isDeleteOpen={isDeleteOpen}

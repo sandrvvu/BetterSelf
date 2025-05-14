@@ -6,7 +6,11 @@ import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 
-import { GoalControls, TasksControls } from "@/components/goals";
+import {
+  GoalBreadcrumb,
+  GoalControls,
+  TasksControls,
+} from "@/components/goals";
 import { AppCollapsible, Spinner } from "@/components/shared";
 import { TaskCard } from "@/components/tasks";
 import { DropdownMenuSeparator, Progress } from "@/components/ui";
@@ -33,6 +37,10 @@ export default function Goal(props: { params: Params }) {
   const onDelete = () => {
     setIsDeleteOpen(false);
     router.replace("/home/goals");
+  };
+
+  const onEditTask = () => {
+    void refetch();
   };
 
   const onDeleteTask = () => {
@@ -70,6 +78,7 @@ export default function Goal(props: { params: Params }) {
   return (
     <>
       <div className="flex flex-col gap-2 mb-2">
+        <GoalBreadcrumb goal={goal} />
         <div className="flex items-start justify-between gap-8 mb-4">
           <div className="flex flex-col gap-2">
             <h1 className="text-4xl font-bold text-gray-900 break-words">
@@ -162,6 +171,7 @@ export default function Goal(props: { params: Params }) {
                 task={task}
                 onToggleStatus={onToggleStatus}
                 onDelete={onDeleteTask}
+                onEdit={onEditTask}
               />
             ))}
           </div>

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { API_BASE_URL, CreateTaskDto, Task,UpdateTaskDto } from "@/lib";
+import { API_BASE_URL, CreateTaskDto, Task, UpdateTaskDto } from "@/lib";
 import { RootState } from "@/state/store";
 
 export const taskApi = createApi({
@@ -42,6 +42,21 @@ export const taskApi = createApi({
       providesTags: (result, error, id) => [{ type: "Task", id }],
     }),
 
+    getAvailableDependencies: builder.query<
+      Task[],
+      { goalId: string; taskId?: string }
+    >({
+      query: ({ goalId, taskId }) => {
+        const params = new URLSearchParams({ goalId });
+        if (taskId) params.append("taskId", taskId);
+
+        return {
+          url: `/tasks/available-dependencies?${params.toString()}`,
+          method: "GET",
+        };
+      },
+    }),
+
     updateTask: builder.mutation<Task, { id: string; data: UpdateTaskDto }>({
       query: ({ id, data }) => ({
         url: `tasks/${id}`,
@@ -58,4 +73,5 @@ export const {
   useDeleteTaskMutation,
   useUpdateTaskMutation,
   useGetTaskQuery,
+  useGetAvailableDependenciesQuery,
 } = taskApi;

@@ -4,10 +4,7 @@ import { useState } from "react";
 
 import { Spinner } from "@/components/shared";
 import { Button } from "@/components/ui";
-import {
-  CreateVisionBoardDialog,
-  VisionBoardCard,
-} from "@/components/vision-boards";
+import { BoardsBreadcrumb, CreateVisionBoardDialog, VisionBoardCard } from "@/components/vision-boards";
 import { useGetVisionBoardsQuery } from "@/state/features/vision-boards/visionBoardApi";
 
 export default function VisionBoards() {
@@ -19,8 +16,9 @@ export default function VisionBoards() {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
+    <>
+      <BoardsBreadcrumb />
+      <div className="flex items-center justify-between my-4">
         <h1 className="text-3xl font-semibold">My vision boards</h1>
         <Button
           variant="default"
@@ -38,6 +36,6 @@ export default function VisionBoards() {
           <VisionBoardCard key={board.id} visionBoard={board} />
         ))}
       </div>
-    </div>
+    </>
   );
 }

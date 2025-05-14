@@ -16,6 +16,7 @@ import { Task } from "@/lib";
 export const TaskControls = ({
   task,
   onDelete,
+  onEdit,
   isEditOpen,
   setIsEditOpen,
   isDeleteOpen,
@@ -23,6 +24,7 @@ export const TaskControls = ({
 }: {
   task: Task;
   onDelete: () => void;
+  onEdit: () => void;
   isEditOpen: boolean;
   setIsEditOpen: Dispatch<SetStateAction<boolean>>;
   isDeleteOpen: boolean;
@@ -46,7 +48,7 @@ export const TaskControls = ({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="cursor-pointer"
-          onClick={(e) => {
+            onClick={(e) => {
               e.preventDefault();
               setIsEditOpen(true);
             }}
@@ -71,6 +73,7 @@ export const TaskControls = ({
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
         task={task}
+        onEdit={onEdit}
       />
 
       <DeleteTaskDialog

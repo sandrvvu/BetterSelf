@@ -1,4 +1,5 @@
 export { API_BASE_URL } from "./constants";
+export { isTokenExpired } from "./helpers";
 export {
   type AuthResponse,
   type Category,
@@ -25,11 +26,13 @@ export {
   type RegisterRequest,
   type Task,
   TaskStatus,
+  type TaskWithDependencies,
   TimeUnit,
   type UpdateCategoryDto,
   type UpdateEntryDto,
   type UpdateGoalDto,
   type UpdateTaskDto,
+  type UpdateUserDto,
   type UpdateVisionBoardDto,
   type User,
   type VisionBoard,

@@ -20,7 +20,7 @@ export type Task = {
   urgency: number;
   difficulty: number;
   successProbability: number;
-  dependencies?: string[];
+  dependencies: string[];
   targetDate?: Date;
   status: TaskStatus;
   estimatedTime?: number;
@@ -37,7 +37,7 @@ export type CreateTaskDto = {
   urgency: number;
   difficulty: number;
   successProbability: number;
-  dependencies?: string[];
+  dependencies?: string[] | null;
   targetDate?: Date;
   estimatedTime?: number;
   estimatedTimeUnit: TimeUnit;
@@ -50,7 +50,7 @@ export type UpdateTaskDto = {
   urgency?: number;
   difficulty?: number;
   successProbability?: number;
-  dependencies?: string[];
+  dependencies?: string[] | null;
   targetDate?: Date;
   status?: TaskStatus;
   estimatedTime?: number;

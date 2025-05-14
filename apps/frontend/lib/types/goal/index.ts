@@ -45,6 +45,15 @@ export type GoalWithCategoryName = Goal & {
   categoryName: string;
 };
 
+interface DependencyInfo {
+  id: string;
+  title: string;
+}
+
+export interface TaskWithDependencies extends Omit<Task, "dependencies"> {
+  dependencies: DependencyInfo[];
+}
+
 export type GoalWithFullInfo = Goal & {
   categoryName: string;
   progress: {
@@ -52,5 +61,5 @@ export type GoalWithFullInfo = Goal & {
     completedTasksCount: number;
     progressPercentage: number;
   };
-  tasks: Task[];
+  tasks: TaskWithDependencies[];
 };

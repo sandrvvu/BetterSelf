@@ -5,6 +5,7 @@ import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
 import { CategoryControls } from "@/components/categories";
+import { CategoryBreadcrumb } from "@/components/categories/ui-elements/breadcrumbs";
 import { GoalCard } from "@/components/goals";
 import { AppCollapsible, Spinner } from "@/components/shared";
 import {
@@ -42,7 +43,8 @@ export default function Category(props: { params: Params }) {
 
   return (
     <>
-      <div className="flex items-start justify-between gap-8">
+    <CategoryBreadcrumb/>
+      <div className="mt-4 flex items-start justify-between gap-8">
         <div>
           <h1 className="text-3xl font-semibold break-all">
             {category.name}

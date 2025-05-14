@@ -6,6 +6,7 @@ import { validate as isValidUUID } from "uuid";
 
 import { AppCollapsible, Spinner } from "@/components/shared";
 import {
+  BoardBreadcrumb,
   BoardControls,
   ImageControls,
   MasontryLayout,
@@ -49,7 +50,8 @@ export default function VisionBoard({ params }: { params: Params }) {
 
   return (
     <>
-      <div className="flex items-start justify-between gap-8">
+    <BoardBreadcrumb/>
+      <div className="mt-4 flex items-start justify-between gap-8">
           <h1 className="text-3xl font-semibold all-break break-words">
             {board.title}
           </h1>

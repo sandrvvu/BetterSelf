@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
+import { Spinner } from "@/components/shared";
 import {
   Button,
   Calendar,
@@ -17,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  MultiSelect,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -30,7 +32,10 @@ import {
 } from "@/components/ui";
 import { TaskSchema, TaskSchemaType, TimeUnit } from "@/lib";
 import { cn } from "@/lib/utils";
-import { useCreateTaskMutation } from "@/state/features/tasks/taskApi";
+import {
+  useCreateTaskMutation,
+  useGetAvailableDependenciesQuery,
+} from "@/state/features/tasks/taskApi";
 
 export default function CreateTaskForm({
   goalId,
@@ -40,6 +45,8 @@ export default function CreateTaskForm({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [createTask, { data, isLoading, isSuccess }] = useCreateTaskMutation();
+  const { data: availableDependencies, isLoading: isLoadingDependencies } =
+    useGetAvailableDependenciesQuery({ goalId });
 
   const form = useForm<TaskSchemaType>({
     resolver: zodResolver(TaskSchema),
@@ -50,7 +57,7 @@ export default function CreateTaskForm({
       urgency: 1,
       difficulty: 1,
       successProbability: 50,
-      dependencies: undefined,
+      dependencies: [],
       targetDate: undefined,
       estimatedTime: undefined,
       estimatedTimeUnit: TimeUnit.MINUTES,
@@ -67,6 +74,10 @@ export default function CreateTaskForm({
       toast.success("Task added successfully.");
     }
   }, [isSuccess, data, setIsOpen]);
+
+  if (isLoadingDependencies) {
+    return <Spinner />;
+  }
 
   return (
     <Form {...form}>
@@ -257,6 +268,30 @@ export default function CreateTaskForm({
             )}
           />
         </div>
+
+        {availableDependencies && (
+          <FormField
+            control={form.control}
+            name="dependencies"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Dependencies</FormLabel>
+                <FormControl>
+                  <MultiSelect
+                    options={availableDependencies.map((dep) => ({
+                      value: dep.id,
+                      label: dep.title,
+                    }))}
+                    selected={field.value || []}
+                    onChange={field.onChange}
+                    placeholder="Select tasks..."
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormItem>
           <Button

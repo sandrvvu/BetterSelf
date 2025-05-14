@@ -1,5 +1,14 @@
 export { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 export { Badge, badgeVariants } from "./badge";
+export {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "./breadcrumb";
 export { Button, buttonVariants } from "./button";
 export { Calendar } from "./calendar";
 export {
@@ -69,6 +78,7 @@ export {
 } from "./form";
 export { Input } from "./input";
 export { Label } from "./label";
+export { MultiSelect } from "./multi-select";
 export {
   Popover,
   PopoverAnchor,

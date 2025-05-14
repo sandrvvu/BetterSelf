@@ -6,7 +6,7 @@ import { notFound, useRouter } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-import { DeleteInsightDialog } from "@/components/insights";
+import { ChatBreadcrumb, DeleteInsightDialog } from "@/components/insights";
 import { Spinner } from "@/components/shared";
 import { Button } from "@/components/ui";
 import { ChatMessageRole } from "@/lib";
@@ -59,7 +59,8 @@ export default function Insight(props: { params: Params }) {
 
   return (
     <>
-      <div className="bg-white flex items-center justify-between mb-4">
+      <ChatBreadcrumb />
+      <div className="bg-white flex items-center justify-between my-4">
         <h1 className="text-3xl font-semibold">
           {format(new Date(chat.createdAt), "PPP")}
         </h1>

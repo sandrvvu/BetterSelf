@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { EntryCard } from "@/components/journal";
+import { EntryCard, JournalBreadcrumb } from "@/components/journal";
 import { Spinner } from "@/components/shared";
 import { Button } from "@/components/ui";
 import { useGetEntriesQuery } from "@/state/features/journal/journalApi";
@@ -16,7 +16,8 @@ export default function Journal() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
+    <JournalBreadcrumb/>
+      <div className="flex items-center justify-between my-4">
         <h1 className="text-3xl font-semibold">My journal</h1>
         <Link href="/home/journal/create">
           <Button

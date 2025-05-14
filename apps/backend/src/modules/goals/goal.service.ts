@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
+import { convertToMinutes } from "src/common/helpers/convert-to-minutes";
 import { TopsisService } from "src/common/services/topsis/topsis.service";
 
 import { Category } from "../categories/category.entity";
@@ -16,7 +17,10 @@ import { Task, TaskStatus } from "../tasks/task.entity";
 import { Goal, GoalStatus } from "./goal.entity";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
 import { GoalWithCategoryName } from "./libs/dto/goal-with-category-name";
-import { GoalWithFullInfo } from "./libs/dto/goal-with-full-info";
+import {
+  GoalWithFullInfo,
+  TaskWithDependencies,
+} from "./libs/dto/goal-with-full-info";
 import { Progress } from "./libs/dto/progress";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
 
@@ -293,21 +297,46 @@ export class GoalService {
     return category;
   }
 
-  private async getPrioritizedTasks(goalId: string): Promise<Task[]> {
+  private async getPrioritizedTasks(
+    goalId: string,
+  ): Promise<TaskWithDependencies[]> {
     const tasks = await this.taskRepository.find({ where: { goalId } });
 
-    const sortedTasks = this.topsisService.rank<Task>(tasks, {
+    const tasksWithNormalizedTime = tasks.map((task) => ({
+      ...task,
+      dependencies: (task.dependencies ?? []).map((id) => ({ id })),
+      normalizedEstimatedTime: convertToMinutes(
+        task.estimatedTime,
+        task.estimatedTimeUnit,
+      ),
+    }));
+
+    const sortedTasks = this.topsisService.rankRespectingDependencies<
+      (typeof tasksWithNormalizedTime)[0]
+    >(tasksWithNormalizedTime, {
       criteria: [
         "importance",
         "urgency",
         "difficulty",
         "successProbability",
-        "estimatedTime",
+        "normalizedEstimatedTime",
       ],
       isBenefit: [true, true, false, true, false],
       weights: [0.3, 0.25, 0.15, 0.2, 0.1],
     });
+    const idToTitle = new Map<string, string>(
+      tasks.map((t) => [t.id, t.title]),
+    );
 
-    return sortedTasks;
+    return sortedTasks.map((t) => {
+      const { normalizedEstimatedTime, ...orig } = t;
+      return {
+        ...orig,
+        dependencies: (orig.dependencies || []).map((depId) => ({
+          id: depId.id,
+          title: idToTitle.get(depId.id) ?? "<Unknown>",
+        })),
+      };
+    });
   }
 }

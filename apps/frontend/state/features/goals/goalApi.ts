@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   API_BASE_URL,
   CreateGoalDto,
+  CreateTaskDto,
   Goal,
   GoalWithCategoryName,
   GoalWithFullInfo,
@@ -65,6 +66,15 @@ export const goalApi = createApi({
       }),
       invalidatesTags: ["Goal"],
     }),
+
+    generateTasks: builder.mutation<CreateTaskDto[], { goalId: string; goalDetails: string }>({
+      query: ({ goalId, goalDetails }) => ({
+        url: `goals/${goalId}/generate-tasks`,
+        method: "POST",
+        body: { goalDetails },
+      }),
+    }),
+    
   }),
 });
 
@@ -74,4 +84,5 @@ export const {
   useUpdateGoalMutation,
   useGetGoalQuery,
   useGetGoalsQuery,
+  useGenerateTasksMutation,
 } = goalApi;
