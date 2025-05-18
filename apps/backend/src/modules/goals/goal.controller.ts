@@ -22,11 +22,11 @@ import { CurrentUserId } from "src/common/decorators";
 
 import { AiAssistantService } from "../../common/services/ai-assistant/ai-assistant.service";
 import { CreateTaskDto } from "../tasks/libs/dto/create-task.dto";
-import { Task } from "../tasks/task.entity";
 
 import { Goal } from "./goal.entity";
 import { GoalService } from "./goal.service";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
+import { GoalOption } from "./libs/dto/goal-option";
 import { GoalWithCategoryName } from "./libs/dto/goal-with-category-name";
 import { GoalWithFullInfo } from "./libs/dto/goal-with-full-info";
 import { UpdateGoalDto } from "./libs/dto/update-goal.dto";
@@ -80,6 +80,22 @@ export class GoalController {
     return await this.goalService.delete(userId, id);
   }
 
+  @Get("available-options")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [GoalOption] })
+  @ApiResponse({
+    description: "Successfully retrieved available goal options.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  async findAllAvailableOptions(
+    @CurrentUserId() userId: string,
+  ): Promise<GoalOption[]> {
+    return await this.goalService.getAvailableOptions(userId);
+  }
+
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth("access-token")
@@ -109,24 +125,6 @@ export class GoalController {
     @CurrentUserId() userId: string,
   ): Promise<GoalWithFullInfo> {
     return await this.goalService.getGoalFullInfo(userId, id);
-  }
-
-  @Get(":id/tasks")
-  @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth("access-token")
-  @ApiOkResponse({ type: [Task] })
-  @ApiResponse({
-    description: "Successfully retrieved tasks for the goal.",
-    status: 200,
-  })
-  @ApiResponse({ description: "Unauthorized.", status: 401 })
-  @ApiResponse({ description: "Access denied.", status: 403 })
-  @ApiResponse({ description: "Goal not found.", status: 404 })
-  async findTasksByGoal(
-    @Param("id") id: string,
-    @CurrentUserId() userId: string,
-  ): Promise<Task[]> {
-    return await this.goalService.findTasksByGoal(id, userId);
   }
 
   @Post(":id/generate-tasks")

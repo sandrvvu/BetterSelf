@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
+import { Spinner } from "@/components/shared";
 import {
   Button,
   Form,
@@ -15,38 +16,43 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui";
-import { EntrySchema, EntrySchemaType } from "@/lib";
+import { Entry, EntrySchema, EntrySchemaType, Info } from "@/lib";
+import { useGetGoalOptionsQuery } from "@/state/features/goals/goalApi";
 import { useUpdateEntryMutation } from "@/state/features/journal/journalApi";
 
 import { Tiptap } from "../editor";
 
 export default function EditEntryForm({
-  id,
-  title,
-  content = "",
+  entry,
   setIsOpen,
 }: {
-  id: string;
-  title: string;
-  content?: string;
+  entry: Entry;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [updateEntry, { data, isLoading, isSuccess }] =
     useUpdateEntryMutation();
 
+  const { data: options, isLoading: isLoadingOptions } =
+    useGetGoalOptionsQuery();
+
   const form = useForm<EntrySchemaType>({
     mode: "onChange",
     resolver: zodResolver(EntrySchema),
     defaultValues: {
-      title,
-      content,
-      goalId: null,
+      title: entry.title,
+      content: entry.content,
+      goalId: entry.goalId,
     },
   });
 
   async function onSubmit(values: EntrySchemaType) {
-    await updateEntry({ id, data: values });
+    await updateEntry({ id: entry.id, data: values });
   }
 
   useEffect(() => {
@@ -55,6 +61,10 @@ export default function EditEntryForm({
       toast.success("Entry edited successfully.");
     }
   }, [isSuccess, data, setIsOpen]);
+
+  if (isLoadingOptions) {
+    return <Spinner />;
+  }
 
   return (
     <Form {...form}>
@@ -100,6 +110,43 @@ export default function EditEntryForm({
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="goalId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Related Goal</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) =>
+                    field.onChange(value === "__none__" ? null : value)
+                  }
+                  value={field.value ?? "__none__"}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a goal..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-40 overflow-y-auto">
+                    <SelectItem
+                      value="__none__"
+                      className="cursor-pointer hover:bg-neutral-100"
+                    >
+                      No goal
+                    </SelectItem>
+                    {options?.map((goal: Info) => (
+                      <SelectItem key={goal.id} value={goal.id}>
+                        {goal.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormItem className="flex justify-end">
           <Button
             type="submit"

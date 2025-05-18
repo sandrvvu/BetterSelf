@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { plainToInstance } from "class-transformer";
 import { Repository } from "typeorm";
 
 import { BoardToImage } from "./board-to-image.entity";
@@ -85,6 +86,7 @@ export class VisionBoardService {
       .createQueryBuilder("visionBoard")
       .leftJoinAndSelect("visionBoard.boardToImages", "boardToImages")
       .leftJoinAndSelect("boardToImages.image", "image")
+      .leftJoinAndSelect("visionBoard.goal", "goal")
       .where("visionBoard.userId = :userId", { userId });
 
     if (goalId) {
@@ -114,6 +116,7 @@ export class VisionBoardService {
         createdAt: vb.createdAt,
         description: vb.description,
         goalId: vb.goalId,
+        goalTitle: vb.goal ? vb.goal.title : null,
         id: vb.id,
         previewImage,
         title: vb.title,
@@ -158,7 +161,7 @@ export class VisionBoardService {
   public async findOneWithImages(id: string): Promise<VisionBoardWithImages> {
     this.logger.log(`Finding vision board by ID: ${id}`);
     const visionBoard = await this.visionBoardRepository.findOne({
-      relations: ["boardToImages", "boardToImages.image"],
+      relations: ["boardToImages", "boardToImages.image", "goal"],
       where: { id },
     });
 
@@ -172,10 +175,12 @@ export class VisionBoardService {
         source: bti.image.source,
       })) ?? [];
 
-    const { boardToImages, ...rest } = visionBoard;
+    const { boardToImages, goal, ...rest } = visionBoard;
 
     return {
       ...rest,
+      goalId: goal?.id ?? null,
+      goalTitle: goal?.title ?? null,
       images,
     };
   }

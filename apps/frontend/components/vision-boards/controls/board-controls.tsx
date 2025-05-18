@@ -63,9 +63,7 @@ export const BoardControls = ({
       <EditVisionBoardDialog
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
-        id={board.id}
-        title={board.title}
-        description={board.description}
+        board={board}
       />
 
       <DeleteVisionBoardDialog

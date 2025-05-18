@@ -1,13 +1,14 @@
 "use client";
 
 import { format } from "date-fns";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
-import { EntryBreadcrumb,EntryControls } from "@/components/journal";
+import { EntryBreadcrumb, EntryControls } from "@/components/journal";
 import { Spinner } from "@/components/shared";
-import { DropdownMenuSeparator } from "@/components/ui";
+import { Badge, DropdownMenuSeparator } from "@/components/ui";
 import { useGetEntryQuery } from "@/state/features/journal/journalApi";
 
 type Params = Promise<{ id: string }>;
@@ -35,8 +36,20 @@ export default function Entry({ params }: { params: Params }) {
   return (
     <>
       <EntryBreadcrumb />
-      <div className="flex items-center justify-between my-4">
-        <h1 className="text-3xl font-semibold">{entry.title}</h1>
+      <div className="flex items-start justify-between my-4 w-full">
+        <div>
+          <h1 className="text-3xl font-semibold">{entry.title}</h1>
+          {entry.goalTitle && (
+            <Link href={`/home/goals/${entry.goalId}`}>
+              <Badge
+                className="mt-2 bg-violet-100 text-violet-700  hover:bg-violet-100 hover:text-violet-700"
+                title={entry.goalTitle}
+              >
+                {entry.goalTitle}
+              </Badge>
+            </Link>
+          )}
+        </div>
         <EntryControls
           entry={entry}
           isEditOpen={isEditOpen}

@@ -78,7 +78,7 @@ export class EntryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
-  async findAllByUserId(@CurrentUserId() userId: string): Promise<Entry[]> {
+  async findAllByUserId(@CurrentUserId() userId: string) {
     return await this.entryService.findAllByUserId(userId);
   }
 

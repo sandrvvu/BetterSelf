@@ -16,6 +16,7 @@ import { Task, TaskStatus } from "../tasks/task.entity";
 
 import { Goal, GoalStatus } from "./goal.entity";
 import { CreateGoalDto } from "./libs/dto/create-goal.dto";
+import { GoalOption } from "./libs/dto/goal-option";
 import { GoalWithCategoryName } from "./libs/dto/goal-with-category-name";
 import {
   GoalWithFullInfo,
@@ -114,24 +115,29 @@ export class GoalService {
     return goal;
   }
 
-  public async findTasksByGoal(
-    goalId: string,
-    userId: string,
-  ): Promise<Task[]> {
-    this.logger.log(`Finding tasks for goal with ID: ${goalId}`);
+  public async getAvailableOptions(userId: string): Promise<GoalOption[]> {
+    this.logger.log(`Finding all goals for user ID: ${userId}`);
 
-    const goal = await this.findOneOrFail(goalId);
-    await this.getCategoryAndCheckOwnership(userId, goal.categoryId);
+    const goals = await this.goalRepository
+      .createQueryBuilder("goal")
+      .innerJoin("goal.category", "category")
+      .addSelect(["category.name"])
+      .where("category.userId = :userId", { userId })
+      .orderBy("goal.createdAt", "DESC")
+      .getMany();
 
-    if (!goal) {
-      this.logger.warn(`Goal not found with ID: ${goalId}`);
-    }
-
-    const tasks = await this.taskRepository.find({
-      where: { goalId },
+    const options = goals.map((goal) => {
+      return {
+        id: goal.id,
+        title: goal.title,
+      };
     });
 
-    return tasks;
+    if (!options.length) {
+      this.logger.warn(`No options found for userId: ${userId}`);
+    }
+
+    return options;
   }
 
   public async getGoalFullInfo(

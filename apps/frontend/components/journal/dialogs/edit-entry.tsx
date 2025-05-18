@@ -2,19 +2,16 @@ import { Dispatch, SetStateAction } from "react";
 
 import { EditEntryForm } from "@/components/journal";
 import { ResponsiveDialog } from "@/components/ui";
+import { Entry } from "@/lib";
 
 export const EditEntryDialog = ({
   isOpen,
   setIsOpen,
-  id,
-  title,
-  content,
+  entry,
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  id: string;
-  title: string;
-  content?: string;
+  entry: Entry;
 }) => (
   <ResponsiveDialog
     isOpen={isOpen}
@@ -22,11 +19,6 @@ export const EditEntryDialog = ({
     title="Edit entry"
     description='Modify the details of this entry. Click "Save Changes" to update.'
   >
-    <EditEntryForm
-      id={id}
-      title={title}
-      content={content}
-      setIsOpen={setIsOpen}
-    />
+    <EditEntryForm entry={entry} setIsOpen={setIsOpen} />
   </ResponsiveDialog>
 );

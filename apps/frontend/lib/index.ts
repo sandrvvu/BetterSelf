@@ -18,6 +18,7 @@ export {
   type GoalWithCategoryName,
   type GoalWithFullInfo,
   type Image,
+  type Info,
   type LoginRequest,
   type Reflection,
   type ReflectionPreview,

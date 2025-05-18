@@ -72,10 +72,8 @@ export const EntryControls = ({
 
       <EditEntryDialog
         isOpen={isEditOpen}
-        title={entry.title}
-        content={entry.content}
         setIsOpen={setIsEditOpen}
-        id={entry.id}
+        entry={entry}
       />
     </>
   );

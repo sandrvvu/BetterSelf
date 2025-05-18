@@ -45,13 +45,13 @@ export type GoalWithCategoryName = Goal & {
   categoryName: string;
 };
 
-interface DependencyInfo {
+export interface Info {
   id: string;
   title: string;
 }
 
 export interface TaskWithDependencies extends Omit<Task, "dependencies"> {
-  dependencies: DependencyInfo[];
+  dependencies: Info[];
 }
 
 export type GoalWithFullInfo = Goal & {

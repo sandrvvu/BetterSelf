@@ -16,6 +16,7 @@ export {
   GoalStatus,
   type GoalWithCategoryName,
   type GoalWithFullInfo,
+  type Info,
   type TaskWithDependencies,
   type UpdateGoalDto,
 } from "./goal";

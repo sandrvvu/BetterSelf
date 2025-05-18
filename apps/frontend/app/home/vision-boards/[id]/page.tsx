@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
 import { AppCollapsible, Spinner } from "@/components/shared";
+import { Badge } from "@/components/ui";
 import {
   BoardBreadcrumb,
   BoardControls,
@@ -50,11 +52,23 @@ export default function VisionBoard({ params }: { params: Params }) {
 
   return (
     <>
-    <BoardBreadcrumb/>
+      <BoardBreadcrumb />
       <div className="mt-4 flex items-start justify-between gap-8">
+        <div>
+          {board.goalTitle && (
+            <Link href={`/home/goals/${board.goalId}`}>
+              <Badge
+                className="mb-2 bg-violet-100 text-violet-700  hover:bg-violet-100 hover:text-violet-700"
+                title={board.goalTitle}
+              >
+                {board.goalTitle}
+              </Badge>
+            </Link>
+          )}
           <h1 className="text-3xl font-semibold all-break break-words">
             {board.title}
           </h1>
+        </div>
         <BoardControls
           board={board}
           isEditOpen={isEditOpen}
@@ -66,13 +80,13 @@ export default function VisionBoard({ params }: { params: Params }) {
       </div>
 
       <AppCollapsible description="Description">
-          <p
-            className="m-2 text-sm text-muted-foreground break-words"
-            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-          >
-            {board.description}
-          </p>
-        </AppCollapsible>
+        <p
+          className="m-2 text-sm text-muted-foreground break-words"
+          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+        >
+          {board.description}
+        </p>
+      </AppCollapsible>
 
       <div className="flex justify-end mb-4">
         <ImageControls

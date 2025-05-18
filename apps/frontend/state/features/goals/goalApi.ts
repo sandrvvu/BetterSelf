@@ -7,6 +7,7 @@ import {
   Goal,
   GoalWithCategoryName,
   GoalWithFullInfo,
+  Info,
   UpdateGoalDto,
 } from "@/lib";
 import { RootState } from "@/state/store";
@@ -50,6 +51,14 @@ export const goalApi = createApi({
       providesTags: ["Goal"],
     }),
 
+    getGoalOptions: builder.query<Info[], void>({
+      query: () => ({
+        url: `/goals/available-options`,
+        method: "GET",
+      }),
+      providesTags: ["Goal"],
+    }),
+
     getGoal: builder.query<GoalWithFullInfo, string>({
       query: (id) => ({
         url: `goals/${id}`,
@@ -85,4 +94,5 @@ export const {
   useGetGoalQuery,
   useGetGoalsQuery,
   useGenerateTasksMutation,
+  useGetGoalOptionsQuery,
 } = goalApi;
