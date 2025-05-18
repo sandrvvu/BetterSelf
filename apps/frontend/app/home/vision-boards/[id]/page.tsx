@@ -32,7 +32,7 @@ export default function VisionBoard({ params }: { params: Params }) {
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [isManageMode, setIsManageMode] = useState(false);
 
   const onDelete = () => {
     setIsDeleteOpen(false);
@@ -40,6 +40,10 @@ export default function VisionBoard({ params }: { params: Params }) {
   };
 
   const handleDeleteImage = async (imageId: string) => {
+    await deleteImage({ boardId: id, imageId });
+  };
+
+  const handleDuplicateImage = async (imageId: string) => {
     await deleteImage({ boardId: id, imageId });
   };
 
@@ -90,18 +94,21 @@ export default function VisionBoard({ params }: { params: Params }) {
 
       <div className="flex justify-end mb-4">
         <ImageControls
-          isDeleteMode={isDeleteMode}
-          onToggleDeleteMode={() => setIsDeleteMode((prev) => !prev)}
+          isManageMode={isManageMode}
+          onToggleMode={() => setIsManageMode((prev) => !prev)}
           boardId={board.id}
           uploadImage={uploadImage}
         />
       </div>
       <MasontryLayout
+        isManageMode={isManageMode}
+        boardId={board.id}
         images={board.images.map((img) => ({
           id: img.id,
           src: img.source,
           alt: board.title,
-          onDelete: isDeleteMode ? () => handleDeleteImage(img.id) : undefined,
+          onDelete: () => handleDeleteImage(img.id),
+          onDuplicate: () => handleDuplicateImage(img.id),
         }))}
       />
     </>

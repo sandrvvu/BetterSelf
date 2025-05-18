@@ -4,6 +4,7 @@ import {
   API_BASE_URL,
   CreateVisionBoardDto,
   Image,
+  Info,
   UpdateVisionBoardDto,
   VisionBoard,
   VisionBoardWithImages,
@@ -40,6 +41,26 @@ export const visionBoardApi = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["VisionBoard"],
+    }),
+
+    duplicateImageToBoard: builder.mutation<
+      void,
+      { currentBoardId: string; imageId: string; boardId: string }
+    >({
+      query: ({ currentBoardId, imageId, boardId }) => ({
+        url: `vision-boards/${currentBoardId}/duplicate/${imageId}`,
+        method: "POST",
+        body: { boardId },
+      }),
+      invalidatesTags: ["VisionBoard"],
+    }),
+
+    getVisionBoardOptions: builder.query<Info[], void>({
+      query: () => ({
+        url: "/vision-boards/available-options",
+        method: "GET",
+      }),
+      providesTags: ["VisionBoard"],
     }),
 
     getVisionBoards: builder.query<VisionBoardWithPreviewImage[], void>({
@@ -111,4 +132,6 @@ export const {
   useGetVisionBoardsQuery,
   useUploadImageToBoardMutation,
   useRemoveImageFromBoardMutation,
+  useDuplicateImageToBoardMutation,
+  useGetVisionBoardOptionsQuery,
 } = visionBoardApi;

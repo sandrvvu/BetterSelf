@@ -13,5 +13,6 @@ export { MasontryLayout } from "./masontry-layout";
 export {
   BoardBreadcrumb,
   BoardsBreadcrumb,
+  DuplicateImageButton,
   VisionBoardCard,
 } from "./ui-elements";

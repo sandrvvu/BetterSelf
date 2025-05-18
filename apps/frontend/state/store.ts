@@ -26,8 +26,8 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      immutableCheck: false,
-      serializableCheck: false,
+      // immutableCheck: false,
+      // serializableCheck: false,
     }).concat(
       rtkQueryErrorLogger,
       userApi.middleware,

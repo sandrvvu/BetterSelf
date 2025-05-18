@@ -5,11 +5,11 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToInstance } from "class-transformer";
 import { Repository } from "typeorm";
 
 import { BoardToImage } from "./board-to-image.entity";
 import { Image } from "./image.entity";
+import { BoardOption } from "./libs/dto/board-option";
 import { CreateVisionBoardDto } from "./libs/dto/create-vision-board.dto";
 import { UpdateVisionBoardDto } from "./libs/dto/update-vision-board.dto";
 import { VisionBoardWithImages } from "./libs/dto/vision-board-with-images";
@@ -75,6 +75,15 @@ export class VisionBoardService {
     );
 
     return Boolean(deletedVisionBoard);
+  }
+
+  public async duplicateImageToBoard(imageId: string, visionBoardId: string) {
+    const boardToImage = this.boardToImageRepository.create({
+      imageId,
+      visionBoardId,
+    });
+
+    await this.boardToImageRepository.save(boardToImage);
   }
 
   public async findAllByUserId(
@@ -183,6 +192,28 @@ export class VisionBoardService {
       goalTitle: goal?.title ?? null,
       images,
     };
+  }
+
+  public async getAvailableOptions(userId: string): Promise<BoardOption[]> {
+    this.logger.log(`Finding all boards for user ID: ${userId}`);
+
+    const boards = await this.visionBoardRepository.find({
+      order: { createdAt: "DESC" },
+      where: { userId },
+    });
+
+    const options = boards.map((board) => {
+      return {
+        id: board.id,
+        title: board.title,
+      };
+    });
+
+    if (!options.length) {
+      this.logger.warn(`No options found for userId: ${userId}`);
+    }
+
+    return options;
   }
 
   async removeImage(visionBoardId: string, imageId: string): Promise<Boolean> {

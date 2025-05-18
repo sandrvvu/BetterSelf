@@ -1,20 +1,20 @@
 "use client";
 
-import { Trash, Upload, X } from "lucide-react";
+import { PencilOff, Upload, X } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
 type ImageControlsProps = {
-  isDeleteMode: boolean;
-  onToggleDeleteMode: () => void;
+  isManageMode: boolean;
+  onToggleMode: () => void;
   boardId: string;
   uploadImage: ({ id, file }: { id: string; file: File }) => Promise<unknown>;
 }
 
 export const ImageControls = ({
-  isDeleteMode,
-  onToggleDeleteMode,
+  isManageMode,
+  onToggleMode,
   boardId,
   uploadImage,
 }: ImageControlsProps) => {
@@ -43,18 +43,18 @@ export const ImageControls = ({
   return (
     <div className="flex flex-wrap gap-2">
       <Button
-        variant={isDeleteMode ? "secondary" : "outline"}
-        onClick={onToggleDeleteMode}
+        variant={isManageMode ? "secondary" : "outline"}
+        onClick={onToggleMode}
       >
-        {isDeleteMode ? (
+        {isManageMode ? (
           <>
             <X className="w-4 h-4 mr-1" />
-            Cancel Delete
+            Cancel Editing
           </>
         ) : (
           <>
-            <Trash className="w-4 h-4 mr-1" />
-            Delete Images
+            <PencilOff className="w-4 h-4 mr-1" />
+            Manage Images
           </>
         )}
       </Button>

@@ -28,8 +28,11 @@ import {
 import { CurrentUserId } from "src/common/decorators";
 import { StorageService } from "src/common/services/storage/storage.service";
 
+import { BoardToImage } from "./board-to-image.entity";
 import { Image } from "./image.entity";
+import { BoardOption } from "./libs/dto/board-option";
 import { CreateVisionBoardDto } from "./libs/dto/create-vision-board.dto";
+import { DuplicateImageDto } from "./libs/dto/duplicate-image.dto";
 import { UpdateVisionBoardDto } from "./libs/dto/update-vision-board.dto";
 import { VisionBoardWithImages } from "./libs/dto/vision-board-with-images";
 import { VisionBoardWithPreviewImage } from "./libs/dto/vision-board-with-preview-image";
@@ -83,6 +86,38 @@ export class VisionBoardController {
     const visionBoard = await this.findOneOrFail(id);
     this.checkVisionBoardOwnership(visionBoard, userId);
     return await this.visionBoardService.delete(visionBoard);
+  }
+
+  @Post(":id/duplicate/:imageId")
+  @HttpCode(HttpStatus.CREATED)
+  @ApiBearerAuth("access-token")
+  @ApiResponse({ description: "Image duplicated successfully", status: 201 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  async duplicateImage(
+    @Param("id") id: string,
+    @Param("imageId") imageId: string,
+    @CurrentUserId() userId: string,
+    @Body(ValidationPipe) body: DuplicateImageDto,
+  ) {
+    const visionBoard = await this.findOneOrFail(id);
+    this.checkVisionBoardOwnership(visionBoard, userId);
+    await this.visionBoardService.duplicateImageToBoard(imageId, body.boardId);
+  }
+
+  @Get("available-options")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth("access-token")
+  @ApiOkResponse({ type: [BoardOption] })
+  @ApiResponse({
+    description: "Successfully retrieved available board options.",
+    status: 200,
+  })
+  @ApiResponse({ description: "Unauthorized.", status: 401 })
+  @ApiResponse({ description: "Access denied.", status: 403 })
+  async findAllAvailableOptions(
+    @CurrentUserId() userId: string,
+  ): Promise<BoardOption[]> {
+    return await this.visionBoardService.getAvailableOptions(userId);
   }
 
   @Get()
