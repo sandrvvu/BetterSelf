@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import { Button, Card, CardContent, Skeleton } from "@/components/ui";
 
@@ -9,8 +10,13 @@ type Quote = {
   a: string;
 };
 
+const DEFAULT_QUOTE: Quote = {
+  q: "The only person you should try to be better than is the person you were yesterday.",
+  a: "Anonymous",
+};
+
 export default function QuoteWidget() {
-  const [quote, setQuote] = useState<Quote | null>(null);
+  const [quote, setQuote] = useState<Quote>(DEFAULT_QUOTE);
   const [loading, setLoading] = useState(true);
 
   const fetchQuote = async () => {
@@ -21,6 +27,8 @@ export default function QuoteWidget() {
       setQuote(data);
     } catch (error) {
       console.error("Failed to fetch quote:", error);
+      toast.error("Failed to fetch quote. Try again later");
+      setQuote(DEFAULT_QUOTE);
     } finally {
       setLoading(false);
     }
@@ -38,9 +46,7 @@ export default function QuoteWidget() {
         ) : (
           <blockquote className="text-xl">
             “{quote?.q}”
-            <footer className="italic mt-2 text-sm">
-              — {quote?.a}
-            </footer>
+            <footer className="italic mt-2 text-sm">— {quote?.a}</footer>
           </blockquote>
         )}
         <div className="flex justify-end mt-4">

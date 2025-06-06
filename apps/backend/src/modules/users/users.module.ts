@@ -11,6 +11,7 @@ import { PasswordService } from "../../common/services/password/password.service
 import { AuthController } from "../auth/auth.controller";
 import { AuthService } from "../auth/auth.service";
 
+import { TopsisSettings } from "./topsis-settings.entity";
 import { UserController } from "./user.controller";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
@@ -18,7 +19,7 @@ import { UserService } from "./user.service";
 @Module({
   controllers: [UserController, AuthController],
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, TopsisSettings]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

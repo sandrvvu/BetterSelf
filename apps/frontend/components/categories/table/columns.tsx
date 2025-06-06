@@ -12,7 +12,9 @@ export const columns: ColumnDef<CategoryWithGoalCount>[] = [
     header: "Category name",
     cell: ({ row }) => {
       return (
-        <div className=" text-purple-700 font-semibold">{row.original.name}</div>
+        <div className="text-purple-700 font-semibold max-w-[200px] break-words">
+          {row.original.name}
+        </div>
       );
     },
   },

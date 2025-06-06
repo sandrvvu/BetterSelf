@@ -13,7 +13,9 @@ import {
 } from "@/components/ui";
 import { GoalWithFullInfo } from "@/lib";
 
-export function GoalBreadcrumb({goal}: {goal: GoalWithFullInfo}) {
+const MAX_CATEGORY_NAME_LENGTH = 15;
+
+export function GoalBreadcrumb({ goal }: { goal: GoalWithFullInfo }) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -29,10 +31,14 @@ export function GoalBreadcrumb({goal}: {goal: GoalWithFullInfo}) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuItem>
-              <BreadcrumbLink href="/home/goals">Goals</BreadcrumbLink>
+                <BreadcrumbLink href="/home/goals">Goals</BreadcrumbLink>
               </DropdownMenuItem>
               <DropdownMenuItem>
-              <BreadcrumbLink href={`/home/categories/${goal.categoryId}`}>{goal.categoryName}</BreadcrumbLink>
+                <BreadcrumbLink href={`/home/categories/${goal.categoryId}`}>
+                  {goal.categoryName?.length > MAX_CATEGORY_NAME_LENGTH
+                    ? `${goal.categoryName.slice(0, MAX_CATEGORY_NAME_LENGTH)}...`
+                    : goal.categoryName}
+                </BreadcrumbLink>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

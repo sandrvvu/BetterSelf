@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -28,13 +27,7 @@ import { useUpdateEntryMutation } from "@/state/features/journal/journalApi";
 
 import { Tiptap } from "../editor";
 
-export default function EditEntryForm({
-  entry,
-  setIsOpen,
-}: {
-  entry: Entry;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-}) {
+export default function EditEntryForm({ entry }: { entry: Entry }) {
   const [updateEntry, { data, isLoading, isSuccess }] =
     useUpdateEntryMutation();
 
@@ -57,10 +50,9 @@ export default function EditEntryForm({
 
   useEffect(() => {
     if (isSuccess && data) {
-      setIsOpen(false);
       toast.success("Entry edited successfully.");
     }
-  }, [isSuccess, data, setIsOpen]);
+  }, [isSuccess, data]);
 
   if (isLoadingOptions) {
     return <Spinner />;

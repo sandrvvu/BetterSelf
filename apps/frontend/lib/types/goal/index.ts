@@ -4,6 +4,8 @@ export enum GoalStatus {
   PENDING = "pending",
   IN_PROGRESS = "in_progress",
   COMPLETED = "completed",
+  NEEDS_CORRECTION = "needs_correction",
+  ARCHIVED = "archived",
 }
 
 export enum GoalPriority {

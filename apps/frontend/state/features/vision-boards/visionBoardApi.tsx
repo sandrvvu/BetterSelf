@@ -63,10 +63,11 @@ export const visionBoardApi = createApi({
       providesTags: ["VisionBoard"],
     }),
 
-    getVisionBoards: builder.query<VisionBoardWithPreviewImage[], void>({
-      query: () => ({
+    getVisionBoards: builder.query<VisionBoardWithPreviewImage[], { title?: string; goalId?: string }>({
+      query: (filters) => ({
         url: `/vision-boards`,
         method: "GET",
+        params: filters,
       }),
       providesTags: ["VisionBoard"],
     }),

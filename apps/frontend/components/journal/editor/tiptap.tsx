@@ -42,7 +42,7 @@ export default function Tiptap({
     editorProps: {
       attributes: {
         class:
-          "border rounded-lg focus:border-violet-500 focus:outline-none max-h-[250px] overflow-y-auto p-2",
+          "focus:outline-none p-2",
       },
     },
     onUpdate({ editor }) {

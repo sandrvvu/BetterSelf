@@ -1,7 +1,8 @@
 import { MoreHorizontal, PencilOff, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
 
-import { DeleteEntryDialog, EditEntryDialog } from "@/components/journal";
+import { DeleteEntryDialog } from "@/components/journal";
 import {
   Button,
   DropdownMenu,
@@ -16,15 +17,11 @@ import { Entry } from "@/lib";
 export const EntryControls = ({
   entry,
   onDelete,
-  isEditOpen,
-  setIsEditOpen,
   isDeleteOpen,
   setIsDeleteOpen,
 }: {
   entry: Entry;
   onDelete: () => void;
-  isEditOpen: boolean;
-  setIsEditOpen: Dispatch<SetStateAction<boolean>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -40,15 +37,14 @@ export const EntryControls = ({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={(event) => {
-              event.preventDefault();
-              setIsEditOpen(true);
-            }}
-          >
-            <PencilOff />
-            Edit entry
+           <DropdownMenuItem className="cursor-pointer">
+            <Link
+              href={`/home/journal/${entry.id}/update`}
+              className="w-full flex gap-1"
+            >
+              <PencilOff size={18} />
+              <span> Edit entry </span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
@@ -68,12 +64,6 @@ export const EntryControls = ({
         setIsOpen={setIsDeleteOpen}
         id={entry.id}
         onDelete={onDelete}
-      />
-
-      <EditEntryDialog
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        entry={entry}
       />
     </>
   );

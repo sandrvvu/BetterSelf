@@ -1,17 +1,51 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { TopsisConfig } from "./topsis.types";
+import { TopsisSettings } from "src/modules/users/topsis-settings.entity";
 
 @Injectable()
 export class TopsisService {
-  public rank<T extends Record<string, any>>(
+  constructor(
+    @InjectRepository(TopsisSettings)
+    private readonly settingsRepo: Repository<TopsisSettings>,
+  ) {}
+
+  public async loadUserSettings(userId: string) {
+    const s = await this.settingsRepo.findOne({
+      relations: ["user"],
+      where: { user: { id: userId } },
+    });
+    if (s) {
+      return {
+        criteria: s.criteria,
+        isBenefit: (s.isBenefit as (string | boolean)[]).map(
+          (v) => v === true || v === "true",
+        ),
+        weights: s.weights.map(Number),
+      };
+    }
+    return {
+      criteria: [
+        "importance",
+        "urgency",
+        "difficulty",
+        "successProbability",
+        "normalizedEstimatedTime",
+      ],
+      isBenefit: [true, true, false, true, false],
+      weights: [0.3, 0.25, 0.15, 0.2, 0.1],
+    };
+  }
+
+  public async rank<T extends Record<string, any>>(
     items: T[],
-    config: TopsisConfig,
-  ): T[] {
-    const { criteria, weights, isBenefit } = config;
+    userId: string,
+  ): Promise<T[]> {
+    const { criteria, isBenefit, weights } =
+      await this.loadUserSettings(userId);
 
     if (
-      !items.length ||
       criteria.length !== weights.length ||
       criteria.length !== isBenefit.length
     ) {
@@ -39,17 +73,19 @@ export class TopsisService {
       .map(({ item }) => item);
   }
 
-  public rankRespectingDependencies<
+  public async rankRespectingDependencies<
     T extends { id: string; dependencies?: { id: string }[] },
-  >(items: T[], config: TopsisConfig): T[] {
-    const topsisSorted = this.rank(items, config);
+  >(items: T[], userId: string): Promise<T[]> {
+    if (!items.length) {
+      return items;
+    }
 
-    // Step 1: Map task ID to TOPSIS rank index
+    const topsisSorted = await this.rank(items, userId);
+
     const priorityMap = new Map<string, number>(
       topsisSorted.map((task, index) => [task.id, index]),
     );
 
-    // Step 2: Build graph and in-degree map
     const graph = new Map<string, string[]>();
     const inDegree = new Map<string, number>();
 
@@ -65,7 +101,6 @@ export class TopsisService {
       }
     });
 
-    // Step 3: Topological sort with TOPSIS-aware queue
     const result: T[] = [];
     const queue: T[] = topsisSorted.filter(
       (task) => (inDegree.get(task.id) ?? 0) === 0,

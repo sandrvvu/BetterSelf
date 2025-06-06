@@ -69,7 +69,10 @@ export default function VisionBoard({ params }: { params: Params }) {
               </Badge>
             </Link>
           )}
-          <h1 className="text-3xl font-semibold all-break break-words">
+          <h1
+            className="text-3xl font-semibold  break-words"
+            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+          >
             {board.title}
           </h1>
         </div>

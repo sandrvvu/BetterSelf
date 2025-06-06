@@ -19,9 +19,11 @@ export default function Category(props: { params: Params }) {
   const { id } = use(props.params);
 
   const router = useRouter();
-  
+
   const { data: category, isLoading } = useGetCategoryQuery(id);
-  const { data: goals, refetch } = useGetGoalsByCategoryQuery(id);
+  const { data: goals, refetch } = useGetGoalsByCategoryQuery(id, {
+    pollingInterval: 60 * 60 * 1000,
+  });
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -43,10 +45,13 @@ export default function Category(props: { params: Params }) {
 
   return (
     <>
-    <CategoryBreadcrumb/>
+      <CategoryBreadcrumb />
       <div className="mt-4 flex items-start justify-between gap-8">
         <div>
-          <h1 className="text-3xl font-semibold break-all">
+          <h1
+            className="text-3xl font-semibold break-words"
+            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+          >
             {category.name}
           </h1>
         </div>
@@ -64,13 +69,13 @@ export default function Category(props: { params: Params }) {
       </div>
 
       <AppCollapsible description="Description">
-          <p
-            className="m-2 text-sm text-muted-foreground break-words"
-            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-          >
-            {category.description}
-          </p>
-        </AppCollapsible>
+        <p
+          className="m-2 text-sm text-muted-foreground break-words"
+          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+        >
+          {category.description}
+        </p>
+      </AppCollapsible>
 
       {goals && goals.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">

@@ -141,6 +141,7 @@ export {
 } from "./sidebar";
 export { Skeleton } from "./skeleton";
 export { Slider } from "./slider";
+export { Switch } from "./switch";
 export {
   Table,
   TableBody,

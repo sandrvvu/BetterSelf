@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import { EntryCard, JournalBreadcrumb } from "@/components/journal";
-import { Spinner } from "@/components/shared";
+import { Spinner, TitleGoalFilter } from "@/components/shared";
 import { Button } from "@/components/ui";
 import { useGetEntriesQuery } from "@/state/features/journal/journalApi";
 
 export default function Journal() {
-  const { data: entries, isLoading } = useGetEntriesQuery();
+  const [filters, setFilters] = useState({ title: "", goalId: "" });
+
+  const { data: entries, isLoading } = useGetEntriesQuery(filters);
 
   if (isLoading) {
     return <Spinner />;
@@ -28,6 +31,9 @@ export default function Journal() {
           </Button>
         </Link>
       </div>
+
+      <TitleGoalFilter onFilterChange={setFilters} />
+      
       {entries && entries.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {entries.map((entry) => (

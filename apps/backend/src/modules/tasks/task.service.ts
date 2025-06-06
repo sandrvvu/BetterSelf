@@ -6,13 +6,13 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { LessThan, Repository } from "typeorm";
 
 import { Goal } from "../goals/goal.entity";
 
 import { CreateTaskDto } from "./libs/dto/create-task.dto";
 import { UpdateTaskDto } from "./libs/dto/update-task.dto";
-import { Task } from "./task.entity";
+import { Task, TaskStatus } from "./task.entity";
 
 @Injectable()
 export class TaskService {
@@ -56,6 +56,7 @@ export class TaskService {
 
     const task = this.taskRepository.create({
       ...createTaskDto,
+      completedAt: null,
       goalId: goal.id,
     });
 
@@ -124,6 +125,22 @@ export class TaskService {
     return tasks;
   }
 
+  async markOverdueTasks(): Promise<void> {
+    this.logger.log("Marking overdue tasks");
+    const now = new Date();
+    const overdueTasks = await this.taskRepository.find({
+      where: {
+        status: TaskStatus.PENDING,
+        targetDate: LessThan(now),
+      },
+    });
+
+    for (const task of overdueTasks) {
+      task.status = TaskStatus.OVERDUE;
+      await this.taskRepository.save(task);
+    }
+  }
+
   public async update(
     userId: string,
     taskId: string,
@@ -152,6 +169,18 @@ export class TaskService {
     }
 
     Object.assign(task, updateTaskDto);
+
+    if (task.status === TaskStatus.COMPLETED) {
+      if (!task.completedAt) {
+        task.completedAt = new Date();
+        this.logger.log(
+          `Task ID: ${task.id} marked as completed and completedAt set.`,
+        );
+      }
+    } else {
+      task.completedAt = null;
+    }
+
     this.logger.log(`Task updated successfully: ${task.id}`);
     return await this.taskRepository.save(task);
   }

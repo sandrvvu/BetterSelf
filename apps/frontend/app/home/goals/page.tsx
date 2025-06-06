@@ -5,7 +5,12 @@ import { Spinner } from "@/components/shared";
 import { useGetGoalsQuery } from "@/state/features/goals/goalApi";
 
 export default function Goals() {
-  const { data: goals, isLoading } = useGetGoalsQuery();
+  const {
+    data: goals,
+    isLoading,
+  } = useGetGoalsQuery(undefined, {
+    pollingInterval: 60 * 60 * 1000,
+  });
 
   if (isLoading) {
     return <Spinner />;

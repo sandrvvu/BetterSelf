@@ -8,12 +8,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  OneToOne,
 } from "typeorm";
 
 import { Category } from "../categories/category.entity";
 import { Entry } from "../entries/entry.entity";
 import { Reflection } from "../reflections/reflection.entity";
 import { VisionBoard } from "../vision-boards/vision-board.entity";
+
+import { TopsisSettings } from "./topsis-settings.entity";
 
 @Entity()
 export class User {
@@ -78,4 +81,10 @@ export class User {
 
   @OneToMany(() => VisionBoard, (board) => board.user)
   visionBoards: VisionBoard[];
+
+  @OneToOne(() => TopsisSettings, (s) => s.user, {
+    cascade: true,
+    eager: true,
+  })
+  topsisSettings: TopsisSettings;
 }

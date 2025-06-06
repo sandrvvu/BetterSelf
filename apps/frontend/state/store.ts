@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { rtkQueryErrorLogger } from "./errorMiddleware";
+import { analyticsApi } from "./features/analytics/analyticsApi";
 import { authApi } from "./features/auth/authApi";
 import authReducer from "./features/auth/authSlice";
 import { categoryApi } from "./features/categories/categoryApi";
@@ -23,22 +24,20 @@ export const store = configureStore({
     [insightApi.reducerPath]: insightApi.reducer,
     [visionBoardApi.reducerPath]: visionBoardApi.reducer,
     [taskApi.reducerPath]: taskApi.reducer,
+    [analyticsApi.reducerPath]: analyticsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      // immutableCheck: false,
-      // serializableCheck: false,
-    }).concat(
-      rtkQueryErrorLogger,
-      userApi.middleware,
-      authApi.middleware,
-      categoryApi.middleware,
-      goalApi.middleware,
-      journalApi.middleware,
-      insightApi.middleware,
-      visionBoardApi.middleware,
-      taskApi.middleware,
-    ),
+    getDefaultMiddleware()
+      .concat(rtkQueryErrorLogger)
+      .concat(userApi.middleware)
+      .concat(authApi.middleware)
+      .concat(categoryApi.middleware)
+      .concat(goalApi.middleware)
+      .concat(journalApi.middleware)
+      .concat(insightApi.middleware)
+      .concat(visionBoardApi.middleware)
+      .concat(taskApi.middleware)
+      .concat(analyticsApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

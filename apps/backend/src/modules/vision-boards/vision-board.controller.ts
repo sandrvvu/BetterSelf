@@ -28,7 +28,6 @@ import {
 import { CurrentUserId } from "src/common/decorators";
 import { StorageService } from "src/common/services/storage/storage.service";
 
-import { BoardToImage } from "./board-to-image.entity";
 import { Image } from "./image.entity";
 import { BoardOption } from "./libs/dto/board-option";
 import { CreateVisionBoardDto } from "./libs/dto/create-vision-board.dto";

@@ -11,6 +11,7 @@ import {
   ValidationPipe,
   ForbiddenException,
   NotFoundException,
+  Query,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -78,8 +79,12 @@ export class EntryController {
     status: 200,
   })
   @ApiResponse({ description: "Unauthorized.", status: 401 })
-  async findAllByUserId(@CurrentUserId() userId: string) {
-    return await this.entryService.findAllByUserId(userId);
+  async findAllByUserId(
+    @CurrentUserId() userId: string,
+    @Query("goalId") goalId?: string,
+    @Query("title") title?: string,
+  ) {
+    return await this.entryService.findAllByUserId(userId, goalId, title);
   }
 
   @Get(":id")

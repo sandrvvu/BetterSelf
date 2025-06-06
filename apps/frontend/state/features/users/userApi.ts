@@ -3,6 +3,17 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_BASE_URL, UpdateUserDto, User } from "@/lib";
 import { RootState } from "@/state/store";
 
+export interface TopsisSettings {
+  criteria: string[];
+  weights: number[];
+  isBenefit: boolean[];
+}
+
+export interface UpdateTopsisSettingsDto {
+  weights: number[];
+  isBenefit: boolean[];
+}
+
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
@@ -30,6 +41,22 @@ export const userApi = createApi({
       invalidatesTags: ["User"],
     }),
 
+    getTopsisSettings: builder.query<TopsisSettings, void>({
+      query: () => ({
+        url: "users/topsis-settings",
+        method: "GET",
+      }),
+    }),
+
+    updateTopsisSettings: builder.mutation<void, UpdateTopsisSettingsDto>({
+      query: (data) => ({
+        url: "users/topsis-settings",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     deleteUser: builder.mutation<boolean, void>({
       query: () => ({
         url: "users",
@@ -43,4 +70,6 @@ export const {
   useGetUserQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useUpdateTopsisSettingsMutation,
+  useGetTopsisSettingsQuery,
 } = userApi;

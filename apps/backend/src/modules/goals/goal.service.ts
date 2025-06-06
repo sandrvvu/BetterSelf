@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { In, LessThan, Repository } from "typeorm";
 
 import { convertToMinutes } from "src/common/helpers/convert-to-minutes";
 import { TopsisService } from "src/common/services/topsis/topsis.service";
@@ -149,7 +149,7 @@ export class GoalService {
       userId,
       goal.categoryId,
     );
-    const tasks = await this.getPrioritizedTasks(goalId);
+    const tasks = await this.getPrioritizedTasks(userId, goalId);
 
     const progress = await this.calculateProgress(goalId, userId);
 
@@ -169,6 +169,21 @@ export class GoalService {
     };
   }
 
+  async markExpiredGoals(): Promise<void> {
+    this.logger.log("Marking expired goals");
+    const now = new Date();
+    const expiredGoals = await this.goalRepository.find({
+      where: {
+        status: In([GoalStatus.IN_PROGRESS, GoalStatus.PENDING]),
+        targetDate: LessThan(now),
+      },
+    });
+    for (const goal of expiredGoals) {
+      goal.status = GoalStatus.NEEDS_CORRECTION;
+      await this.goalRepository.save(goal);
+    }
+  }
+
   public async update(
     userId: string,
     goalId: string,
@@ -182,6 +197,20 @@ export class GoalService {
     }
 
     Object.assign(goal, updateGoalDto);
+
+    if (goal.status === GoalStatus.NEEDS_CORRECTION) {
+      const now = new Date();
+      const hasValidFutureDate =
+        goal.targetDate && new Date(goal.targetDate) > now;
+      const hasSomeProgress = goal.progress > 0;
+
+      if (hasValidFutureDate) {
+        goal.status = hasSomeProgress
+          ? GoalStatus.IN_PROGRESS
+          : GoalStatus.PENDING;
+      }
+    }
+
     this.logger.log(`Goal updated successfully: ${goal.id}`);
     return await this.goalRepository.save(goal);
   }
@@ -231,10 +260,18 @@ export class GoalService {
 
     if (goal.progress === 100) {
       goal.status = GoalStatus.COMPLETED;
+      if (!goal.completedAt) {
+        goal.completedAt = new Date();
+      }
       this.logger.log(`Goal ID: ${goalId} marked as completed.`);
     } else if (completedTasks.length > 0) {
       goal.status = GoalStatus.IN_PROGRESS;
+      goal.completedAt = null;
       this.logger.log(`Goal ID: ${goalId} marked as in progress.`);
+    } else {
+      goal.status = GoalStatus.PENDING;
+      goal.completedAt = null;
+      this.logger.log(`Goal ID: ${goalId} marked as pending.`);
     }
 
     await this.goalRepository.save(goal);
@@ -304,9 +341,12 @@ export class GoalService {
   }
 
   private async getPrioritizedTasks(
+    userId: string,
     goalId: string,
   ): Promise<TaskWithDependencies[]> {
-    const tasks = await this.taskRepository.find({ where: { goalId } });
+    const tasks = await this.taskRepository.find({
+      where: { goalId },
+    });
 
     const tasksWithNormalizedTime = tasks.map((task) => ({
       ...task,
@@ -316,20 +356,11 @@ export class GoalService {
         task.estimatedTimeUnit,
       ),
     }));
-
-    const sortedTasks = this.topsisService.rankRespectingDependencies<
+    this.logger.log(`Tasks: ${tasksWithNormalizedTime}`);
+    const sortedTasks = await this.topsisService.rankRespectingDependencies<
       (typeof tasksWithNormalizedTime)[0]
-    >(tasksWithNormalizedTime, {
-      criteria: [
-        "importance",
-        "urgency",
-        "difficulty",
-        "successProbability",
-        "normalizedEstimatedTime",
-      ],
-      isBenefit: [true, true, false, true, false],
-      weights: [0.3, 0.25, 0.15, 0.2, 0.1],
-    });
+    >(tasksWithNormalizedTime, userId);
+
     const idToTitle = new Map<string, string>(
       tasks.map((t) => [t.id, t.title]),
     );

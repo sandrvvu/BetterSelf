@@ -1,24 +1,21 @@
 import { Dispatch, SetStateAction } from "react";
 
-import { EditEntryForm } from "@/components/journal";
+import { DeleteAccountButton } from "@/components/account";
 import { ResponsiveDialog } from "@/components/ui";
-import { Entry } from "@/lib";
 
-export const EditEntryDialog = ({
+export const DeleteAccountDialog = ({
   isOpen,
   setIsOpen,
-  entry,
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  entry: Entry;
 }) => (
   <ResponsiveDialog
     isOpen={isOpen}
     setIsOpen={setIsOpen}
-    title="Edit entry"
-    description='Modify the details of this entry. Click "Save Changes" to update.'
+    title="Delete account"
+    description="Are you sure you want to delete your account?"
   >
-    <EditEntryForm entry={entry} setIsOpen={setIsOpen} />
+    <DeleteAccountButton />
   </ResponsiveDialog>
 );

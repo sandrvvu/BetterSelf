@@ -41,16 +41,34 @@ export class EntryService {
     return Boolean(deletedEntry);
   }
 
-  public async findAllByUserId(userId: string) {
-    const entries = await this.entryRepository.find({
-      order: { createdAt: "DESC" },
-      relations: ["goal"],
-      where: { userId },
-    });
+  public async findAllByUserId(
+    userId: string,
+    goalId?: string,
+    title?: string,
+  ) {
+    const queryBuilder = this.entryRepository
+      .createQueryBuilder("entry")
+      .leftJoinAndSelect("entry.goal", "goal")
+      .where("entry.userId = :userId", { userId });
+
+    if (goalId) {
+      queryBuilder.andWhere("entry.goalId = :goalId", { goalId });
+    }
+
+    if (title) {
+      queryBuilder.andWhere("entry.title ILIKE :title", {
+        title: `%${title}%`,
+      });
+    }
+
+    queryBuilder.orderBy("entry.createdAt", "DESC");
+
+    const entries = await queryBuilder.getMany();
 
     if (!entries.length) {
       this.logger.warn(`No entries found for userId: ${userId}`);
     }
+
     return plainToInstance(EntryWithGoalDto, entries, {
       excludeExtraneousValues: true,
     });

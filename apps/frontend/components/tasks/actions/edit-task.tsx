@@ -94,6 +94,8 @@ export default function EditTaskForm({
         }}
         className="space-y-4"
       >
+
+<div className="flex flex-col gap-4 overflow-y-auto px-2 custom-scrollbar max-h-[500px]">
         <FormField
           control={form.control}
           name="title"
@@ -298,7 +300,8 @@ export default function EditTaskForm({
             )}
           />
         )}
-
+   </div>
+   
         <FormItem>
           <Button
             type="submit"

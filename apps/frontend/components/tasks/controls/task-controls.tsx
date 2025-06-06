@@ -21,6 +21,7 @@ export const TaskControls = ({
   setIsEditOpen,
   isDeleteOpen,
   setIsDeleteOpen,
+  setIsTooltipOpen, 
 }: {
   task: Task;
   onDelete: () => void;
@@ -29,6 +30,7 @@ export const TaskControls = ({
   setIsEditOpen: Dispatch<SetStateAction<boolean>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
+  setIsTooltipOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   return (
     <>
@@ -50,6 +52,7 @@ export const TaskControls = ({
             className="cursor-pointer"
             onClick={(e) => {
               e.preventDefault();
+              setIsTooltipOpen?.(false);
               setIsEditOpen(true);
             }}
           >
@@ -60,6 +63,7 @@ export const TaskControls = ({
             className="cursor-pointer"
             onClick={(e) => {
               e.preventDefault();
+              setIsTooltipOpen?.(false);
               setIsDeleteOpen(true);
             }}
           >

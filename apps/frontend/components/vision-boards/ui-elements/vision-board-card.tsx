@@ -7,7 +7,9 @@ import { VisionBoardWithPreviewImage } from "@/lib";
 type VisionBoardCardProps = {
   visionBoard: VisionBoardWithPreviewImage;
 };
+
 const MAX_GOAL_TITLE_LENGTH = 15;
+const MAX_BOARD_TITLE_LENGTH = 30;
 
 export default function VisionBoardCard({ visionBoard }: VisionBoardCardProps) {
   return (
@@ -41,7 +43,9 @@ export default function VisionBoardCard({ visionBoard }: VisionBoardCardProps) {
 
       <div className="p-4">
         <h2 className="text-lg font-semibold text-purple-700 group-hover:underline">
-          {visionBoard.title}
+              {visionBoard.title?.length > MAX_BOARD_TITLE_LENGTH
+                ? `${visionBoard.title.slice(0, MAX_BOARD_TITLE_LENGTH)}...`
+                : visionBoard.title}
         </h2>
         {visionBoard.description && (
           <p className="text-sm text-gray-600 mt-1 line-clamp-2">

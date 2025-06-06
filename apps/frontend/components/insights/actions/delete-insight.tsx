@@ -17,8 +17,8 @@ export default function DeleteInsightContent({
     useDeleteInsightChatMutation();
 
   async function handleDelete(id: string) {
-    await deleteInsightChat(id);
     onDelete();
+    await deleteInsightChat(id);
   }
 
   useEffect(() => {

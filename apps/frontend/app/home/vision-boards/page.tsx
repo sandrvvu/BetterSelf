@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 
-import { Spinner } from "@/components/shared";
+import { Spinner, TitleGoalFilter } from "@/components/shared";
 import { Button } from "@/components/ui";
 import { BoardsBreadcrumb, CreateVisionBoardDialog, VisionBoardCard } from "@/components/vision-boards";
 import { useGetVisionBoardsQuery } from "@/state/features/vision-boards/visionBoardApi";
 
 export default function VisionBoards() {
-  const { data: boards, isLoading } = useGetVisionBoardsQuery();
+  const [filters, setFilters] = useState({ title: "", goalId: "" });
+
+  const { data: boards, isLoading } = useGetVisionBoardsQuery(filters);
   const [isAddOpen, setIsAddOpen] = useState(false);
 
   if (isLoading) {
@@ -30,6 +32,8 @@ export default function VisionBoards() {
 
         <CreateVisionBoardDialog isOpen={isAddOpen} setIsOpen={setIsAddOpen} />
       </div>
+
+      <TitleGoalFilter onFilterChange={setFilters} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {boards?.map((board) => (

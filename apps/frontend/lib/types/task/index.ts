@@ -1,6 +1,7 @@
 export enum TaskStatus {
   PENDING = "pending",
   COMPLETED = "completed",
+  OVERDUE = "overdue",
 }
 
 export enum TimeUnit {

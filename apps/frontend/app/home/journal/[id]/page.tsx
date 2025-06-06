@@ -13,13 +13,14 @@ import { useGetEntryQuery } from "@/state/features/journal/journalApi";
 
 type Params = Promise<{ id: string }>;
 
+const MAX_GOAL_TITLE_LENGTH = 30;
+
 export default function Entry({ params }: { params: Params }) {
   const { id } = use(params);
   const router = useRouter();
   const { data: entry, isLoading } = useGetEntryQuery(id);
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
 
   if ((!entry && !isLoading) || !isValidUUID(id)) {
     notFound();
@@ -38,22 +39,27 @@ export default function Entry({ params }: { params: Params }) {
       <EntryBreadcrumb />
       <div className="flex items-start justify-between my-4 w-full">
         <div>
-          <h1 className="text-3xl font-semibold">{entry.title}</h1>
+          <h1
+            className="text-3xl font-semibold  break-words"
+            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+          >
+            {entry.title}
+          </h1>
           {entry.goalTitle && (
             <Link href={`/home/goals/${entry.goalId}`}>
               <Badge
                 className="mt-2 bg-violet-100 text-violet-700  hover:bg-violet-100 hover:text-violet-700"
                 title={entry.goalTitle}
               >
-                {entry.goalTitle}
+                {entry.goalTitle?.length > MAX_GOAL_TITLE_LENGTH
+                  ? `${entry.goalTitle.slice(0, MAX_GOAL_TITLE_LENGTH)}...`
+                  : entry.goalTitle}
               </Badge>
             </Link>
           )}
         </div>
         <EntryControls
           entry={entry}
-          isEditOpen={isEditOpen}
-          setIsEditOpen={setIsEditOpen}
           isDeleteOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
           onDelete={onDelete}

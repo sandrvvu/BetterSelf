@@ -72,7 +72,7 @@ export const TasksControls = ({
             onClick={() => setIsOpen(true)}
           >
             <Bot />
-            Generate Tasks
+            Generate tasks
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

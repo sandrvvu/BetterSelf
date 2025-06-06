@@ -81,7 +81,8 @@ export function GenerateTasksModal({
                 <p>Importance: {tasks[currentIndex].importance}</p>
                 <p>Urgency: {tasks[currentIndex].urgency}</p>
                 <p>Difficulty: {tasks[currentIndex].difficulty}</p>
-                <p>Estimated Time: {tasks[currentIndex].estimatedTime}</p>
+                <p>Success Probability: {tasks[currentIndex]?.successProbability}%</p>
+                <p>Estimated Time: {tasks[currentIndex].estimatedTime} {tasks[currentIndex].estimatedTimeUnit}</p>
               </div>
             </div>
 

@@ -36,6 +36,7 @@ export {
   type UpdateUserDto,
   type UpdateVisionBoardDto,
   type User,
+  type UserAnalytics,
   type VisionBoard,
   type VisionBoardWithImages,
   type VisionBoardWithPreviewImage,

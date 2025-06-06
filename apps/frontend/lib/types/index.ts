@@ -40,7 +40,7 @@ export {
   TimeUnit,
   type UpdateTaskDto,
 } from "./task";
-export { type UpdateUserDto, type User } from "./user";
+export { type UpdateUserDto, type User, type UserAnalytics } from "./user";
 export {
   type CreateVisionBoardDto,
   type Image,
