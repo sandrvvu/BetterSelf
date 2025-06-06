@@ -9,6 +9,7 @@ import { Repository } from "typeorm";
 
 import { BoardToImage } from "./board-to-image.entity";
 import { Image } from "./image.entity";
+import { BoardOption } from "./libs/dto/board-option";
 import { CreateVisionBoardDto } from "./libs/dto/create-vision-board.dto";
 import { UpdateVisionBoardDto } from "./libs/dto/update-vision-board.dto";
 import { VisionBoardWithImages } from "./libs/dto/vision-board-with-images";
@@ -76,6 +77,15 @@ export class VisionBoardService {
     return Boolean(deletedVisionBoard);
   }
 
+  public async duplicateImageToBoard(imageId: string, visionBoardId: string) {
+    const boardToImage = this.boardToImageRepository.create({
+      imageId,
+      visionBoardId,
+    });
+
+    await this.boardToImageRepository.save(boardToImage);
+  }
+
   public async findAllByUserId(
     userId: string,
     goalId?: string,
@@ -85,6 +95,7 @@ export class VisionBoardService {
       .createQueryBuilder("visionBoard")
       .leftJoinAndSelect("visionBoard.boardToImages", "boardToImages")
       .leftJoinAndSelect("boardToImages.image", "image")
+      .leftJoinAndSelect("visionBoard.goal", "goal")
       .where("visionBoard.userId = :userId", { userId });
 
     if (goalId) {
@@ -114,6 +125,7 @@ export class VisionBoardService {
         createdAt: vb.createdAt,
         description: vb.description,
         goalId: vb.goalId,
+        goalTitle: vb.goal ? vb.goal.title : null,
         id: vb.id,
         previewImage,
         title: vb.title,
@@ -158,7 +170,7 @@ export class VisionBoardService {
   public async findOneWithImages(id: string): Promise<VisionBoardWithImages> {
     this.logger.log(`Finding vision board by ID: ${id}`);
     const visionBoard = await this.visionBoardRepository.findOne({
-      relations: ["boardToImages", "boardToImages.image"],
+      relations: ["boardToImages", "boardToImages.image", "goal"],
       where: { id },
     });
 
@@ -172,12 +184,36 @@ export class VisionBoardService {
         source: bti.image.source,
       })) ?? [];
 
-    const { boardToImages, ...rest } = visionBoard;
+    const { boardToImages, goal, ...rest } = visionBoard;
 
     return {
       ...rest,
+      goalId: goal?.id ?? null,
+      goalTitle: goal?.title ?? null,
       images,
     };
+  }
+
+  public async getAvailableOptions(userId: string): Promise<BoardOption[]> {
+    this.logger.log(`Finding all boards for user ID: ${userId}`);
+
+    const boards = await this.visionBoardRepository.find({
+      order: { createdAt: "DESC" },
+      where: { userId },
+    });
+
+    const options = boards.map((board) => {
+      return {
+        id: board.id,
+        title: board.title,
+      };
+    });
+
+    if (!options.length) {
+      this.logger.warn(`No options found for userId: ${userId}`);
+    }
+
+    return options;
   }
 
   async removeImage(visionBoardId: string, imageId: string): Promise<Boolean> {

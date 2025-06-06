@@ -1,9 +1,11 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { plainToInstance } from "class-transformer";
 import { Repository } from "typeorm";
 
 import { Entry } from "./entry.entity";
 import { CreateEntryDto } from "./libs/dto/create-entry.dto";
+import { EntryWithGoalDto } from "./libs/dto/entry-with-goal.dto";
 import { UpdateEntryDto } from "./libs/dto/update-entry.dto";
 
 @Injectable()
@@ -39,25 +41,53 @@ export class EntryService {
     return Boolean(deletedEntry);
   }
 
-  public async findAllByUserId(userId: string): Promise<Entry[]> {
-    const entries = await this.entryRepository.findBy({ userId });
+  public async findAllByUserId(
+    userId: string,
+    goalId?: string,
+    title?: string,
+  ) {
+    const queryBuilder = this.entryRepository
+      .createQueryBuilder("entry")
+      .leftJoinAndSelect("entry.goal", "goal")
+      .where("entry.userId = :userId", { userId });
+
+    if (goalId) {
+      queryBuilder.andWhere("entry.goalId = :goalId", { goalId });
+    }
+
+    if (title) {
+      queryBuilder.andWhere("entry.title ILIKE :title", {
+        title: `%${title}%`,
+      });
+    }
+
+    queryBuilder.orderBy("entry.createdAt", "DESC");
+
+    const entries = await queryBuilder.getMany();
 
     if (!entries.length) {
       this.logger.warn(`No entries found for userId: ${userId}`);
     }
 
-    return entries;
+    return plainToInstance(EntryWithGoalDto, entries, {
+      excludeExtraneousValues: true,
+    });
   }
 
   public async findOne(id: string): Promise<Entry> {
     this.logger.log(`Finding entry by ID: ${id}`);
-    const entry = await this.entryRepository.findOneBy({ id });
+    const entry = await this.entryRepository.findOne({
+      relations: ["goal"],
+      where: { id },
+    });
 
     if (!entry) {
       this.logger.warn(`Entry not found with ID: ${id}`);
     }
 
-    return entry;
+    return plainToInstance(EntryWithGoalDto, entry, {
+      excludeExtraneousValues: true,
+    });
   }
 
   public async update(

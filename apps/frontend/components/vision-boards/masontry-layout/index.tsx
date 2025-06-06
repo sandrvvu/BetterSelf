@@ -1,23 +1,34 @@
 "use client";
 
-import { X } from 'lucide-react'
+import { X } from "lucide-react";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
+
+import { Button } from "@/components/ui";
+
+import { DuplicateImageButton } from "../ui-elements/duplicate-image";
 
 type ImageData = {
   id: string;
   src: string;
   alt: string;
   onDelete?: () => void;
+  onDuplicate?: () => void;
 };
 
 type PinterestLayoutProps = {
+  isManageMode: boolean;
+  boardId: string;
   images: ImageData[];
 };
 
-export const MasontryLayout = ({ images }: PinterestLayoutProps) => {
+export const MasontryLayout = ({
+  boardId,
+  isManageMode,
+  images,
+}: PinterestLayoutProps) => {
   const breakpointColumnsObj = {
-    default: 4,
+    default: 3,
     1100: 3,
     700: 2,
     500: 1,
@@ -39,13 +50,16 @@ export const MasontryLayout = ({ images }: PinterestLayoutProps) => {
             height={0}
             className="w-full h-auto rounded-lg"
           />
-          {img.onDelete && (
-            <button
-              onClick={img.onDelete}
-              className="absolute top-2 right-2 bg-white text-red-600 rounded-full shadow p-1 opacity-0 group-hover:opacity-100 transition"
-            >
-              <X className="w-4 h-4" />
-            </button>
+          {isManageMode && (
+            <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition">
+              <DuplicateImageButton  imageId={img.id} currentBoardId={boardId} />
+              <Button
+                onClick={img.onDelete}
+                className="bg-white text-red-600 rounded-full shadow p-1 hover:bg-whitebg-white"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           )}
         </div>
       ))}

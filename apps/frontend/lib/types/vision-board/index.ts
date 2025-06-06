@@ -16,6 +16,7 @@ export type VisionBoard = {
 };
 
 export type VisionBoardWithPreviewImage = VisionBoard & {
+  goalTitle: string | null;
   previewImage: {
     id: string;
     source: string;
@@ -23,6 +24,7 @@ export type VisionBoardWithPreviewImage = VisionBoard & {
 };
 
 export type VisionBoardWithImages = VisionBoard & {
+  goalTitle: string | null;
   images: {
     id: string;
     source: string;

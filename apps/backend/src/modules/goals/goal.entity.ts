@@ -29,6 +29,8 @@ export enum GoalStatus {
   PENDING = "pending",
   IN_PROGRESS = "in_progress",
   COMPLETED = "completed",
+  NEEDS_CORRECTION = "needs_correction",
+  ARCHIVED = "archived",
 }
 
 export enum GoalPriority {
@@ -121,6 +123,14 @@ export class Goal {
     example: 50,
   })
   progress: number;
+
+  @Column("date", { nullable: true })
+  @Expose()
+  @ApiProperty({
+    description: "Completion date for the goal.",
+    example: "2025-12-31",
+  })
+  completedAt: Date;
 
   @CreateDateColumn()
   @Expose()

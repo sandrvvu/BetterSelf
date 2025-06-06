@@ -1,10 +1,8 @@
 "use client";
-
-// import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
-import { InsightCard } from "@/components/insights";
+import { InsightCard, InsightsBreadcrumb } from "@/components/insights";
 import { Spinner } from "@/components/shared";
 import { Button } from "@/components/ui";
 import {
@@ -13,8 +11,6 @@ import {
 } from "@/state/features/insights/insightApi";
 
 export default function Insights() {
-  // const router = useRouter();
-
   const { data: previews, isLoading } = useGetInsightsPreviewQuery();
 
   const [createInsightChat, { data: chat, isLoading: isCreated, isSuccess }] =
@@ -22,7 +18,6 @@ export default function Insights() {
 
   useEffect(() => {
     if (isSuccess && chat) {
-      // router.replace(`/home/insights/${chat.id}`);
       toast.success("Insight chat added successfully.");
     }
   }, [isSuccess, chat]);
@@ -33,13 +28,14 @@ export default function Insights() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-4xl font-semibold text-purple-800">My insights</h1>
+      <InsightsBreadcrumb />
+      <div className="flex items-center justify-between my-4">
+        <h1 className="text-3xl font-semibold">My insights</h1>
         <Button
           onClick={() => {
             void createInsightChat();
           }}
-          className="border-2 text-md border-purple-600 bg-purple-600 text-white py-4 rounded-lg hover:bg-white hover:text-purple-800 shadow-lg"
+          className="border-2 text-md border-purple-700 bg-purple-700 text-white py-4 rounded-lg hover:bg-white hover:text-purple-700 shadow-lg"
         >
           Add insight
         </Button>

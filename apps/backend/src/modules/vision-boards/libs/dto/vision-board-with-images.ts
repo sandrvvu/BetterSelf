@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Expose, Transform } from "class-transformer";
 
 export class VisionBoardWithImages {
   @ApiProperty({
@@ -21,6 +22,14 @@ export class VisionBoardWithImages {
     type: "string",
   })
   goalId: string | null;
+
+  @ApiProperty({
+    description: "Title of the related goal.",
+    type: "string",
+  })
+  @Transform(({ obj }) => obj.goal?.title ?? null)
+  @Expose()
+  goalTitle: string | null;
 
   @ApiProperty({
     description: "Unique identifier of the vision board.",

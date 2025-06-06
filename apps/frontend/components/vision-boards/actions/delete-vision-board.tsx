@@ -17,8 +17,8 @@ export default function DeleteVisionBoardContent({
     useDeleteVisionBoardMutation();
 
   async function handleDelete(id: string) {
-    await deleteVisionBoard(id);
     onDelete();
+    await deleteVisionBoard(id);
   }
 
   useEffect(() => {

@@ -25,6 +25,7 @@ import { Goal } from "../goals/goal.entity";
 export enum TaskStatus {
   PENDING = "pending",
   COMPLETED = "completed",
+  OVERDUE = "overdue",
 }
 
 export enum TimeUnit {
@@ -167,6 +168,14 @@ export class Task {
     example: TimeUnit.HOURS,
   })
   estimatedTimeUnit: TimeUnit;
+
+  @Column("date", { nullable: true })
+  @Expose()
+  @ApiProperty({
+    description: "Completion date for the task.",
+    example: "2025-12-31",
+  })
+  completedAt: Date;
 
   @CreateDateColumn()
   @Expose()

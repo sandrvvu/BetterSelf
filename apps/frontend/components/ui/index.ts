@@ -1,5 +1,14 @@
 export { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 export { Badge, badgeVariants } from "./badge";
+export {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "./breadcrumb";
 export { Button, buttonVariants } from "./button";
 export { Calendar } from "./calendar";
 export {
@@ -10,6 +19,7 @@ export {
   CardHeader,
   CardTitle,
 } from "./card";
+export { Checkbox } from "./checkbox";
 export {
   Collapsible,
   CollapsibleContent,
@@ -68,6 +78,7 @@ export {
 } from "./form";
 export { Input } from "./input";
 export { Label } from "./label";
+export { MultiSelect } from "./multi-select";
 export {
   Popover,
   PopoverAnchor,
@@ -77,6 +88,18 @@ export {
 export { Progress } from "./progress";
 export { RadioGroup, RadioGroupItem } from "./radio-group";
 export { ResponsiveDialog } from "./responsive-dialog";
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
 export { Separator } from "./separator";
 export {
   Sheet,
@@ -117,6 +140,8 @@ export {
   useSidebar,
 } from "./sidebar";
 export { Skeleton } from "./skeleton";
+export { Slider } from "./slider";
+export { Switch } from "./switch";
 export {
   Table,
   TableBody,

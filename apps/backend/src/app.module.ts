@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ScheduleModule } from "@nestjs/schedule";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AppController } from "./app.controller";
@@ -13,7 +14,9 @@ import {
   OpenAIConfig,
   TypedConfigService,
 } from "./config";
+import { AnalyticsModule } from "./modules/analytics/analytics.module";
 import { CategoriesModule } from "./modules/categories/categories.module";
+import { CronModule } from "./modules/cron/cron.module";
 import { EntriesModule } from "./modules/entries/entries.module";
 import { GoalsModule } from "./modules/goals/goals.module";
 import { ReflectionsModule } from "./modules/reflections/reflections.module";
@@ -40,10 +43,13 @@ import { VisionBoardsModule } from "./modules/vision-boards/vision-boards.module
         ...configService.get("database"),
       }),
     }),
+    AnalyticsModule,
     CategoriesModule,
+    CronModule,
     EntriesModule,
     GoalsModule,
     TasksModule,
+    ScheduleModule.forRoot(),
     ReflectionsModule,
     UsersModule,
     VisionBoardsModule,

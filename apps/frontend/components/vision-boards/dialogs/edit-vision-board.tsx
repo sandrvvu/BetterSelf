@@ -2,19 +2,16 @@ import { Dispatch, SetStateAction } from "react";
 
 import { ResponsiveDialog } from "@/components/ui";
 import { EditVisionBoardForm } from "@/components/vision-boards";
+import { VisionBoard } from "@/lib";
 
 export const EditVisionBoardDialog = ({
   isOpen,
   setIsOpen,
-  id,
-  title,
-  description,
+  board,
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  id: string;
-  title: string;
-  description: string;
+  board: VisionBoard;
 }) => (
   <ResponsiveDialog
     isOpen={isOpen}
@@ -22,11 +19,6 @@ export const EditVisionBoardDialog = ({
     title="Edit vision board"
     description='Modify the details of this vision board. Click "Save Changes" to update.'
   >
-    <EditVisionBoardForm
-      id={id}
-      setIsOpen={setIsOpen}
-      title={title}
-      description={description}
-    />
+    <EditVisionBoardForm board={board} setIsOpen={setIsOpen} />
   </ResponsiveDialog>
 );

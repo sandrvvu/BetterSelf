@@ -1,17 +1,19 @@
 "use client";
 
 import { format } from "date-fns";
-import { PencilOff, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
-import { DeleteEntryDialog, EditEntryDialog } from "@/components/journal";
+import { EntryBreadcrumb, EntryControls } from "@/components/journal";
 import { Spinner } from "@/components/shared";
-import { Button } from "@/components/ui";
+import { Badge, DropdownMenuSeparator } from "@/components/ui";
 import { useGetEntryQuery } from "@/state/features/journal/journalApi";
 
 type Params = Promise<{ id: string }>;
+
+const MAX_GOAL_TITLE_LENGTH = 30;
 
 export default function Entry({ params }: { params: Params }) {
   const { id } = use(params);
@@ -19,13 +21,12 @@ export default function Entry({ params }: { params: Params }) {
   const { data: entry, isLoading } = useGetEntryQuery(id);
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
 
   if ((!entry && !isLoading) || !isValidUUID(id)) {
     notFound();
   }
 
-  const handleDelete = () => {
+  const onDelete = () => {
     setIsDeleteOpen(false);
     router.replace("/home/journal");
   };
@@ -35,26 +36,41 @@ export default function Entry({ params }: { params: Params }) {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-4xl font-bold mb-4">{entry.title}</h1>
-        <div className="flex gap-2">
-          {[
-            { icon: <PencilOff />, onClick: () => setIsEditOpen(true) },
-            { icon: <Trash2 />, onClick: () => setIsDeleteOpen(true) },
-          ].map(({ icon, onClick }, i) => (
-            <Button
-              key={i}
-              onClick={onClick}
-              className="border-2 text-md border-neutral-500 bg-white text-neutral-800 py-4 rounded-lg hover:bg-purple-600 hover:text-white shadow-lg"
-            >
-              {icon}
-            </Button>
-          ))}
+      <EntryBreadcrumb />
+      <div className="flex items-start justify-between my-4 w-full">
+        <div>
+          <h1
+            className="text-3xl font-semibold  break-words"
+            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+          >
+            {entry.title}
+          </h1>
+          {entry.goalTitle && (
+            <Link href={`/home/goals/${entry.goalId}`}>
+              <Badge
+                className="mt-2 bg-violet-100 text-violet-700  hover:bg-violet-100 hover:text-violet-700"
+                title={entry.goalTitle}
+              >
+                {entry.goalTitle?.length > MAX_GOAL_TITLE_LENGTH
+                  ? `${entry.goalTitle.slice(0, MAX_GOAL_TITLE_LENGTH)}...`
+                  : entry.goalTitle}
+              </Badge>
+            </Link>
+          )}
         </div>
+        <EntryControls
+          entry={entry}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          onDelete={onDelete}
+        />
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="italic">{format(new Date(entry.createdAt), "PPP")}</p>
+        <p className="italic text-muted-foreground">
+          {format(new Date(entry.createdAt), "PPP")}
+        </p>
+        <DropdownMenuSeparator />
         {entry.content && (
           <div
             className="prose prose-sm max-w-none"
@@ -62,21 +78,6 @@ export default function Entry({ params }: { params: Params }) {
           />
         )}
       </div>
-
-      <DeleteEntryDialog
-        isOpen={isDeleteOpen}
-        setIsOpen={setIsDeleteOpen}
-        id={id}
-        onDelete={handleDelete}
-      />
-
-      <EditEntryDialog
-        isOpen={isEditOpen}
-        title={entry.title}
-        content={entry.content}
-        setIsOpen={setIsEditOpen}
-        id={id}
-      />
     </>
   );
 }

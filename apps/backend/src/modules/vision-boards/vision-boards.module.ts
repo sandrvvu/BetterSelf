@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { StorageService } from "src/common/modules/storage/storage.service";
+import { StorageService } from "src/common/services/storage/storage.service";
 
 import { BoardToImage } from "./board-to-image.entity";
 import { Image } from "./image.entity";

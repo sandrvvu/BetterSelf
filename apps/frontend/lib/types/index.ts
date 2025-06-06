@@ -15,6 +15,9 @@ export {
   GoalPriority,
   GoalStatus,
   type GoalWithCategoryName,
+  type GoalWithFullInfo,
+  type Info,
+  type TaskWithDependencies,
   type UpdateGoalDto,
 } from "./goal";
 export {
@@ -30,7 +33,14 @@ export {
   type Entry,
   type UpdateEntryDto,
 } from "./journal";
-export { type User } from "./user";
+export {
+  type CreateTaskDto,
+  type Task,
+  TaskStatus,
+  TimeUnit,
+  type UpdateTaskDto,
+} from "./task";
+export { type UpdateUserDto, type User, type UserAnalytics } from "./user";
 export {
   type CreateVisionBoardDto,
   type Image,

@@ -9,16 +9,18 @@ export const columns: ColumnDef<CategoryWithGoalCount>[] = [
   {
     accessorFn: (row) => row.name,
     id: "name",
-    header: "Category Name",
+    header: "Category name",
     cell: ({ row }) => {
       return (
-        <div className="text-pink-400 font-semibold">{row.original.name}</div>
+        <div className="text-purple-700 font-semibold max-w-[200px] break-words">
+          {row.original.name}
+        </div>
       );
     },
   },
   {
     id: "totalGoals",
-    header: () => <div className="text-center">Total Goals</div>,
+    header: () => <div className="text-center">Total goals</div>,
     cell: ({ row }) => {
       return <div className="text-center">{row.original.allGoals}</div>;
     },

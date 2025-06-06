@@ -34,10 +34,11 @@ export const journalApi = createApi({
       invalidatesTags: ["Entry"],
     }),
 
-    getEntries: builder.query<Entry[], void>({
-      query: () => ({
+    getEntries: builder.query<Entry[], { title?: string; goalId?: string }>({
+      query: (filters) => ({
         url: `/entries`,
         method: "GET",
+        params: filters,
       }),
       providesTags: ["Entry"],
     }),

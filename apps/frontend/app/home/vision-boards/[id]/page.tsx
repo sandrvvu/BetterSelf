@@ -1,15 +1,15 @@
 "use client";
 
-import { PencilOff, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
-import { Spinner } from "@/components/shared";
-import { Button } from "@/components/ui";
+import { AppCollapsible, Spinner } from "@/components/shared";
+import { Badge } from "@/components/ui";
 import {
-  DeleteVisionBoardDialog,
-  EditVisionBoardDialog,
+  BoardBreadcrumb,
+  BoardControls,
   ImageControls,
   MasontryLayout,
 } from "@/components/vision-boards";
@@ -32,19 +32,19 @@ export default function VisionBoard({ params }: { params: Params }) {
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [isManageMode, setIsManageMode] = useState(false);
 
-  const handleDelete = () => {
+  const onDelete = () => {
     setIsDeleteOpen(false);
     router.replace("/home/vision-boards");
   };
 
   const handleDeleteImage = async (imageId: string) => {
-    try {
-      await deleteImage({ boardId: id, imageId });
-    } catch (err) {
-      console.error("Failed to delete image:", err);
-    }
+    await deleteImage({ boardId: id, imageId });
+  };
+
+  const handleDuplicateImage = async (imageId: string) => {
+    await deleteImage({ boardId: id, imageId });
   };
 
   if ((!board && !isLoading) || !isValidUUID(id)) {
@@ -55,63 +55,65 @@ export default function VisionBoard({ params }: { params: Params }) {
   if (!board) return null;
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between">
-        <div className="">
-          <h1 className="text-4xl font-bold text-purple-800 break-words">
+    <>
+      <BoardBreadcrumb />
+      <div className="mt-4 flex items-start justify-between gap-8">
+        <div>
+          {board.goalTitle && (
+            <Link href={`/home/goals/${board.goalId}`}>
+              <Badge
+                className="mb-2 bg-violet-100 text-violet-700  hover:bg-violet-100 hover:text-violet-700"
+                title={board.goalTitle}
+              >
+                {board.goalTitle}
+              </Badge>
+            </Link>
+          )}
+          <h1
+            className="text-3xl font-semibold  break-words"
+            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+          >
             {board.title}
           </h1>
-          <p className="text-muted-foreground mt-2 break-words w-5/6">
-            {board.description}
-          </p>
         </div>
-
-        <div className="flex gap-2">
-          <Button
-            className="border text-md border-neutral-500 bg-white text-neutral-800 py-4 rounded-lg hover:bg-purple-600 hover:text-white shadow-lg"
-            onClick={() => setIsEditOpen(true)}
-          >
-            <PencilOff />
-          </Button>
-          <Button
-            className="border text-md border-neutral-500 bg-white text-neutral-800 py-4 rounded-lg hover:bg-purple-600 hover:text-white shadow-lg"
-            onClick={() => setIsDeleteOpen(true)}
-          >
-            <Trash2 />
-          </Button>
-        </div>
+        <BoardControls
+          board={board}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          onDelete={onDelete}
+        />
       </div>
 
-      <ImageControls
-        isDeleteMode={isDeleteMode}
-        onToggleDeleteMode={() => setIsDeleteMode((prev) => !prev)}
-        boardId={board.id}
-        uploadImage={uploadImage}
-      />
+      <AppCollapsible description="Description">
+        <p
+          className="m-2 text-sm text-muted-foreground break-words"
+          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+        >
+          {board.description}
+        </p>
+      </AppCollapsible>
 
+      <div className="flex justify-end mb-4">
+        <ImageControls
+          isManageMode={isManageMode}
+          onToggleMode={() => setIsManageMode((prev) => !prev)}
+          boardId={board.id}
+          uploadImage={uploadImage}
+        />
+      </div>
       <MasontryLayout
+        isManageMode={isManageMode}
+        boardId={board.id}
         images={board.images.map((img) => ({
           id: img.id,
           src: img.source,
           alt: board.title,
-          onDelete: isDeleteMode ? () => handleDeleteImage(img.id) : undefined,
+          onDelete: () => handleDeleteImage(img.id),
+          onDuplicate: () => handleDuplicateImage(img.id),
         }))}
       />
-
-      <EditVisionBoardDialog
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        id={board.id}
-        title={board.title}
-        description={board.description}
-      />
-
-      <DeleteVisionBoardDialog
-        isOpen={isDeleteOpen}
-        setIsOpen={setIsDeleteOpen}
-        id={board.id}
-        onDelete={handleDelete}
-      />
-    </div>
+    </>
   );
 }

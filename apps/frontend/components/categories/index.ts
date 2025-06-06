@@ -3,10 +3,11 @@ export {
   DeleteCategoryContent,
   EditCategoryForm,
 } from "./actions";
-export { CategoryControls } from "./buttons";
+export { CategoryControls } from "./controls";
 export {
   CreateCategoryDialog,
   DeleteCategoryDialog,
   EditCategoryDialog,
 } from "./dialogs";
 export { columns, DataTableRowActions } from "./table";
+export { CategoriesBreadcrumb, CategoryBreadcrumb } from "./ui-elements";

@@ -4,14 +4,10 @@ import { notFound, useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { validate as isValidUUID } from "uuid";
 
-import {
-  CategoryControls,
-  DeleteCategoryDialog,
-  EditCategoryDialog,
-} from "@/components/categories";
-import { AddGoalDialog, GoalCard } from "@/components/goals";
-import { Spinner } from "@/components/shared";
-import { Button } from "@/components/ui";
+import { CategoryControls } from "@/components/categories";
+import { CategoryBreadcrumb } from "@/components/categories/ui-elements/breadcrumbs";
+import { GoalCard } from "@/components/goals";
+import { AppCollapsible, Spinner } from "@/components/shared";
 import {
   useGetCategoryQuery,
   useGetGoalsByCategoryQuery,
@@ -23,8 +19,11 @@ export default function Category(props: { params: Params }) {
   const { id } = use(props.params);
 
   const router = useRouter();
+
   const { data: category, isLoading } = useGetCategoryQuery(id);
-  const { data: goals, refetch } = useGetGoalsByCategoryQuery(id);
+  const { data: goals, refetch } = useGetGoalsByCategoryQuery(id, {
+    pollingInterval: 60 * 60 * 1000,
+  });
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -45,61 +44,41 @@ export default function Category(props: { params: Params }) {
   if (!category) return null;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between">
+    <>
+      <CategoryBreadcrumb />
+      <div className="mt-4 flex items-start justify-between gap-8">
         <div>
-          <h1 className="text-4xl font-bold text-purple-800 w-5/6">
+          <h1
+            className="text-3xl font-semibold break-words"
+            style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+          >
             {category.name}
           </h1>
-          {category.description && (
-            <p
-              className="text-muted-foreground mt-2 w-5/6  break-all"
-              style={{ wordBreak: "break-word" }}
-            >
-              {category.description}
-            </p>
-          )}
         </div>
         <CategoryControls
-          onEdit={() => setIsEditOpen(true)}
-          onDelete={() => setIsDeleteOpen(true)}
+          category={category}
+          isAddOpen={isAddOpen}
+          setIsAddOpen={setIsAddOpen}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          onAdded={() => void refetch()}
+          onDelete={onDelete}
         />
       </div>
 
-      <div className="text-right">
-        <Button
-          variant="default"
-          className="border-2 text-md border-purple-600 bg-purple-600 text-white py-4 rounded-lg hover:bg-white hover:text-purple-800 shadow-lg"
-          onClick={() => setIsAddOpen(true)}
+      <AppCollapsible description="Description">
+        <p
+          className="m-2 text-sm text-muted-foreground break-words"
+          style={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
         >
-          Add goal
-        </Button>
-      </div>
-
-      <EditCategoryDialog
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        id={id}
-        name={category.name}
-        description={category.description || ""}
-      />
-      <DeleteCategoryDialog
-        isOpen={isDeleteOpen}
-        setIsOpen={setIsDeleteOpen}
-        id={id}
-        onDelete={onDelete}
-      />
-      <AddGoalDialog
-        isOpen={isAddOpen}
-        setIsOpen={setIsAddOpen}
-        categoryId={id}
-        onAdded={() => {
-          void refetch();
-        }}
-      />
+          {category.description}
+        </p>
+      </AppCollapsible>
 
       {goals && goals.length > 0 ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {goals.map((goal) => (
             <GoalCard key={goal.id} goal={goal} />
           ))}
@@ -109,6 +88,6 @@ export default function Category(props: { params: Params }) {
           No goals in this category.
         </p>
       )}
-    </div>
+    </>
   );
 }

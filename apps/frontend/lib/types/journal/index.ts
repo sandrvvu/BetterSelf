@@ -4,6 +4,7 @@ export type Entry = {
   content?: string;
   userId: string;
   goalId: string | null;
+  goalTitle?: string | null;
   createdAt: Date;
   updatedAt: Date;
 };

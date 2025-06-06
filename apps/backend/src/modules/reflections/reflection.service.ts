@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { AiAssistantService } from "../../common/modules/ai-assistant/ai-assistant.service";
+import { AiAssistantService } from "../../common/services/ai-assistant/ai-assistant.service";
 
 import { ChatMessage, ChatMessageRole } from "./chat-message.entity";
 import { ReflectionPreviewDto } from "./libs/dto/reflection-preview.dto";
