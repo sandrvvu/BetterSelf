@@ -55,7 +55,9 @@ export default function CreateGoalForm({
   useEffect(() => {
     if (isSuccess && data) {
       setIsOpen(false);
-      toast.success("Goal added successfully.");
+      toast.success("Goal added successfully.", {
+        toastId: "goalsuccess1",
+      });
     }
   }, [isSuccess, data, setIsOpen]);
 

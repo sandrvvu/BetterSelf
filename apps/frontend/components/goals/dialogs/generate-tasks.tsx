@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction,useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import {
@@ -17,29 +17,38 @@ export function GenerateTasksModal({
   goalId,
   isOpen,
   setIsOpen,
+  onAdded,
 }: {
   goalId: string;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  onAdded: () => void;
 }) {
-  const [generateTasks, { data, isLoading }] = useGenerateTasksMutation();
+  const [generateTasks, { data, isLoading, isSuccess }] =
+    useGenerateTasksMutation();
   const [createTask] = useCreateTaskMutation();
   const [tasks, setTasks] = useState<CreateTaskDto[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [details, setDetails] = useState("");
 
   const handleGenerate = async () => {
-    const result = await generateTasks({
+    await generateTasks({
       goalId,
       goalDetails: details,
-    }).unwrap();
-    setTasks(result.tasks);
-    setCurrentIndex(0);
+    });
   };
 
+  useEffect(() => {
+    if (isSuccess && data) {
+      setTasks(data.tasks);
+      setCurrentIndex(0);
+    }
+  }, [isSuccess, data, setTasks, setCurrentIndex]);
+
   const handleAdd = async () => {
-    if (tasks) {
-      await createTask({ goalId, ...tasks[currentIndex] });
+    const task = tasks?.[currentIndex];
+    if (task?.title && task?.description) {
+      await createTask({ ...task });
       toast.success("Task added!");
       showNext();
     }
@@ -51,6 +60,7 @@ export function GenerateTasksModal({
     } else {
       toast.success("All tasks reviewed");
       setIsOpen(false);
+      onAdded();
     }
   };
 
@@ -61,14 +71,20 @@ export function GenerateTasksModal({
           <DialogTitle>Generate AI Tasks</DialogTitle>
         </DialogHeader>
 
-        {tasks.length === 0 ? (
+        {!tasks?.[currentIndex] ? (
           <>
             <Textarea
               value={details}
               onChange={(e) => setDetails(e.target.value)}
               placeholder="Describe your goal in more detail..."
             />
-            <Button onClick={handleGenerate} disabled={isLoading}>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                void handleGenerate();
+              }}
+              disabled={isLoading}
+            >
               {isLoading ? "Generating..." : "Generate"}
             </Button>
           </>
@@ -81,8 +97,14 @@ export function GenerateTasksModal({
                 <p>Importance: {tasks[currentIndex].importance}</p>
                 <p>Urgency: {tasks[currentIndex].urgency}</p>
                 <p>Difficulty: {tasks[currentIndex].difficulty}</p>
-                <p>Success Probability: {tasks[currentIndex]?.successProbability}%</p>
-                <p>Estimated Time: {tasks[currentIndex].estimatedTime} {tasks[currentIndex].estimatedTimeUnit}</p>
+                <p>
+                  Success Probability: {tasks[currentIndex]?.successProbability}
+                  %
+                </p>
+                <p>
+                  Estimated Time: {tasks[currentIndex].estimatedTime}{" "}
+                  {tasks[currentIndex].estimatedTimeUnit}
+                </p>
               </div>
             </div>
 
@@ -90,7 +112,14 @@ export function GenerateTasksModal({
               <Button variant="outline" onClick={showNext}>
                 Skip
               </Button>
-              <Button onClick={handleAdd}>Add Task</Button>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  void handleAdd();
+                }}
+              >
+                Add Task
+              </Button>
             </div>
           </>
         )}

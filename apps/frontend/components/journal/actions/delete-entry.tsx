@@ -17,13 +17,15 @@ export default function DeleteEntryContent({
     useDeleteEntryMutation();
 
   async function handleDelete(id: string) {
-    onDelete();
     await deleteEntry(id);
   }
 
   useEffect(() => {
     if (isSuccess && data) {
-      toast.success("Entry deleted successfully.");
+      toast.success("Entry deleted successfully.", {
+        toastId: "entrysuccess1",
+      });
+      onDelete();
     }
   }, [onDelete, data, isSuccess]);
 

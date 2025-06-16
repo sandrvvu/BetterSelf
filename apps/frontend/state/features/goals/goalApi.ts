@@ -76,7 +76,7 @@ export const goalApi = createApi({
       invalidatesTags: ["Goal"],
     }),
 
-    generateTasks: builder.mutation<CreateTaskDto[], { goalId: string; goalDetails: string }>({
+    generateTasks: builder.mutation<{tasks: CreateTaskDto[]}, { goalId: string; goalDetails: string }>({
       query: ({ goalId, goalDetails }) => ({
         url: `goals/${goalId}/generate-tasks`,
         method: "POST",

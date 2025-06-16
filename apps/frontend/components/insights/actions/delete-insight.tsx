@@ -17,15 +17,17 @@ export default function DeleteInsightContent({
     useDeleteInsightChatMutation();
 
   async function handleDelete(id: string) {
-    onDelete();
     await deleteInsightChat(id);
   }
 
   useEffect(() => {
     if (isSuccess && data) {
-      toast.success("Insight chat deleted successfully.");
+      toast.success("Insight chat deleted successfully.", {
+        toastId: "chatsuccess1",
+      });
+      onDelete();
     }
-  }, [data, isSuccess]);
+  }, [data, isSuccess, onDelete]);
 
   return (
     <Button

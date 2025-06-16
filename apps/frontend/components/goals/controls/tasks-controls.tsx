@@ -81,6 +81,7 @@ export const TasksControls = ({
         goalId={goalId}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        onAdded={onAdded}
       />
 
       <AddTaskDialog

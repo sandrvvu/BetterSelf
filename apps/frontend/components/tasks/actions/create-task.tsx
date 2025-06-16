@@ -71,7 +71,9 @@ export default function CreateTaskForm({
   useEffect(() => {
     if (isSuccess && data) {
       setIsOpen(false);
-      toast.success("Task added successfully.");
+      toast.success("Task added successfully.", {
+        toastId: "tasksuccess1",
+      });
     }
   }, [isSuccess, data, setIsOpen]);
 
@@ -218,10 +220,12 @@ export default function CreateTaskForm({
                   <FormControl>
                     <Input
                       type="number"
-                      min={0}
                       placeholder="e.g. 30"
                       {...field}
-                      onChange={(e) => field.onChange(+e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        field.onChange(val === "" ? undefined : Number(val));
+                      }}
                     />
                   </FormControl>
                   <FormMessage />

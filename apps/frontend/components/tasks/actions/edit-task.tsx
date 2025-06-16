@@ -77,7 +77,9 @@ export default function EditTaskForm({
     if (isSuccess && data) {
       setIsOpen(false);
       onEdit();
-      toast.success("Task edited successfully.");
+      toast.success("Task edited successfully..", {
+        toastId: "tasksuccess1",
+      });
     }
   }, [isSuccess, data, setIsOpen, onEdit]);
 
@@ -94,214 +96,215 @@ export default function EditTaskForm({
         }}
         className="space-y-4"
       >
+        <div className="flex flex-col gap-4 overflow-y-auto px-2 custom-scrollbar max-h-[500px]">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Task title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-<div className="flex flex-col gap-4 overflow-y-auto px-2 custom-scrollbar max-h-[500px]">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Task title" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Task description (optional)"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Task description (optional)"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <div className="flex gap-4">
+            {(["importance", "urgency", "difficulty"] as const).map((name) => (
+              <FormField
+                key={name}
+                control={form.control}
+                name={name}
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="capitalize">{name} (1-5)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={5}
+                        value={field.value}
+                        onChange={(e) => field.onChange(+e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
+          </div>
 
-        <div className="flex gap-4">
-          {(["importance", "urgency", "difficulty"] as const).map((name) => (
+          <FormField
+            control={form.control}
+            name="successProbability"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Success Probability (%)</FormLabel>
+                <FormControl>
+                  <Slider
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={[field.value]}
+                    onValueChange={(val) => field.onChange(val[0])}
+                  />
+                </FormControl>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {field.value}%
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="targetDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Target Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full text-left",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent align="start" className="p-0">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex gap-4">
             <FormField
-              key={name}
               control={form.control}
-              name={name}
+              name="estimatedTime"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="capitalize">{name} (1-5)</FormLabel>
+                  <FormLabel>Estimated Time</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      min={1}
-                      max={5}
-                      value={field.value}
-                      onChange={(e) => field.onChange(+e.target.value)}
+                      placeholder="e.g. 30"
+                      {...field}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        field.onChange(val === "" ? undefined : Number(val));
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          ))}
+            <FormField
+              control={form.control}
+              name="estimatedTimeUnit"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Time Unit</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem
+                        className="hover:cursor-pointer hover:bg-neutral-100"
+                        value={TimeUnit.MINUTES}
+                      >
+                        Minutes
+                      </SelectItem>
+                      <SelectItem
+                        className="hover:cursor-pointer hover:bg-neutral-100"
+                        value={TimeUnit.HOURS}
+                      >
+                        Hours
+                      </SelectItem>
+                      <SelectItem
+                        className="hover:cursor-pointer hover:bg-neutral-100"
+                        value={TimeUnit.DAYS}
+                      >
+                        Days
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {availableDependencies && (
+            <FormField
+              control={form.control}
+              name="dependencies"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Dependencies</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={availableDependencies.map((dep) => ({
+                        value: dep.id,
+                        label: dep.title,
+                      }))}
+                      selected={field.value || []}
+                      onChange={field.onChange}
+                      placeholder="Select tasks..."
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
 
-        <FormField
-          control={form.control}
-          name="successProbability"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Success Probability (%)</FormLabel>
-              <FormControl>
-                <Slider
-                  min={0}
-                  max={100}
-                  step={1}
-                  value={[field.value]}
-                  onValueChange={(val) => field.onChange(val[0])}
-                />
-              </FormControl>
-              <div className="text-sm text-muted-foreground mt-1">
-                {field.value}%
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="targetDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Target Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full text-left",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent align="start" className="p-0">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex gap-4">
-          <FormField
-            control={form.control}
-            name="estimatedTime"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Estimated Time</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    min={0}
-                    placeholder="e.g. 30"
-                    {...field}
-                    onChange={(e) => field.onChange(+e.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="estimatedTimeUnit"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Time Unit</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem
-                      className="hover:cursor-pointer hover:bg-neutral-100"
-                      value={TimeUnit.MINUTES}
-                    >
-                      Minutes
-                    </SelectItem>
-                    <SelectItem
-                      className="hover:cursor-pointer hover:bg-neutral-100"
-                      value={TimeUnit.HOURS}
-                    >
-                      Hours
-                    </SelectItem>
-                    <SelectItem
-                      className="hover:cursor-pointer hover:bg-neutral-100"
-                      value={TimeUnit.DAYS}
-                    >
-                      Days
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        {availableDependencies && (
-          <FormField
-            control={form.control}
-            name="dependencies"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Dependencies</FormLabel>
-                <FormControl>
-                  <MultiSelect
-                    options={availableDependencies.map((dep) => ({
-                      value: dep.id,
-                      label: dep.title,
-                    }))}
-                    selected={field.value || []}
-                    onChange={field.onChange}
-                    placeholder="Select tasks..."
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
-   </div>
-   
         <FormItem>
           <Button
             type="submit"

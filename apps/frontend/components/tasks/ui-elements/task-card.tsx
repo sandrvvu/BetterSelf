@@ -22,6 +22,7 @@ type TaskCardProps = {
 };
 
 const MAX_TASK_TITLE_LENGTH = 100;
+const MAX_TASK_DESC_LENGTH = 150;
 
 export default function TaskCard({
   task,
@@ -88,7 +89,9 @@ export default function TaskCard({
                     </h3>
                     {task.description && (
                       <p className="text-xs text-neutral-400 line-clamp-1">
-                        {task.description}
+                        {task.description.length > MAX_TASK_DESC_LENGTH
+                        ? `${task.description.slice(0, MAX_TASK_DESC_LENGTH)}...`
+                        : task.description}
                       </p>
                     )}
                   </div>
